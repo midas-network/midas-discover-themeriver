@@ -8,22 +8,23 @@
   </head>
   <body style="text-align: center">
     <svg width="1650" height="920" id="mainsvg" class="svgs" style="background-color: #ffffff;"></svg>
+    <div id="word-box"><div id="word-label"></div><div id="freq-count"></div></div>
     <script>
         // get main SVG and its attributes & setting hyper-parameters; 
         const svg = d3.select('#mainsvg');
         const width = +svg.attr('width');
         const height = +svg.attr('height');
-        const margin = {top: 100, right: 120, bottom: 100, left: 120};
+        const margin = {top: 50, right: 420, bottom: 100, left: 120};
         const innerWidth = width - margin.left - margin.right;
         const innerHeight = height - margin.top - margin.bottom;
         const xValue = (datum) => { return dates.indexOf(datum['date']); };
-        const yValue = (datum) => {return datum['Newly diagnosed']};
-        //const xValue = d => d['confirmed cases'];
+        const yValue = (datum) => {return datum['count']};
+        //const xValue = d => d['count'];
         //const xValue = d => d['感染率'];
         //const yValue = d => {return Math.log(d['diffuse_smooth'] + 1)};
         //const yValue = d => {return d['diffuse_smooth']};
         //const yValue = d => {return Math.log(d['newinfec']+1)};
-        //const rValue = d => {return Math.sqrt(d['confirmed cases']) + 6};
+        //const rValue = d => {return Math.sqrt(d['count']) + 6};
         let low_max = 4000; 
         let up_max = 1000;
         let limit_up_max = -1;
@@ -35,50 +36,23 @@
         let metapop;
         let rawdata; 
 
-        const xAxisLabel = ' ';
-        const yAxisLabel = '新增人数';
+        const xAxisLabel = 'Year';
+        const yAxisLabel = 'Topic Frequency';
 
         const xBarValue = (datum) => {return datum.value};
         const yBarValue = (datum) => {return datum.name};
-        const barKeys = ['confirmed cases', 'deaths', 'death toll'];
-        const barKeys_reverse = ['death toll', 'deaths', 'confirmed cases'];
+        const barKeys = ['count', 'covid19', 'gorilla'];
+        const barKeys_reverse = ['death toll', 'deaths', 'count'];
         let yBandScale, nyBandScale, xBarScale;
 
-        var province_color = {
-            "Pennsylvania": "#DD6B66",
-            "河南": "#759AA0",
-            "浙江": "#E69D87",
-            "湖南": "#8DC1A9",
-            "Texas": "#EA7E53",
-            "江西": "#EEDD78",
-            "江苏": "#73A373",
-            "重庆": "#73B9BC",
-            "山东": "#7289AB",
-            "四川": "#91CA8C",
-            "黑龙江": "#F49F42",
-            "Arizona": "#AA312C",
-            "上海": "#39656D",
-            "Ohio": "#B35E45",
-            "河北": "#4B8E6F",
-            "陕西": "#B6481C",
-            "New York": "#BBA838",
-            "云南": "#386F38",
-            "海南": "#388589",
-            "贵州": "#385177",
-            "山西": "#50964A",
-            "辽宁": "#C16B0D",
-            "天津": "#FF190F",
-            "Virginia": "#45BFD3",
-            "吉林": "#FF5F2F",
-            "内蒙古":"#50F3A8",
-            "新疆":"#FF4800",
-            "宁夏":"#FFDE1A",
-            "香港":"#41D541",
-            "青海":"#32E7EF",
-            "台湾":"#ef638e",
-            "Kansas":"#3B7CDE",
-            "西藏":"#58FD4A",
-            "California":"#FF8500"
+        var topics = ['2019ncov', 'acut', 'adult', 'advanc', 'africa', 'antibodi', 'base', 'behavior', 'bia', 'bind', 'care', 'cell', 'character', 'chikungunya', 'cholera bangladesh sustain', 'classifi', 'commun', 'compar', 'complex', 'congoschool closur 2009', 'congoschool closur 2009 influenza', 'control', 'corona', 'cost', 'countri', 'countri fight', 'countri fight poverti', 'countri fight poverti bring', 'covid19', 'decreas', 'democrat', 'democrat republ', 'democrat republ congoschool', 'democrat republ congoschool closur', 'dengu', 'design', 'design bia set', 'dynam', 'effect', 'function', 'gorilla', 'gorilla gorilla', 'gorilla gorilla gorilla', 'h1n1', 'h3n2', 'hiv', 'hiv1', 'host', 'hylob', 'impact', 'implic', 'influenza', 'inform', 'initi', 'key', 'live', 'local', 'make', 'market', 'medic', 'network', 'opioid opportun', 'opioid opportun challengesth impact', 'opportun', 'opportun challengesth', 'opportun challengesth impact', 'opportun challengesth impact imit', 'oral', 'oral cholera', 'oral cholera bangladesh', 'oral cholera bangladesh sustain', 'parasit', 'parasit local', 'parasit local adaptationassoci', 'parasit local adaptationassoci airborn', 'pathogen', 'pre', 'pre prophylaxi', 'prophylaxi', 'rate', 'reduc', 'risk', 'sarscov2', 'sarscov2 variant', 'scientif', 'scientif tool', 'scientif tool developingcountri', 'scientif tool developingcountri partnerspotenti', 'social', 'south', 'speci', 'structur', 'tool', 'treatment', 'use', 'variant', 'viral', 'worker']
+        
+        const province_color = function(idx){
+            let randomColor = Math.floor(Math.random(idx)*16777215).toString(16);
+            if (randomColor.length < 6){
+                randomColor += '0'
+            }
+            return "#" + randomColor;
         }
 
 
@@ -141,7 +115,8 @@
             //.tickFormat(d3.format('.2s'))
             .tickSize(-innerHeight)
             .tickPadding(10)
-            .ticks(24);
+            .ticks(13);
+            // .ticks(24);
 
             let yAxisGroup = g.append('g').call(yAxis).attr('id', 'yaxis')
             d3.selectAll('#yaxis .tick text').attr('transform', `translate(${0}, ${-3})`);
@@ -149,7 +124,7 @@
             .attr('transform', `rotate(-90)`)
             .attr('x', -innerHeight / 2)
             .attr('y', -80)
-            .attr('fill', 'white')
+            .attr('fill', 'red')
             .text(yAxisLabel)
             .attr('text-anchor', 'middle') // Make label at the middle of axis. 
             yAxisGroup.selectAll('.domain').remove(); // we can select multiple tags using comma to seperate them and we can use space to signify nesting; 
@@ -159,52 +134,55 @@
             xAxisGroup.append('text')
             .attr('y', 60)
             .attr('x', innerWidth / 2)
-            .attr('fill', 'white')
+            .attr('fill', 'red')
             .text(xAxisLabel);
             xAxisGroup.selectAll('.domain').remove();
 
             // console.log(document.getElementById('xaxis'));
-            myticks = ["1月21日", "22日", "23日", "24日", "25日", "26日", 
-            "27日", "28日", "29日", "30日", "31日", "2月1日", "2日", 
-            "3日", "4日", "5日", "6日", "7日", "8日", "9日", "10日", 
-            "11日", "12日", "13日", "14日", "15日", "16日"]
+            // myticks = ["1月21日", "22日", "23日", "24日", "25日", "26日", 
+            // "27日", "28日", "29日", "30日", "31日", "2月1日", "2日", 
+            // "3日", "4日", "5日", "6日", "7日", "8日", "9日", "10日", 
+            // "11日", "12日", "13日", "14日", "15日", "16日"]
+            myticks = ['2010', '2011', '2012', '2013', '2014', '2015',
+                '2016', '2017', '2018', '2019', '2020', '2021', '2022']
             for(let tid = 0; tid < myticks.length; tid++){
-                // document.getElementById('xaxis').getElementsByClassName('tick')[tid].getElementsByTagName('text')[0].textContent = myticks[tid];
+                document.getElementById('xaxis').getElementsByClassName('tick')[tid].getElementsByTagName('text')[0].textContent = myticks[tid];
             }
             
-            var province_name = ["California", "Pennsylvania", "Texas", "Arizona", "Ohio", "New York", "Virginia", "Kansas"]
+            var province_name = topics
             // draw legend
-            var legend = svg.selectAll(".legend")
-                .data(province_name)
-                .enter().append("g")
-                .attr("class", "legend")
-                .attr("transform", function(d, i) { return "translate(" + (innerWidth + 130) + "," + (i * 20 + 140) + ")"; });
+            // var legend = svg.selectAll(".legend")
+            //     .data(province_name)
+            //     .enter().append("g")
+            //     .attr("class", "legend")
+            //     .attr("transform", function(d, i) { return "translate(" + (innerWidth + 140) + "," + (i * 20 + 50) + ")"; });
+            //     // .attr("transform", function(d, i) { return "translate(" + (innerWidth + 130) + "," + (i * 20 + 140) + ")"; });
 			
-            // draw legend colored rectangles
-            legend.append("rect")
-            .data(province_name) 
-            .attr("x", 0)
-            .attr("y", 0)
-            .attr("width", 30)
-            .attr("height", 15)
-            .style("fill", function (d,i) {
-                return province_color[d]});
+            // // draw legend colored rectangles
+            // legend.append("rect")
+            // .data(province_name) 
+            // .attr("x", 0)
+            // .attr("y", 0)
+            // .attr("width", 30)
+            // .attr("height", 15)
+            // .style("fill", function (d,i) {
+            //     return province_color(i)});
 			
-            // draw legend text
-            legend.append("text")
-            .data(province_name)
-            .attr("class", "legend_text")
-            .attr("x", 40)
-            .attr("y", 9)
-            .attr("dy", ".2em")
-            .attr("fill", '#333333')
-            .style("text-anchor", "start")
-            .text(d => d);
+            // // draw legend text
+            // legend.append("text")
+            // .data(province_name)
+            // .attr("class", "legend_text")
+            // .attr("x", 40)
+            // .attr("y", 9)
+            // .attr("dy", ".2em")
+            // .attr("fill", '#333333')
+            // .style("text-anchor", "start")
+            // .text(d => d);
         };
         
         const render = function(data, keys, area){
             let g;
-            if(keys.includes('California')){
+            if(keys.includes('covid19')){
                 g = d3.select('#maingroup');
             }else{
                 g = d3.select('#hubeigroup');
@@ -230,14 +208,45 @@
             .attr("opacity",0.9)
             //.transition().duration(3000)
             .attr("d", function(d,i) {
-                console.log(d);
+                // console.log(d);
                 return area(d);
             })
             .attr("clip-path", "url(#rectClip)")
             // fill attrbute requires designers to assign colors for each province; 
             .attr("fill", function (d,i) {
-                console.log(d["key"]);
-                return province_color[d["key"]]; });
+                // console.log(d["key"]);
+                return province_color(i); })
+            .attr("class", function (d,i) {
+                return d["key"]
+            });
+
+
+            // document.querySelectorAll('path').forEach(bar => {
+            //     const elem = document.querySelector('#word-box')
+            //     bar.addEventListener('mouseenter', event => {
+            //         // elem.style.left=innerWidth+140 + 'px';
+            //         elem.style.left=(event.x+(elem.clientWidth))+ 'px';
+            //         elem.style.top=(event.y-(elem.clientHeight/2)) + 'px';
+            //         elem.style.display="block";
+            //         elem.style.backgroundColor=bar.getAttribute('fill');
+            //         var styleElem = document.head.appendChild(document.createElement("style"));
+            //         styleElem.innerHTML = "#word-box:before {border-right-color:" + bar.getAttribute('fill') + ";}";
+            //         document.querySelector('#word-label').innerHTML=bar.className.baseVal;
+            //         document.querySelector('#freq-count').innerHTML=yScale.invert(event.pageY-margin.top);
+            //     })
+            //     bar.addEventListener('mouseleave', event => {
+            //         // document.querySelector('#word-label').style.display="none";
+            //         document.querySelector('#word-label').innerHTML="";
+            //     })
+            // });
+
+            const elem = document.querySelector('#word-box')
+            d3.selectAll('path').on('mouseenter', function(e, d){
+                console.log('event:')
+                console.log(e)
+                console.log('data:')
+                console.log(d)
+            })
 
             clipedrect.transition().ease(d3.easeLinear).duration(totalduration).attr("width", innerWidth);
  
@@ -260,19 +269,22 @@
             });
             data.forEach(datum => {
                 //sequential[alldates.indexOf(datum['date'])].push(datum);
-                prestack[dates.indexOf(datum['date'])][datum['StateName']] = yValue(datum);
+                prestack[dates.indexOf(datum['date'])][datum['topic']] = yValue(datum);
             });
             return prestack
         }
 
-        d3.csv('./data/province.csv').then(function(data){
+        // d3.csv('./data/province.csv').then(function(data){
+        var year_range = ['2004/1/1','2005/1/1','2006/1/1','2007/1/1']
+        d3.csv('./data/year_counts_trim.csv').then(function(data){
+            // data = data.filter(datum => {return year_range.includes(datum['date'])});
             data.forEach(datum => {
                 // pre-process the data; 
-                datum['confirmed cases'] = +(datum['confirmed cases']);
-                datum['deaths'] = +(datum['deaths']);
-                datum['death toll'] = +(datum['death toll']);
-                datum['Newly diagnosed'] = +(datum['Newly diagnosed']);
-                datum['existing diagnosis'] = +(datum['existing diagnosis']);
+                datum['count'] = +(datum['count']);
+                // datum['deaths'] = +(datum['deaths']);
+                // datum['death toll'] = +(datum['death toll']);
+                // datum['count'] = +(datum['count']);
+                // datum['existing diagnosis'] = +(datum['existing diagnosis']);
             });
             
             // remove duplicated items; 
@@ -289,8 +301,8 @@
             // setting up barchart; 
             setting_up_barchart(data);
 
-            // delete 'total';
-            data = data.filter(datum => {return datum['StateName'] !== 'total'});
+            // delete 'gorilla';
+            data = data.filter(datum => {return datum['topic'] !== 'gorilla'});
 
             // generate sequential data; 
             let sequential = []; 
@@ -302,7 +314,7 @@
             });
             // smooth new infec; 
             let t = 0;
-            const originyValue = datum => datum['Newly diagnosed'];
+            const originyValue = datum => datum['count'];
             for(; t < sequential.length; t++){
                 sequential[t].forEach(datum => {
                     if(t == 0){
@@ -310,38 +322,38 @@
                     }else if(t == 1){
                         datum.newinfec_s = (
                             originyValue(datum) + 
-                            originyValue(sequential[t-1].find(x => x['StateName'] === datum['StateName']))
+                            originyValue(sequential[t-1].find(x => x['topic'] === datum['topic']))
                         ) / 2.0;
                     }else{
                         datum.newinfec_s = (
                             originyValue(datum) + 
-                            originyValue(sequential[t-1].find(x => x['StateName'] === datum['StateName'])) +
-                            originyValue(sequential[t-2].find(x => x['StateName'] === datum['StateName']))
+                            originyValue(sequential[t-1].find(x => x['topic'] === datum['topic'])) +
+                            originyValue(sequential[t-2].find(x => x['topic'] === datum['topic']))
                         ) / 3.0;
                     }
                 })
             }
 
             // split data from Hu-Bei and not from Hu-Bei; 
-            data_hubei = data.filter(datum => {return datum['StateName'] === 'California'});
-            data = data.filter(datum => {return datum['StateName'] !== 'California'});
+            data_hubei = data.filter(datum => {return datum['topic'] === 'covid19'});
+            data = data.filter(datum => {return datum['topic'] !== 'covid19'});
 
             // stack data; 
             let prestack = seqgen(data);
             let prestack_hubei = seqgen(data_hubei);
-            // let keys = Array.from(new Set(data.map( datum => datum['StateName'])));
+            // let keys = Array.from(new Set(data.map( datum => datum['topic'])));
             // sort according to '累计确诊' and prepare keys; 
-            const sortedforkey = sequential[sequential.length-1].sort( (a,b) => b['confirmed cases'] - a['confirmed cases'] );
-            let keys = sortedforkey.map(d => d['StateName']);
-            keys = keys.filter(d => {return d !== 'California'});
-            let keys_hubei = Array.from(new Set(data_hubei.map( datum => datum['StateName'])));
+            const sortedforkey = sequential[sequential.length-1].sort( (a,b) => b['count'] - a['count'] );
+            let keys = sortedforkey.map(d => d['topic']);
+            keys = keys.filter(d => {return d !== 'covid19'});
+            let keys_hubei = Array.from(new Set(data_hubei.map( datum => datum['topic'])));
 
             // generate low_max and up_max for Y-scale; 
             up_max = d3.max(sequential, seq => {
                 // console.log(seq);
                 result = 0;
                 seq.forEach(s => {
-                    if(s['StateName'] !== 'California'){
+                    if(s['topic'] !== 'covid19'){
                         result += yValue(s);
                     }
                 })
@@ -353,7 +365,7 @@
                 }
                 result = 0;
                 seq.forEach(s => {
-                    if(s['StateName'] === 'California'){
+                    if(s['topic'] === 'covid19'){
                         result += yValue(s);
                     }
                 })
