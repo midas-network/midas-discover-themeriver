@@ -7,13 +7,14 @@
     <script src="./js/barchart-in-themeriver.js"></script>
   </head>
   <body style="text-align: center">
-    <svg width="1650" height="920" id="mainsvg" class="svgs" style="background-color: #ffffff;"></svg>
+    <div id="wrapper"><svg width="1650" height="920" id="mainsvg" class="svgs" style="background-color: #ffffff;"></svg></div>
     <div id="word-box"><div id="word-label"></div><div id="freq-count"></div></div>
     <script>
         // get main SVG and its attributes & setting hyper-parameters; 
         const svg = d3.select('#mainsvg');
         const width = +svg.attr('width');
         const height = +svg.attr('height');
+        console.log(height)
         const margin = {top: 50, right: 420, bottom: 100, left: 120};
         const innerWidth = width - margin.left - margin.right;
         const innerHeight = height - margin.top - margin.bottom;
@@ -139,10 +140,6 @@
             xAxisGroup.selectAll('.domain').remove();
 
             // console.log(document.getElementById('xaxis'));
-            // myticks = ["1月21日", "22日", "23日", "24日", "25日", "26日", 
-            // "27日", "28日", "29日", "30日", "31日", "2月1日", "2日", 
-            // "3日", "4日", "5日", "6日", "7日", "8日", "9日", "10日", 
-            // "11日", "12日", "13日", "14日", "15日", "16日"]
             myticks = ['2010', '2011', '2012', '2013', '2014', '2015',
                 '2016', '2017', '2018', '2019', '2020', '2021', '2022']
             for(let tid = 0; tid < myticks.length; tid++){
@@ -150,34 +147,6 @@
             }
             
             var province_name = topics
-            // draw legend
-            // var legend = svg.selectAll(".legend")
-            //     .data(province_name)
-            //     .enter().append("g")
-            //     .attr("class", "legend")
-            //     .attr("transform", function(d, i) { return "translate(" + (innerWidth + 140) + "," + (i * 20 + 50) + ")"; });
-            //     // .attr("transform", function(d, i) { return "translate(" + (innerWidth + 130) + "," + (i * 20 + 140) + ")"; });
-			
-            // // draw legend colored rectangles
-            // legend.append("rect")
-            // .data(province_name) 
-            // .attr("x", 0)
-            // .attr("y", 0)
-            // .attr("width", 30)
-            // .attr("height", 15)
-            // .style("fill", function (d,i) {
-            //     return province_color(i)});
-			
-            // // draw legend text
-            // legend.append("text")
-            // .data(province_name)
-            // .attr("class", "legend_text")
-            // .attr("x", 40)
-            // .attr("y", 9)
-            // .attr("dy", ".2em")
-            // .attr("fill", '#333333')
-            // .style("text-anchor", "start")
-            // .text(d => d);
         };
         
         const render = function(data, keys, area){
@@ -240,6 +209,22 @@
             //     })
             // });
 
+            debugger;
+            // const wrapper  = d3.select("#wrapper")
+            //     .append("svg")
+            //     .attr("width", width)
+            //     .attr("height", height)
+            // const bounds = wrapper
+            //     .append("g")
+            //     .style("transform", 'translate(${margin.left}px,${}margin.toppx)');
+            const listeningRect = g
+                .append("rect")
+                .attr("class", "listening-rect")
+                .attr("width", width)
+                .attr("height", height)
+                .on("mousemove", onMouseMove)
+                .on("mouseleave", onMouseLeave);
+
             const elem = document.querySelector('#word-box')
             d3.selectAll('path').on('mouseenter', function(e, d){
                 console.log('event:')
@@ -249,7 +234,18 @@
             })
 
             clipedrect.transition().ease(d3.easeLinear).duration(totalduration).attr("width", innerWidth);
- 
+
+            function onMouseMove() {
+                console.log('move')
+                const mousePosition = d3.mouse(this)
+                const hoverDate = xScale.invert(mousePosition[0])
+                console.log(mousePosition)
+                console.log(hoverDate)
+            }
+            
+            function onMouseLeave() {
+                console.log('leave')
+            }
             //const path = g.selectAll("path")
             //.data(layers)
             //.join("path") // use join to avoid split according to "enter" and "update"; 
