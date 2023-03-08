@@ -13,8 +13,8 @@ const toNameValue = function(data){
 }
 
 const setting_up_barchart = function(data){
-    let data_tt = data.filter(datum => {return datum['StateName'] === 'total'});
-    let data_hb = data.filter(datum => {return datum['StateName'] === 'California'});
+    let data_tt = data.filter(datum => {return datum['topic'] === 'gorilla'});
+    let data_hb = data.filter(datum => {return datum['topic'] === 'covid19'});
     data_tt = data_tt.sort(dateSort);
     data_hb = data_hb.sort(dateSort);
     let i = 0; 
@@ -58,7 +58,7 @@ const renderbarchart = function(data, isTatal){
     if(isTatal){
         g = d3.select('#maingroup');
         yscalehere = yBandScale;
-        console.log(data[0]);
+        // console.log(data[0]);
     }else{
         g = d3.select('#hubeigroup');
         yscalehere = nyBandScale;
@@ -69,13 +69,14 @@ const renderbarchart = function(data, isTatal){
     .attr('y', datum => yscalehere(yBarValue(datum)) + yscalehere.bandwidth() / 2 - 2)
     .attr('x', 210)
     .attr('text-anchor', 'start');
-    textbarchart.text(d => d.value)
-    .transition().ease(d3.easeLinear).duration(aduration)
-    .attr('x', (datum) => {
-        //console.log(datum.name);
-        //console.log(210 + xBarScale(xBarValue(datum)));
-        return 210 + xBarScale(xBarValue(datum));
-    });
+    // textbarchart.text(d => d.value)
+    // // textbarchart.text(d => 'hoohoo')
+    // .transition().ease(d3.easeLinear).duration(aduration)
+    // .attr('x', (datum) => {
+    //     //console.log(datum.name);
+    //     //console.log(210 + xBarScale(xBarValue(datum)));
+    //     return 210 + xBarScale(xBarValue(datum));
+    // });
     
     g.selectAll('.rect-barchart')
     .data(data)

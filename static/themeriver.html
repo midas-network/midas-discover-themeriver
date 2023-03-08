@@ -16,7 +16,7 @@
         const innerWidth = width - margin.left - margin.right;
         const innerHeight = height - margin.top - margin.bottom;
         const xValue = (datum) => { return dates.indexOf(datum['date']); };
-        const yValue = (datum) => {return datum['Newly diagnosed']};
+        const yValue = (datum) => {return datum['count']};
         //const xValue = d => d['confirmed cases'];
         //const xValue = d => d['感染率'];
         //const yValue = d => {return Math.log(d['diffuse_smooth'] + 1)};
@@ -68,7 +68,7 @@
             "台湾":"#ef638e",
             "Kansas":"#3B7CDE",
             "西藏":"#58FD4A",
-            "California":"#FF8500"
+            "covid19":"#FF8500"
         }
 
 
@@ -151,7 +151,7 @@
         
         const render = function(data, keys, area){
             let g;
-            if(keys.includes('California')){
+            if(keys.includes('covid19')){
                 g = d3.select('#maingroup');
             }else{
                 g = d3.select('#hubeigroup');
@@ -182,7 +182,7 @@
             });
             data.forEach(datum => {
                 //sequential[alldates.indexOf(datum['date'])].push(datum);
-                prestack[dates.indexOf(datum['date'])][datum['StateName']] = yValue(datum);
+                prestack[dates.indexOf(datum['date'])][datum['topic']] = yValue(datum);
             });
             return prestack
         }
@@ -194,11 +194,11 @@
                 datum['confirmed cases'] = +(datum['confirmed cases']);
                 datum['deaths'] = +(datum['deaths']);
                 datum['death toll'] = +(datum['death toll']);
-                datum['Newly diagnosed'] = +(datum['Newly diagnosed']);
+                datum['count'] = +(datum['count']);
             });
 
-            // delete 'total';
-            data = data.filter(datum => {return datum['StateName'] !== 'total'});
+            // delete 'gorilla';
+            data = data.filter(datum => {return datum['topic'] !== 'gorilla'});
 
             // remove duplicated items; 
             alldates = Array.from(new Set(data.map( datum => datum['date'])));
@@ -221,7 +221,7 @@
             });
             // smooth new infec; 
             let t = 0;
-            const originyValue = datum => datum['Newly diagnosed'];
+            const originyValue = datum => datum['count'];
             for(; t < sequential.length; t++){
                 sequential[t].forEach(datum => {
                     if(t == 0){
@@ -229,13 +229,13 @@
                     }else if(t == 1){
                         datum.newinfec_s = (
                             originyValue(datum) + 
-                            originyValue(sequential[t-1].find(x => x['StateName'] === datum['StateName']))
+                            originyValue(sequential[t-1].find(x => x['topic'] === datum['topic']))
                         ) / 2.0;
                     }else{
                         datum.newinfec_s = (
                             originyValue(datum) + 
-                            originyValue(sequential[t-1].find(x => x['StateName'] === datum['StateName'])) +
-                            originyValue(sequential[t-2].find(x => x['StateName'] === datum['StateName']))
+                            originyValue(sequential[t-1].find(x => x['topic'] === datum['topic'])) +
+                            originyValue(sequential[t-2].find(x => x['topic'] === datum['topic']))
                         ) / 3.0;
                     }
                 })
@@ -243,25 +243,25 @@
             console.log(data);
 
             // split data from Hu-Bei and not from Hu-Bei; 
-            data_hubei = data.filter(datum => {return datum['StateName'] === 'California'});
-            data = data.filter(datum => {return datum['StateName'] !== 'California'});
+            data_hubei = data.filter(datum => {return datum['topic'] === 'covid19'});
+            data = data.filter(datum => {return datum['topic'] !== 'covid19'});
 
             // stack data; 
             let prestack = seqgen(data);
             let prestack_hubei = seqgen(data_hubei);
-            // let keys = Array.from(new Set(data.map( datum => datum['StateName'])));
+            // let keys = Array.from(new Set(data.map( datum => datum['topic'])));
             // sort according to '累计确诊' and prepare keys; 
             const sortedforkey = sequential[sequential.length-1].sort( (a,b) => b['confirmed cases'] - a['confirmed cases'] );
-            let keys = sortedforkey.map(d => d['StateName']);
-            keys = keys.filter(d => {return d !== 'California'});
-            let keys_hubei = Array.from(new Set(data_hubei.map( datum => datum['StateName'])));
+            let keys = sortedforkey.map(d => d['topic']);
+            keys = keys.filter(d => {return d !== 'covid19'});
+            let keys_hubei = Array.from(new Set(data_hubei.map( datum => datum['topic'])));
 
             // generate low_max and up_max for Y-scale; 
             up_max = d3.max(sequential, seq => {
                 // console.log(seq);
                 result = 0;
                 seq.forEach(s => {
-                    if(s['StateName'] !== 'California'){
+                    if(s['topic'] !== 'covid19'){
                         result += yValue(s);
                     }
                 })
@@ -270,7 +270,7 @@
             low_max = d3.max(sequential, seq => {
                 result = 0;
                 seq.forEach(s => {
-                    if(s['StateName'] === 'California'){
+                    if(s['topic'] === 'covid19'){
                         result += yValue(s);
                     }
                 })
