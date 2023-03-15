@@ -92,6 +92,10 @@ def themeriverlrhubei():
 def themeriverlrworld():
     return flask.send_from_directory('static', 'themeriver-lr-world.html')
 
+@app.route('/themeriver-midas')
+def themeriverlrmidas():
+    return flask.send_from_directory('static', 'themeriver-midas.html')
+
 @app.route('/colorgradient')
 def colorgradient():
     return flask.send_from_directory('static', 'color-gradient.html')

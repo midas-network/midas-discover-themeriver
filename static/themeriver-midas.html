@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>MidasRiver</title>
+    <link rel="stylesheet" href="./css/themeriver.css"> 
+    <script src="./js/d3.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="./js/riverStats.js"></script>
+  </head>
+  <body syle="text-align: center">
+    <div id="wrapper"><svg width="1650" height="920" id="mainsvg" class="svgs" style="background-color: #ffffff;"></svg></div>
+    <div id="word-box"><div id="word-label"></div><div id="freq-count"></div></div>
+    <script>
+        // get main SVG and its attributes and setting hyper-parameters
+        const svg = d3.select('#mainsvg');
+        const width = +svg.attr('width');
+        const height = +svg.attr('height');
+        const margin = {top:50, right:120, bottom: 120, left: 120}
+        const innerWidth = width - margin.left - margin.right;
+        const innerHeight = height - margin.top - margin.bottom;
+        const xValue = (datum) => {return dates.indexOf(datum['date']);};
+        const yValue = (datum) => {return datum['count']};
+
+        let up_max = 5000;
+        let limit_up_max = -1;
+        let xSale, yScale;
+        let maxX, maxY;
+        let dates;
+        let aduration = 1000;
+        let totalduration = 6000;
+        let metapop;
+        let rawdata;
+
+        const xAxisLabel = 'Year'
+        const yAxisLabel = 'Topic Frequency'
+
+        const xBarValue = (datum) => {return datum.value};
+        const yBarValue = (datum) => {return datum.name};
+        const barKeys = []
+        const barKeys_reverse = ['count']
+        let yBandScale,xBarScale;
+        
+        var topics = ['2019ncov', 'acut', 'adult', 'advanc', 'africa', 'antibodi', 'base', 'behavior', 'bia', 'bind', 'care', 'cell', 'character', 'chikungunya', 'cholera bangladesh sustain', 'classifi', 'commun', 'compar', 'complex', 'congoschool closur 2009', 'congoschool closur 2009 influenza', 'control', 'corona', 'cost', 'countri', 'countri fight', 'countri fight poverti', 'countri fight poverti bring', 'covid19', 'decreas', 'democrat', 'democrat republ', 'democrat republ congoschool', 'democrat republ congoschool closur', 'dengu', 'design', 'design bia set', 'dynam', 'effect', 'function', 'gorilla', 'gorilla gorilla', 'gorilla gorilla gorilla', 'h1n1', 'h3n2', 'hiv', 'hiv1', 'host', 'hylob', 'impact', 'implic', 'influenza', 'inform', 'initi', 'key', 'live', 'local', 'make', 'market', 'medic', 'network', 'opioid opportun', 'opioid opportun challengesth impact', 'opportun', 'opportun challengesth', 'opportun challengesth impact', 'opportun challengesth impact imit', 'oral', 'oral cholera', 'oral cholera bangladesh', 'oral cholera bangladesh sustain', 'parasit', 'parasit local', 'parasit local adaptationassoci', 'parasit local adaptationassoci airborn', 'pathogen', 'pre', 'pre prophylaxi', 'prophylaxi', 'rate', 'reduc', 'risk', 'sarscov2', 'sarscov2 variant', 'scientif', 'scientif tool', 'scientif tool developingcountri', 'scientif tool developingcountri partnerspotenti', 'social', 'south', 'speci', 'structur', 'tool', 'treatment', 'use', 'variant', 'viral', 'worker']
+
+        const bar_color = function(idx){
+            let randomColor = Math.floor(Math.random(idx)*16777215).toString(16);
+            if (randomColor.length < 6){
+                randomColor += '0'
+            }
+            return "#" + randomColor;
+        }
+
+        const renderinit = function(data, seq){
+            // Linear Scale: Data Space -> Screen Space
+            xScale = d3.scaleLinear()
+              .domain([0, dates.length-1])
+              .range([0, innerWidth]);
+
+            // Introducing y-Scale
+            yScale = d3.scaleLinear()
+              .domain([up_max, 0])
+              .range([0,innerHeight])
+              .nice();
+
+            yBandScale = d3.scaleBand()
+              .domain(barKeys_reverse)
+              .range([innerHeight - innerHeight/8, innerHeight]) // Divided by 8 because there are 8 numbers on the vertical scale (including 0)
+              .padding(0.01);
+
+            // generate maxX and maxY
+            maxX = xScale(d3.max(data, xValue));
+            maxY = yScale(d3.max(data,yValue));
+
+            const g = svg.append('g')
+              .attr('transform',`translate(${margin.left}, ${margin.top})`)
+              .attr('id', 'maingroup');
+
+            // Adding axes
+            var formatter = d3.format("0")
+            const yAxis = d3.axisLeft(yScale)
+              .tickSize(-innerWidth)
+              .tickFormat(function (d) {
+                  if (d===0) return 0; // No labels for '0' allegedly? The y axis is the frequency count and it is labeled even when the value is not reached.
+                  else if (d<0) d = -d
+                  return formatter(d);
+              })
+              .tickPadding(10);
+            const xAxis = d3.axisBottom(xScale)
+              .tickSize(-innerHeight)
+              .tickPadding(10)
+              .ticks(13);
+
+            let yAxisGroup = g.append('g').call(yAxis).attr('id', 'yaxis')
+            d3.selectAll('#yaxis .tick text').attr('transform', `translate(${0}, ${-3})`); // transform shifts the labels on y axis toward the left
+            yAxisGroup.append('text')
+              .attr('transform', 'rotate(-90)')
+              .attr('x', -innerHeight / 2)
+              .attr('y',-80)
+              .attr('fill', 'black')
+              .text(yAxisLabel)
+              .attr('text-anchor', 'middle'); // Make label at the middle of the axis (seemingly in conjunction with the x attribute)
+            yAxisGroup.selectAll('.domain').remove(); // [Not sure what this is doing] We can select multiple tags using comma to seperate them and we can use space to signify nesting
+
+            let xAxisGroup = g.append('g').call(xAxis).attr('transform', `translate(${0}, ${innerHeight})`).attr('id', 'xaxis');
+            d3.selectAll('#xaxis .tick text').attr('transform', `translate(${0}, ${5})`);
+            xAxisGroup.append('text')
+              .attr('y', 60)
+              .attr('x', innerWidth/2)
+              .attr('fill', 'black')
+              .text(xAxisLabel)
+            xAxisGroup.selectAll('.domain').remove();
+
+            myticks = ['2010', '2011', '2012', '2013', '2014', '2015',
+                '2016', '2017', '2018', '2019', '2020', '2021', '2022']
+            for(let tid = 0; tid < myticks.length; tid++){
+                document.getElementById('xaxis').getElementsByClassName('tick')[tid].getElementsByTagName('text')[0].textContent = myticks[tid];
+            }
+        };
+
+        const render = function(dataset, keys, area){
+            let g = d3.select('#maingroup');
+
+            console.log(dataset)
+            let layers = d3.stack()
+              .keys(keys)
+              .offset(d3.stackOffsetNone)
+              .order(d3.stackOrderAscending)
+              (dataset);
+
+            const clippedrect = g.append("clipPath")
+              .attr('id', 'rectClip')
+              .append('rect')
+              .attr('class', 'rect-clip')
+              .attr('width', 0)
+              .attr('height', innerHeight)
+
+            g.selectAll('path')
+              .data(layers)
+              .join('path')
+              .attr('opacity', 0.9)
+              .attr('d', function(d,i) {
+                return area(d);
+              })
+              .attr('clip-path', 'url(#rectClip)')
+              .attr('fill', function(d,i) {
+                return bar_color(i); })
+              .attr('class', function(d,i){
+                return d['key']
+              })
+              .on("mousemove", onMouseMove);
+
+              // Show label on hover
+            function onMouseMove(e){
+                const elem = $('#word-box'),
+                    styleElem = document.head.appendChild(document.createElement("style")),
+                    g_width = $("#maingroup")[0].getBBox().width;
+
+                elem.css('display', 'block');
+                elem.css('left', g_width + 20 + 'px');
+                elem.css('top', d3.event.pageY-(elem.height()/2) + 'px');
+
+                // Color label box
+                elem.css('backgroundColor',d3.event.currentTarget.getAttribute('fill'));
+                styleElem.innerHTML = "#word-box:before {border-right-color:" + d3.event.currentTarget.getAttribute('fill') + ";}";
+
+                // Get count
+                var date_index = Math.round(xScale.invert(d3.mouse(this)[0])),
+                    topic_count = this.__data__[date_index]['data'][this.classList[0]];
+                
+                $('#word-label').html(this.classList[0] + "   year: " + dates[date_index].substr(0,4) + "   count: " + topic_count);
+
+                // const mousePosition = d3.mouse(e);
+                // const hoveredDate = xScale.invert(mousePosition[0]);
+                // console.log(mousePosition)
+                // console.log(hoveredDate)
+                // var bisectDate = d3.bisector(function(d) {return d.date;}).left,
+                //     x0 = xScale.invert(e.pageX)
+                //     i = bisectDate(dates,x0,1);
+
+                console.log('sdfdfs')  
+            };
+
+            clippedrect.transition().ease(d3.easeLinear).duration(totalduration).attr("width", innerWidth);
+        };
+        const seqgen = function(data){
+            // re-arrange the data sequentially
+            let prestack = [];
+            dates.forEach(datum => {
+                prestack.push({'date': datum});
+            });
+            data.forEach(datum => {
+                prestack[dates.indexOf(datum['date'])][datum['topic']] = yValue(datum);
+            });
+            return prestack
+        }
+
+        d3.csv('./data/year_counts_trim.csv').then(function(dataset){
+            dataset.forEach(datum => {
+                datum['count'] = +(datum['count']);
+            });
+
+            filtered_set = getFilteredSet(dataset);
+            limited_dataset = dataset.filter(d => filtered_set.map(d => d.key).includes(d.topic))
+            // remove duplicated items
+            alldates = Array.from(new Set(limited_dataset.map( datum => datum['date'])));
+
+            // make sure dates are listed according to real time order
+            alldates = alldates.sort(function(a,b){
+                return new Date(b.date) - new Date(a.date);
+            });
+            dates = alldates;
+
+            // set up bar chart
+            // setting_up_barchart(data);
+
+            // generate sequential data
+            let sequential = [];
+            alldates.forEach(datum => {
+                sequential.push([])
+            });
+            // place each datum into year-specific array
+            limited_dataset.forEach(datum => {
+                sequential[alldates.indexOf(datum['date'])].push(datum);
+            });
+
+            // smooth new infec
+            let t = 0
+            const originyValue = datum => datum['count'];
+            for(; t < sequential.length; t++){
+                sequential[t].forEach(datum => {
+                    if(t == 0){
+                        datum.newinfec_s = originyValue(datum);
+                    } else if(t == 1){
+                        datum.newinfec_s = (
+                            originyValue(datum) +
+                            originyValue(sequential[t-1].find(x => x['topic'] === datum['topic']))
+                        ) / 2.0;
+                    } else {
+                        datum.newinfec_s = (
+                            originyValue(datum) +
+                            originyValue(sequential[t-1].find(x => x['topic'] === datum['topic'])) +
+                            originyValue(sequential[t-2].find(x => x['topic'] === datum['topic']))
+                        ) / 3.0;
+                    }
+                });
+            }
+
+            // stack data
+            let prestack = seqgen(limited_dataset);
+            const sortedforkey = sequential[sequential.length-1].sort( (a,b) => b['count'] - a['count'] );
+            let keys = sortedforkey.map(d => d['topic']);
+            
+            // generate max for Y-scale
+            up_max = d3.max(sequential, seq => {
+                result = 0;
+                seq.forEach(s => {
+                    result += yValue(s)
+                })
+                return result;
+            });
+
+            renderinit(limited_dataset);
+
+            const area = d3.area()
+              .curve(d3.curveCardinal.tension(0.0001)) // default is d3.curveLinear, d3.curveBundle.beta(1.0)
+              .x(d => xScale(xValue(d.data)))
+              .y0(d => yScale(d[0]))
+              .y1(d => yScale(d[1]));
+
+            render(prestack, keys, area);
+        });
+    </script>
+  </body>
+</html>
