@@ -21,7 +21,6 @@
         const innerWidth = width - margin.left - margin.right;
         const innerHeight = height - margin.top - margin.bottom;
         const xValue = (datum) => {return dates.indexOf(datum['date']);};
-        // const yValue = (datum) => {return datum['count']};
         const yValue = (datum) => {return datum['adjusted_percent']};
         const yRaw = (datum) => {return datum['count']};
 
@@ -34,10 +33,6 @@
         let totalduration = 6000;
         let metapop;
         let rawdata;
-
-        // fetch('./data/papers_per_word_full.json')
-        //   .then(response => {return response.json()})
-        //   .then(dta => { consoe.log('hey'); })
 
         const xAxisLabel = 'Year'
         const yAxisLabel = 'Topic Frequency'
@@ -67,17 +62,9 @@
 
             // Introducing y-Scale
             yScale = d3.scaleLinear()
-              // .domain([up_max, 0])
               .domain([0,100])
-              // .range([0,innerHeight])
               .range([innerHeight, 0])
-              // .range([height-margin.bottom-50,margin.top+30])
               .nice();
-
-            // yBandScale = d3.scaleBand()
-            //   .domain(barKeys_reverse)
-            //   .range([innerHeight - innerHeight/8, innerHeight]) // Divided by 8 because there are 8 numbers on the vertical scale (including 0)
-            //   .padding(0.01);
 
             // generate maxX and maxY
             maxX = xScale(d3.max(data,xValue));
@@ -90,18 +77,10 @@
             // Adding axes
             var formatter = d3.format("0")
             const yAxis = d3.axisLeft(yScale)
-              // .tickSize(-innerWidth)
               .tickSize(0)
-              // .tickFormat(function (d) {
-              //     if (d===0) return 0; // No labels for '0' allegedly? The y axis is the frequency count and it is labeled even when the value is not reached.
-              //     else if (d<0) d = -d
-              //     return formatter(d);
-              // })
               .tickFormat("")
               .tickPadding(10);
             const xAxis = d3.axisBottom(xScale)
-              // .tickSize(-innerHeight)
-              // .tickSize(-innerHeight)
               .tickPadding(10)
               .ticks(13);
 
@@ -124,14 +103,6 @@
               .attr('fill', 'black')
               .text(xAxisLabel)
             xAxisGroup.selectAll('.domain').remove();
-
-            // svg.append("text")
-            //     .attr("x", innerWidth/2)
-            //     .attr("y", 0-(margin.top/2))
-            //     .attr("text-anchor", "middle")
-            //     .style("font-size", "16px")
-            //     .style("text-decoration", "underline")
-            //     .text("Midas River!")
 
             myticks = ['2010', '2011', '2012', '2013', '2014', '2015',
                 '2016', '2017', '2018', '2019', '2020', '2021', '2022']
@@ -202,13 +173,6 @@
                 
                 $('#word-label').html(this.classList[0] + "<br>year: " + dates[date_index].substr(0,4) + "<br>count: " + topic_count);
 
-                // const mousePosition = d3.mouse(e);
-                // const hoveredDate = xScale.invert(mousePosition[0]);
-                // console.log(mousePosition)
-                // console.log(hoveredDate)
-                // var bisectDate = d3.bisector(function(d) {return d.date;}).left,
-                //     x0 = xScale.invert(e.pageX)
-                //     i = bisectDate(dates,x0,1);
                 fetch('./data/papers_per_word_full.json')
                   .then(response => {return response.json()})
                   .then(papers => { 
@@ -222,17 +186,7 @@
 
             clippedrect.transition().ease(d3.easeLinear).duration(totalduration).attr("width", innerWidth);
         };
-        // const seqgen = function(data){
-        //     // re-arrange the data sequentially
-        //     let prestack = [];
-        //     dates.forEach(datum => {
-        //         prestack.push({'date': datum});
-        //     });
-        //     data.forEach(datum => {
-        //         prestack[dates.indexOf(datum['date'])][datum['topic']] = yValue(datum);
-        //     });
-        //     return prestack
-        // }
+        
         const seqgen = function(data){
             // re-arrange the data sequentially
             let prestack = [];
@@ -245,7 +199,6 @@
             return prestack
         }
 
-        // d3.csv('./data/year_counts_trim.csv').then(function(dataset){
         d3.csv('./data/year_counts_full.csv').then(function(dataset){
             dataset.forEach(datum => {
                 datum['count'] = +(datum['count']);
@@ -282,7 +235,6 @@
             dates = alldates;
 
             // set up bar chart
-            // setting_up_barchart(data);
 
             // generate sequential data
             let sequential = [];
@@ -294,27 +246,6 @@
                 sequential[alldates.indexOf(datum['date'])].push(datum);
             });
 
-            // smooth new infec
-            // let t = 0
-            // const originyValue = datum => datum['count'];
-            // for(; t < sequential.length; t++){
-            //     sequential[t].forEach(datum => {
-            //         if(t == 0){
-            //             datum.newinfec_s = originyValue(datum);
-            //         } else if(t == 1){
-            //             datum.newinfec_s = (
-            //                 originyValue(datum) +
-            //                 originyValue(sequential[t-1].find(x => x['topic'] === datum['topic']))
-            //             ) / 2.0;
-            //         } else {
-            //             datum.newinfec_s = (
-            //                 originyValue(datum) +
-            //                 originyValue(sequential[t-1].find(x => x['topic'] === datum['topic'])) +
-            //                 originyValue(sequential[t-2].find(x => x['topic'] === datum['topic']))
-            //             ) / 3.0;
-            //         }
-            //     });
-            // }
 
             // generate max for Y-scale
             up_max = d3.max(sequential, seq => {
@@ -334,13 +265,9 @@
 
             // stack data
             let prestack = seqgen(limited_dataset);
-            // const sortedforkey = sequential[sequential.length-1].sort( (a,b) => b['count'] - a['count'] );
-            // let keys = sortedforkey.map(d => d['topic']);
             let keys = sorting_set;
-            // console.log(keys)
             console.log(prestack)
 
-            // renderinit(limited_dataset);
             renderinit(limited_dataset);
 
             const area = d3.area()
@@ -351,14 +278,7 @@
               .y0(d => ((yScale(d[0])-(innerHeight/2))+110)*.85)
               .y1(d => ((yScale(d[1])-(innerHeight/2))+110)*.85);
             
-            // const area = d3.area()
-            //   .curve(d3.curveCardinal.tension(0.0001)) // default is d3.curveLinear, d3.curveBundle.beta(1.0)
-            //   .x(d => xScale(xValue(d.data)))
-            //   .y0(d => yScale(50))
-            //   .y1(d => yScale(d['adjusted_percent']));
-
             render(prestack, keys, area);
-            // render(sequential, keys, area);
         });
     </script>
   </body>
