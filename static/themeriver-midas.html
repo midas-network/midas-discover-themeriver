@@ -35,6 +35,10 @@
         let metapop;
         let rawdata;
 
+        // fetch('./data/papers_per_word_full.json')
+        //   .then(response => {return response.json()})
+        //   .then(dta => { consoe.log('hey'); })
+
         const xAxisLabel = 'Year'
         const yAxisLabel = 'Topic Frequency'
 
@@ -205,6 +209,15 @@
                 // var bisectDate = d3.bisector(function(d) {return d.date;}).left,
                 //     x0 = xScale.invert(e.pageX)
                 //     i = bisectDate(dates,x0,1);
+                fetch('./data/papers_per_word_full.json')
+                  .then(response => {return response.json()})
+                  .then(papers => { 
+                    console.log('year: ' + dates[date_index].substr(0,4)); 
+                    console.log('word: ' + this.classList[0]);
+                    for (article of papers[dates[date_index].substr(0,4)][this.classList[0]]){
+                      console.log(article['title']) }
+                  })
+
             };
 
             clippedrect.transition().ease(d3.easeLinear).duration(totalduration).attr("width", innerWidth);
