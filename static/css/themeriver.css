@@ -39,6 +39,14 @@ text{
     stroke: #333333
 }
 
+.container{
+    max-width: unset !important;
+}
+
+#info-panel{
+    /* position: absolute; */
+}
+
 #word-box{
     position: absolute;
     background-color: #eaa3c4;
