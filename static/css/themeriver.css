@@ -1,4 +1,4 @@
-text{
+text {
     font-size: 2em;
 }
 
@@ -6,11 +6,11 @@ text{
     font-size: 1em;
 }
 
-.legend_text{
+.legend_text {
     font-size: 1em;
 }
 
-.path_text{
+.path_text {
     font-size: 0.5em;
 }
 
@@ -19,7 +19,7 @@ text{
     font-size: 7em;
 }
 
-.tick text{
+.tick text {
     font-size: 1.6em;
     fill: #333333;
 }
@@ -29,25 +29,25 @@ text{
     stroke: #cccccc;
 }
 
-#population{
+#population {
     font-size: 3em;
     stroke: #333333
 }
 
-#horsepower{
+#horsepower {
     font-size: 3em;
     stroke: #333333
 }
 
-.container{
+.container {
     max-width: unset !important;
 }
 
-#info-panel{
+#info-panel {
     /* position: absolute; */
 }
 
-#word-box{
+#word-box {
     position: absolute;
     background-color: #eaa3c4;
     -webkit-border-radius: 10px;
@@ -65,7 +65,7 @@ text{
     text-align: center;
 }
 
-#word-box:before{
+#word-box:before {
     content: "";
     position: absolute;
     top: 45px;
@@ -76,7 +76,7 @@ text{
     border-right-color: #414b41;
 }
 
-#word-box:after{
+#word-box:after {
     border-right-color: #eaa3c4;
     border-width: 15px;
     margin-top: -15px;
@@ -123,4 +123,33 @@ text{
     top: 2%;
     left: 50%;
     font-size: 20px;
+}
+
+#header-row {
+    height: 5vh;
+}
+
+#chart-row {
+    height: 95vh;
+}
+
+#instructions {
+    height: 10vh;
+    margin-bottom: 25px;
+
+}
+
+#paper-list {
+    height: 10vh;
+    margin-bottom: 25px;
+
+}
+
+#topics-list {
+    height: 60vh;
+
+}
+
+.side-panel {
+    border: 5px solid #1C6EA4;
 }
