@@ -10,7 +10,6 @@ const getFilteredSet = (dataset) => {
                .entries(dataset)
                .sort((a,b) => {return d3.descending(a.value, b.value)})
 
-    console.log(rollup)
     // return rollup.filter((d, i) => {return i < 20})
     return rollup
 }

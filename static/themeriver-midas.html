@@ -45,12 +45,7 @@
         const svg = d3.select('#mainsvg');
         const width = +svg.attr('width');
         const height = +svg.attr('height');
-        // const width = svg._groups[0][0].getBBox().width;
-        // const height = svg._groups[0][0].getBBox().height;
         const margin = {top: 50, right: 20, bottom: 120, left: 120}
-        // const margin = {top:50, right:320, bottom: 120, left: 120}
-        //const innerWidth = width - margin.left - margin.right - 300;
-        //const innerHeight = height - margin.top - margin.bottom;
         const innerHeight = $("#wrapper")[0].offsetHeight;
         const innerWidth = $("#wrapper")[0].offsetWidth;
         const xValue = (datum) => {
@@ -83,11 +78,8 @@
             return datum.name
         };
         const barKeys = []
-        // const barKeys_reverse = ['count']
         const barKeys_reverse = ['adjusted_percent']
         let yBandScale, xBarScale;
-
-        // var topics = ['2019ncov', 'acut', 'adult', 'advanc', 'africa', 'antibodi', 'base', 'behavior', 'bia', 'bind', 'care', 'cell', 'character', 'chikungunya', 'cholera bangladesh sustain', 'classifi', 'commun', 'compar', 'complex', 'congoschool closur 2009', 'congoschool closur 2009 influenza', 'control', 'corona', 'cost', 'countri', 'countri fight', 'countri fight poverti', 'countri fight poverti bring', 'covid19', 'decreas', 'democrat', 'democrat republ', 'democrat republ congoschool', 'democrat republ congoschool closur', 'dengu', 'design', 'design bia set', 'dynam', 'effect', 'function', 'gorilla', 'gorilla gorilla', 'gorilla gorilla gorilla', 'h1n1', 'h3n2', 'hiv', 'hiv1', 'host', 'hylob', 'impact', 'implic', 'influenza', 'inform', 'initi', 'key', 'live', 'local', 'make', 'market', 'medic', 'network', 'opioid opportun', 'opioid opportun challengesth impact', 'opportun', 'opportun challengesth', 'opportun challengesth impact', 'opportun challengesth impact imit', 'oral', 'oral cholera', 'oral cholera bangladesh', 'oral cholera bangladesh sustain', 'parasit', 'parasit local', 'parasit local adaptationassoci', 'parasit local adaptationassoci airborn', 'pathogen', 'pre', 'pre prophylaxi', 'prophylaxi', 'rate', 'reduc', 'risk', 'sarscov2', 'sarscov2 variant', 'scientif', 'scientif tool', 'scientif tool developingcountri', 'scientif tool developingcountri partnerspotenti', 'social', 'south', 'speci', 'structur', 'tool', 'treatment', 'use', 'variant', 'viral', 'worker']
 
         const bar_color = function (idx) {
             let randomColor = Math.floor(Math.random(idx) * 16777215).toString(16);
@@ -120,8 +112,6 @@
                 maxX = xScale(d3.max(data, xValue));
                 maxY = yScale(d3.max(data, yValue));
 
-                console.log(graphWidth)
-                console.log(graphHeight)
                 const g = svg.append('g')
                     .attr('transform', `translate(0,0)`)
                     //.attr('transform', `translate(${graphWidth * .3}, ${graphHeight * .1})`)
@@ -166,7 +156,6 @@
             const render = function (dataset, keys, area) {
                 let g = d3.select('#maingroup');
 
-                console.log(dataset)
                 let layers = d3.stack()
                     .keys(keys)
                     .offset(d3.stackOffsetWiggle)
@@ -230,11 +219,9 @@
                     // Get count
                     var date_index = Math.round(xScale.invert(d3.mouse(this)[0])),
                         topic_count = this.__data__[date_index]['data'][this.classList[0]];
-                    //  $("#topics-list").text(JSON.stringify(this.__data__[date_index]['data']))
                     for (i = 0; i < limited_dataset.length; i++) {
                         if (limited_dataset[i]['date'] == dates[date_index] && limited_dataset[i]['topic'] == this.classList['value']) {
                             topic_count = limited_dataset[i]['count'];
-                            // console.log(limited_dataset[i]['topic'])
                         }
                     }
 
@@ -244,7 +231,6 @@
                 };
 
                 function onMouseClick(e) {
-                    console.log('sgdsdf')
                     const topic_elem = $('#current-topic')
                     const paper_elem = $('#paper-list')
                     let date_index = Math.round(xScale.invert(d3.mouse(this)[0]));
@@ -263,7 +249,6 @@
                             topic_elem[0].innerHTML = "<b>Current Topic:</b><br>" + this.classList['value'] + "<br><b>Current Year:</b><br>" + dates[date_index].substr(0, 4)
                             paper_elem[0].innerHTML = paper_list;
                             paper_elem[0].scrollTop = 0;
-                            // console.log(paper_list)
                         })
 
                 }
@@ -342,24 +327,18 @@
                 up_max = d3.max(sequential, seq => {
                     result = 0;
                     seq.forEach(s => {
-                        // result += yValue(s)
                         result += yRaw(s)
                     })
                     return result;
                 });
-                console.log(up_max)
-                // up_max = 100;
 
                 // put arrays in correct display order and get adjusted counts
                 sequential = rebalanceSet(sequential, sorting_set, up_max);
-                console.log(sequential)
 
-                //
 
                 // stack data
                 let prestack = seqgen(limited_dataset);
                 let keys = sorting_set;
-                console.log(prestack)
 
                 renderinit(limited_dataset);
 
@@ -375,14 +354,11 @@
                 const area = d3.area()
                     .curve(d3.curveCardinal.tension(0.0001)) // default is d3.curveLinear, d3.curveBundle.beta(1.0)
                     .x(d => xScale(xValue(d.data)))
-                    // .y0(d => ((yScale(d[0])-(innerHeight/2))+82)*.85)
-                    // .y1(d => ((yScale(d[1])-(innerHeight/2))+82)*.85);
                     .y0(d => getYScale(d[0]))
                     .y1(d => getYScale(d[1]))
 
                 render(prestack, keys, area);
             });
-            console.log("ready!");
         });
     </script>
 </body>
