@@ -23,10 +23,7 @@
     <div id="info-row" class="row">
         <div class="col-md-1"></div>
         <div class="col-md-2">
-            <div id="instructions" class="side-panel">Click to display list of papers for year and topic.</div>
-        </div>
-        <div class="col-md-2">
-            <div id="current-topic" class="side-panel"></div>
+            <div id="current-topic" class="side-panel">Click the graph to display list of papers for year and topic.</div>
         </div>
         <div class="col-md-6">
             <div id="paper-list" class="side-panel"></div>
@@ -157,11 +154,11 @@
                 let xAxisGroup = g.append('g').call(xAxis).attr('transform', `translate(0, ${$("svg")[0].getBoundingClientRect().height - heightOfXAxis})`).attr('id', 'xaxis');
                 // let xAxisGroup = g.append('g').call(xAxis).attr('transform', `translate(0,0)`).attr('id', 'xaxis');
                 //  d3.selectAll('#xaxis .tick text').attr('transform', `translate(${0}, ${5})`);
-                xAxisGroup.append('text')
-                    .attr('y', 60)
-                    .attr('x', $("svg")[0].getBoundingClientRect().width / 2)
-                    .attr('fill', 'black')
-                    .text(xAxisLabel)
+                // xAxisGroup.append('text')
+                //     .attr('y', 60)
+                //     .attr('x', $("svg")[0].getBoundingClientRect().width / 2)
+                //     .attr('fill', 'black')
+                //     .text(xAxisLabel)
                 // xAxisGroup.selectAll('.domain').remove();
 
             };
@@ -265,6 +262,7 @@
 
                             topic_elem[0].innerHTML = "<b>Current Topic:</b><br>" + this.classList['value'] + "<br><b>Current Year:</b><br>" + dates[date_index].substr(0, 4)
                             paper_elem[0].innerHTML = paper_list;
+                            paper_elem[0].scrollTop = 0;
                             // console.log(paper_list)
                         })
 
