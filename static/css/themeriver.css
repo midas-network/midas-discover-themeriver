@@ -1,3 +1,121 @@
+.control {
+    font-family: arial;
+    display: block;
+    position: relative;
+    padding-left: 30px;
+    margin-bottom: 5px;
+    padding-top: 3px;
+    cursor: pointer;
+    font-size: 16px;
+}
+    .control input {
+        position: absolute;
+        z-index: -1;
+        opacity: 0;
+    }
+.control_indicator {
+    position: absolute;
+    top: 2px;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background: #e6e6e6;
+    border: 0px solid #000000;
+    border-radius: undefinedpx;
+}
+.control:hover input ~ .control_indicator,
+.control input:focus ~ .control_indicator {
+    background: #cccccc;
+}
+
+.control input:checked ~ .control_indicator {
+    background: #2aa1c0;
+}
+.control:hover input:not([disabled]):checked ~ .control_indicator,
+.control input:checked:focus ~ .control_indicator {
+    background: #0e6647d;
+}
+.control input:disabled ~ .control_indicator {
+    background: #e6e6e6;
+    opacity: 0.6;
+    pointer-events: none;
+}
+.control_indicator:after {
+    box-sizing: unset;
+    content: '';
+    position: absolute;
+    display: none;
+}
+.control input:checked ~ .control_indicator:after {
+    display: block;
+}
+.control-radio .control_indicator {
+    border-radius: 50%;
+}
+
+.control-radio .control_indicator:after {
+    left: 7px;
+    top: 7px;
+    height: 6px;
+    width: 6px;
+    border-radius: 50%;
+    background: #ffffff;
+    transition: background 250ms;
+}
+.control-radio input:disabled ~ .control_indicator:after {
+    background: #7b7b7b;
+}.control-radio .control_indicator::before {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 4.5rem;
+    height: 4.5rem;
+    margin-left: -1.3rem;
+    margin-top: -1.3rem;
+    background: #2aa1c0;
+    border-radius: 3rem;
+    opacity: 0.6;
+    z-index: 99999;
+    transform: scale(0);
+}
+@keyframes s-ripple {
+    0% {
+        opacity: 0;
+        transform: scale(0);
+    }
+    20% {
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0.01;
+        transform: scale(1);
+    }
+}
+@keyframes s-ripple-dup {
+   0% {
+       transform: scale(0);
+    }
+   30% {
+        transform: scale(1);
+    }
+    60% {
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1);
+    }
+}
+.control-radio input + .control_indicator::before {
+    animation: s-ripple 250ms ease-out;
+}
+.control-radio input:checked + .control_indicator::before {
+    animation-name: s-ripple-dup;
+}
+
+
 text {
     font-size: 2em;
 }
@@ -48,7 +166,7 @@ text {
 }
 
 #wrapper {
-    height: 70vh;
+    height: 60vh;
 
     padding: 0px 0px 0px 0px !important;
 }
@@ -123,27 +241,44 @@ text {
     font-size: 20px;
 }
 
+
+#subtitle {
+
+  text-align: center;
+    font-size: 14px;
+}
+
+
 #header-row {
-    height: 5vh;
+    height: 7vh;
 }
 
 #chart-row {
-    height: 65vh;
+    height: 60vh;
 }
 #info-row {
-    height: 30vh;
+        background-color: #4f5287;
+    height: 33vh;
+        display: flex;
+    align-items: center;
 }
 
-#instructions {
-    height: 10vh;
-    margin-bottom: 25px;
 
-}
 
 #paper-list {
   overflow: auto;
     height: 28vh;
     margin-bottom: 25px;
+    background-color: #fefefed4;
+    font-size:14px;
+
+
+}
+#paper-list ul {
+        list-style-type: auto;
+}
+#paper-list li::marker{
+    font-size:11px;
 
 }
 
@@ -156,4 +291,36 @@ text {
     border: 2px solid #1C6EA4;
     border-radius: 5px;
     padding: 5px 5px 5px 5px;
+}
+
+#topic-line {
+    display: none;
+}
+
+#instruction-line, #topic-line, #current-topic-count, #pubmed-rb-line {
+    color: white;
+
+}
+
+.options-header {
+    color:white;
+}
+
+#current-topic-count, #current-topic, #current-year {
+      font-weight: bold;
+}
+
+.control {
+    color:white;
+}
+
+
+#options {
+
+
+    margin-top: auto;
+    margin-bottom: auto;
+    padding: 5px 5px 5px 5px;
+    border: 2px solid white ;
+    border-radius: 10px;
 }
