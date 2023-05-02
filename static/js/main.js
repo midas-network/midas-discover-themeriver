@@ -343,7 +343,7 @@ $(document).ready(function () {
         // console.log("papersJsonFilename", papersJsonFilename)
 
         //NAOMI, uncomment the next line once you have the csv and json files created --- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        //drawRiver(csvFilename, jsonFilename);
+        //drawRiver(countsCsvFilename, papersJsonFilename);
 
 
         //NAMOI, delete the next 3 lines of code once you have the csv and json files created --- !!!!!!!!!!!!!!!!!!!!!!
