@@ -1,24 +1,27 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>MidasRiver</title>
+    <title>Midas River</title>
     <link rel="stylesheet" href="./css/themeriver.css">
+    <link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
     <script src="./js/d3.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <script src="./js/jquery.min.js"></script>
     <script src="./js/riverStats.js"></script>
+    <script src="./js/colors.js"></script>
+
 </head>
 <body>
 <div class="container">
     <div id="header-row" class="row">
-        <div id="title">Top 20 Most Frequently Occurring MeSH Terms in Infections Disease Modeling Papers Written by
+        <div id="title">Top 20 Most Frequently Occurring <span id="pubmed-datasource-in-title"></span> <i><span
+                id="ngram-size-in-title"></span></i> in Infections Disease Modeling Papers Written by
             MIDAS Members
         </div>
         <div id="subtitle">By Year, 2010-2022</div>
     </div>
     <div id="chart-row" class="row">
         <div id="wrapper" class="col-md-12">
-            <svg id="mainsvg" class="svgs" style="background-color: #ffffff;" width="100%" height="100%"></svg>
+            <svg id="main-svg" class="svgs" style="background-color: #ffffff;" width="100%" height="100%"></svg>
         </div>
     </div>
     <div id="info-row" class="row">
@@ -26,43 +29,38 @@
             <div id="options">
                 <div class="options-header" id="ngram-line">N-gram Size:</div>
                 <div class="control-group-ngram">
-                     <label class="control control-radio">
-                        All (Hierarchical)
 
-                        <input type="radio" name="ngram-radio" checked="checked"/>
-                        <div class="control_indicator"></div>
-                    </label>
                     <label class="control control-radio">
                         1
-                        <input type="radio" name="ngram-radio" checked="checked"/>
+                        <input type="radio" name="ngram-radio" value="1" checked="checked"/>
                         <div class="control_indicator"></div>
                     </label>
                     <label class="control control-radio">
                         2
-                        <input type="radio" name="ngram-radio"/>
+                        <input type="radio" name="ngram-radio" value="2"/>
                         <div class="control_indicator"></div>
                     </label>
                     <label class="control control-radio">
                         3
-                        <input type="radio" name="ngram-radio"/>
+                        <input type="radio" name="ngram-radio" value="3"/>
                         <div class="control_indicator"></div>
                     </label>
                 </div>
                 <div class="options-header" id="pubmed-rb-line">PubMed Field for Topics:</div>
-                <div class="control-group">
+                <div class="control-group-pubmed-source">
                     <label class="control control-radio">
                         MeSH Terms
-                        <input type="radio" name="pubmed-source-radio" checked="checked"/>
+                        <input type="radio" name="pubmed-source-radio" value="meshTerms" checked="checked"/>
                         <div class="control_indicator"></div>
                     </label>
                     <label class="control control-radio">
                         Keywords
-                        <input type="radio" name="pubmed-source-radio"/>
+                        <input type="radio" name="pubmed-source-radio" value="pubmedKeywords"/>
                         <div class="control_indicator"></div>
                     </label>
                     <label class="control control-radio">
                         Abstracts
-                        <input type="radio" name="pubmed-source-radio"/>
+                        <input type="radio" name="pubmed-source-radio" value="paperAbstract"/>
                         <div class="control_indicator"></div>
                     </label>
 
@@ -83,376 +81,6 @@
         <div id="freq-count"></div>
     </div>
 </div>
-<script>
-    const counts_file = './data/year_counts_full.csv';
-    // const counts_file = './data/fake.csv';
-    // get main SVG and its attributes and setting hyper-parameters
-    const svg = d3.select('#mainsvg');
-    const width = +svg.attr('width');
-    const height = +svg.attr('height');
-    const margin = {top: 50, right: 20, bottom: 120, left: 120}
-    const innerHeight = $("#wrapper")[0].offsetHeight;
-    const innerWidth = $("#wrapper")[0].offsetWidth;
-    const xValue = (datum) => {
-        return dates.indexOf(datum['date']);
-    };
-    const yValue = (datum) => {
-        return datum['adjusted_percent']
-    };
-    const yRaw = (datum) => {
-        return datum['count']
-    };
-
-    let up_max = 5000;
-    let limit_up_max = -1;
-    let xSale, yScale;
-    let maxX, maxY;
-    let dates;
-    let aduration = 1000;
-    let totalduration = 0;
-    let metapop;
-    let rawdata;
-
-    const xAxisLabel = 'Year'
-    const yAxisLabel = 'Topic Frequency'
-
-    const xBarValue = (datum) => {
-        return datum.value
-    };
-    const yBarValue = (datum) => {
-        return datum.name
-    };
-    const barKeys = []
-    const barKeys_reverse = ['adjusted_percent']
-    let yBandScale, xBarScale;
-
-    const bar_color = function (idx) {
-        // const colors = ['#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#911eb4', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe', '#008080', '#e6beff', '#9a6324', '#fffac8', '#800000', '#aaffc3', '#808000', '#ffd8b1', '#000075', '#808080', '#ffffff', '#000000']
-        let randomColor = Math.floor(Math.random(idx) * 16777215).toString(16);
-        if (randomColor.length < 6) {
-            randomColor += '0'
-        }
-        return "#" + randomColor;
-        //console.log(idx)
-        // return colors[idx]
-    }
-
-
-    $(document).ready(function () {
-            const rgb = [255, 0, 0];
-
-// Randomly change to showcase updates
-
-                function updateOptions(ngram_count, fieldset){
-                    // open file based on field + ngram count
-                    // filename format: {field}-ngram_{ngram number}-counts.csv
-                    // filename format: {field}-ngram_{ngram number}-papers.json
-                    // field options: "pubmedKeywords", "meshTerms", "paperAbstract"
-                    // ngram options: 1, 2, (3)
-
-                }
-
-            function setContrast() {
-                // Randomly update colours
-                rgb[0] = Math.round(Math.random() * 255);
-                rgb[1] = Math.round(Math.random() * 255);
-                rgb[2] = Math.round(Math.random() * 255);
-
-                // http://www.w3.org/TR/AERT#color-contrast
-                const brightness = Math.round(((parseInt(rgb[0]) * 299) +
-                    (parseInt(rgb[1]) * 587) +
-                    (parseInt(rgb[2]) * 114)) / 1000);
-                const textColour = (brightness > 125) ? 'black' : 'white';
-                const backgroundColour = 'rgb(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ')';
-                $('#word-label').css('color', textColour);
-                $('#word-box').css('background-color', backgroundColour);
-            }
-
-            const renderinit = function (data, seq) {
-
-                const graphHeight = $("#wrapper")[0].offsetHeight;
-                const graphWidth = $("#wrapper")[0].offsetWidth;
-                const heightOfXAxis = 75;
-
-                // Linear Scale: Data Space -> Screen Space
-                xScale = d3.scaleLinear()
-                    .domain([0, dates.length - 1])
-                    .range([$("svg")[0].getBoundingClientRect().x + 50, $("svg")[0].getBoundingClientRect().width - 50]);
-
-                // Introducing y-Scale
-                yScale = d3.scaleLinear()
-                    .domain([0, 100])
-                    .range([$("svg")[0].getBoundingClientRect().height, 0])
-                    .nice();
-
-                // generate maxX and maxY
-                maxX = xScale(d3.max(data, xValue));
-                maxY = yScale(d3.max(data, yValue));
-
-                const g = svg.append('g')
-                    .attr('transform', `translate(0,0)`)
-                    //.attr('transform', `translate(${graphWidth * .3}, ${graphHeight * .1})`)
-                    .attr('id', 'maingroup')
-
-
-                // Adding axes
-                var formatter = d3.format("0")
-                const yAxis = d3.axisLeft(yScale)
-                    .tickSize(0)
-                    .tickFormat("")
-                    .tickPadding(10);
-
-
-                const xAxis = d3.axisBottom(xScale)
-                    .tickFormat((d, i) => dates[i].substring(0, 4))
-
-
-                let yAxisGroup = g.append('g').call(yAxis).attr('id', 'yaxis')
-                // d3.selectAll('#yaxis .tick text').attr('transform', `translate(${0}, ${-3})`); // transform shifts the labels on y axis toward the left
-                yAxisGroup.append('text')
-                    .attr('transform', 'rotate(-90)')
-                    .attr('x', -graphHeight / 2)
-                    .attr('y', -80)
-                    .attr('fill', 'black')
-                    .text(yAxisLabel)
-                    .attr('text-anchor', 'middle'); // Make label at the middle of the axis (seemingly in conjunction with the x attribute)
-                yAxisGroup.selectAll('.domain').remove(); // [Not sure what this is doing] We can select multiple tags using comma to seperate them and we can use space to signify nesting
-
-                let xAxisGroup = g.append('g').call(xAxis).attr('transform', `translate(0, ${$("svg")[0].getBoundingClientRect().height - heightOfXAxis})`).attr('id', 'xaxis');
-                // let xAxisGroup = g.append('g').call(xAxis).attr('transform', `translate(0,0)`).attr('id', 'xaxis');
-                //  d3.selectAll('#xaxis .tick text').attr('transform', `translate(${0}, ${5})`);
-                // xAxisGroup.append('text')
-                //     .attr('y', 60)
-                //     .attr('x', $("svg")[0].getBoundingClientRect().width / 2)
-                //     .attr('fill', 'black')
-                //     .text(xAxisLabel)
-                // xAxisGroup.selectAll('.domain').remove();
-
-            };
-
-            const render = function (dataset, keys, area) {
-                let g = d3.select('#maingroup');
-
-                let layers = d3.stack()
-                    .keys(keys)
-                    .offset(d3.stackOffsetWiggle)
-                    .order(d3.stackOrderAscending)
-                    (dataset);
-
-                const clippedrect = g.append("clipPath")
-                    .attr('id', 'rectClip')
-                    .append('rect')
-                    .attr('class', 'rect-clip')
-                    .attr('width', 0)
-                    .attr('height', $("svg")[0].getBoundingClientRect().height)
-                // .attr('height', height)
-
-                g.selectAll('path')
-                    .data(layers)
-                    .join('path')
-                    .attr('opacity', 0.9)
-                    .attr('d', function (d, i) {
-                        return area(d);
-                    })
-                    .attr('clip-path', 'url(#rectClip)')
-                    .attr('fill', function (d, i) {
-                        return bar_color(i);
-                    })
-                    .attr('class', function (d, i) {
-                        return d['key']
-                    })
-                    .on("mousemove", onMouseMove)
-                    .on("click", onMouseClick);
-
-                // Show label on hover
-                function onMouseMove(e) {
-                    const elem = $('#word-box'),
-                        styleElem = document.head.appendChild(document.createElement("style")),
-                        g_width = $("#maingroup")[0].getBBox().width;
-
-                    elem.css('display', 'block');
-                    // elem.css('left', g_width + 20 + 'px');
-                    if (d3.event.pageX + 10 + 80 > width) {
-                        elem.css('left', (width - 45) + 'px')
-                    } else {
-                        elem.css('left', d3.event.pageX + 20 + 'px');
-                    }
-                    elem.css('top', d3.event.pageY - (elem.height() / 2) + 'px');
-
-                    // Color label box
-                    elem.css('backgroundColor', d3.event.currentTarget.getAttribute('fill'));
-                    const arrowSide = "right"
-                    const nonArrowSide = "left"
-                    const cssClass = "box_with_arrow_on_" + arrowSide;
-                    elem.removeClass("box_with_arrow_on_" + nonArrowSide)
-                    elem.addClass(cssClass)
-                    const fill = d3.event.currentTarget.getAttribute('fill')
-
-                    document.styleSheets[0].addRule('.box_with_arrow_on_right:after', 'border-left-color: ' + fill + ';');
-
-
-                    //  styleElem.innerHTML = "." + cssClass+ ":after {border-"+nonArrowSide+"-color: " + fill + " :before {border-"+nonArrowSide+"-color: " + fill + "}";
-
-                    // Get count
-                    var date_index = Math.round(xScale.invert(d3.mouse(this)[0])),
-                        topic_count = this.__data__[date_index]['data'][this.classList[0]];
-                    for (i = 0; i < limited_dataset.length; i++) {
-                        if (limited_dataset[i]['date'] == dates[date_index] && limited_dataset[i]['topic'] == this.classList['value']) {
-                            topic_count = limited_dataset[i]['count'];
-                        }
-                    }
-
-
-                    $('#word-label').html(this.classList['value'] + "<br>year: " + dates[date_index].substr(0, 4) + "<br>count: " + topic_count);
-
-                };
-
-                function onMouseClick(e) {
-
-
-                    const topic_elem = $('#current-topic')
-                    const topic_count_elem = $('#current-topic-count')
-                    const year_elem = $('#current-year')
-                    const paper_elem = $('#paper-list')
-                    let date_index = Math.round(xScale.invert(d3.mouse(this)[0]));
-                    let topic_count = this.__data__[date_index]['data'][this.classList[0]];
-
-                    fetch('./data/papers_per_word_full.json')
-                        .then(response => {
-                            return response.json()
-                        })
-                        .then(papers => {
-                                let paper_list = "<ul>"
-                                for (article of papers[dates[date_index].substr(0, 4)][this.classList['value']]) {
-                                    paper_list += "<li><a href='" + article['uri'] + "' target='_blank'>" + article['title'] + "</a></li>"
-                                }
-                                for (i = 0; i < limited_dataset.length; i++) {
-                                    if (limited_dataset[i]['date'] == dates[date_index] && limited_dataset[i]['topic'] == this.classList['value']) {
-                                        topic_count = limited_dataset[i]['count'];
-                                    }
-                                }
-                                paper_list += "</ul>"
-                                year_elem.text(dates[date_index].substr(0, 4))
-                                topic_count_elem.text(topic_count)
-                                topic_elem[0].innerHTML = this.classList['value']
-                                paper_elem[0].innerHTML = paper_list;
-                                paper_elem[0].scrollTop = 0;
-                                $("#instruction-line").hide()
-                                $("#topic-line").show()
-                            }
-                        )
-
-                }
-
-                clippedrect.transition().ease(d3.easeLinear).duration(totalduration).attr("width", $("svg")[0].getBoundingClientRect().width);
-            };
-
-            const seqgen = function (data) {
-                // re-arrange the data sequentially
-                let prestack = [];
-                dates.forEach(datum => {
-                    prestack.push({'date': datum});
-                });
-                data.forEach(datum => {
-                    prestack[dates.indexOf(datum['date'])][datum['topic']] = yValue(datum);
-                });
-                return prestack
-            }
-
-
-            d3.csv(counts_file).then(function (dataset) {
-                dataset.forEach(datum => {
-                    datum['count'] = +(datum['count']);
-                });
-
-                filtered_set = getFilteredSet(dataset);
-
-                let odds = [],
-                    evens = []
-                sorting_set = [];
-
-                for (const x of Array(filtered_set.length).keys()) {
-                    if (x == 0) {
-                        continue
-                    } else if (x % 2 === 1) {
-                        odds.push(x)
-                    } else {
-                        evens.push(x)
-                    }
-                }
-                ;
-
-                evens.reverse().forEach((index) => {
-                    sorting_set.push(filtered_set[index]['key'])
-                })
-                sorting_set.push(filtered_set[0]['key'])
-                odds.forEach((index) => {
-                    sorting_set.push(filtered_set[index]['key'])
-                })
-
-                limited_dataset = dataset.filter(d => filtered_set.map(d => d.key).includes(d.topic))
-
-                // remove duplicated items
-                alldates = Array.from(new Set(limited_dataset.map(datum => datum['date'])));
-
-                // make sure dates are listed according to real time order
-                alldates = alldates.sort(function (a, b) {
-                    return new Date(b.date) - new Date(a.date);
-                });
-                dates = alldates;
-
-                // set up bar chart
-
-                // generate sequential data
-                let sequential = [];
-                alldates.forEach(datum => {
-                    sequential.push([])
-                });
-                // place each datum into year-specific array
-                limited_dataset.forEach(datum => {
-                    sequential[alldates.indexOf(datum['date'])].push(datum);
-                });
-
-
-                // generate max for Y-scale
-                up_max = d3.max(sequential, seq => {
-                    result = 0;
-                    seq.forEach(s => {
-                        result += yRaw(s)
-                    })
-                    return result;
-                });
-
-                // put arrays in correct display order and get adjusted counts
-                sequential = rebalanceSet(sequential, sorting_set, up_max);
-
-
-                // stack data
-                let prestack = seqgen(limited_dataset);
-                let keys = sorting_set;
-
-                renderinit(limited_dataset);
-
-
-                const yScreenPercentage = 0.5;
-
-                const getYScale = (yScaleVal) => {
-                    const yQuarterOfTheScreen = ((innerHeight / 2));
-                    const heightOffset = 85;
-                    const yScreenPercentage = 0.78;
-                    return ((yScale(yScaleVal) - (yQuarterOfTheScreen)) + heightOffset) * yScreenPercentage
-                }
-                const area = d3.area()
-                    .curve(d3.curveCardinal.tension(0.0001)) // default is d3.curveLinear, d3.curveBundle.beta(1.0)
-                    .x(d => xScale(xValue(d.data)))
-                    .y0(d => getYScale(d[0]))
-                    .y1(d => getYScale(d[1]))
-
-                render(prestack, keys, area);
-            });
-        }
-    )
-    ;
-</script>
 </body>
+    <script src="./js/main.js"></script>
 </html>

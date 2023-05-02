@@ -1,5 +1,5 @@
 .control {
-    font-family: arial;
+    font-family: arial, serif;
     display: block;
     position: relative;
     padding-left: 30px;
@@ -20,8 +20,8 @@
     height: 20px;
     width: 20px;
     background: #e6e6e6;
-    border: 0px solid #000000;
-    border-radius: undefinedpx;
+    border: 0 solid #000000;
+    border-radius: 0px;
 }
 .control:hover input ~ .control_indicator,
 .control input:focus ~ .control_indicator {
@@ -32,6 +32,7 @@
     background: #2aa1c0;
 }
 .control:hover input:not([disabled]):checked ~ .control_indicator,
+
 .control input:checked:focus ~ .control_indicator {
     background: #0e6647d;
 }
@@ -120,23 +121,6 @@ text {
     font-size: 2em;
 }
 
-.text-barchart {
-    font-size: 1em;
-}
-
-.legend_text {
-    font-size: 1em;
-}
-
-.path_text {
-    font-size: 0.5em;
-}
-
-.date_text {
-    font-weight: bold;
-    font-size: 7em;
-}
-
 .tick text {
     font-size: 1.6em;
     fill: #333333;
@@ -147,28 +131,14 @@ text {
     stroke: #cccccc;
 }
 
-#population {
-    font-size: 3em;
-    stroke: #333333
-}
-
-#horsepower {
-    font-size: 3em;
-    stroke: #333333
-}
-
 .container {
     max-width: 100vw !important;
-}
-
-.info-panel {
-    /* position: absolute; */
 }
 
 #wrapper {
     height: 60vh;
 
-    padding: 0px 0px 0px 0px !important;
+    padding: 0 0 0 0 !important;
 }
 
 #word-box {
@@ -198,42 +168,6 @@ text {
     border: 1px solid #414141;
 }
 
-
-.box_with_arrow_on_right {
-    position: relative;
-    background: #88b7d5;
-    border: 4px solid #414141;
-    padding: 5px 5px 5px 5px;
-}
-
-.box_with_arrow_on_right:after, .box_with_arrow_on_right:before {
-    left: 100%;
-    top: 50%;
-    border: solid transparent;
-    content: "";
-    height: 0;
-    width: 0;
-    position: absolute;
-    pointer-events: none;
-}
-
-.box_with_arrow_on_right:after {
-    border-color: rgba(136, 183, 213, 0);
-    border-left-color: #88b7d5;
-    border-width: 15px;
-    margin-top: -15px;
-}
-
-.box_with_arrow_on_right:before {
-    border-color: rgba(65, 65, 65, 0);
-    border-left-color: #414141;
-    border-width: 16px;
-    margin-top: -16px;
-}
-
-.listening-rect {
-    fill: transparent;
-}
 
 #title {
 
@@ -282,11 +216,6 @@ text {
 
 }
 
-#topics-list {
-    height: 60vh;
-
-}
-
 .side-panel {
     border: 2px solid #1C6EA4;
     border-radius: 5px;
@@ -323,4 +252,13 @@ text {
     padding: 5px 5px 5px 5px;
     border: 2px solid white ;
     border-radius: 10px;
+}
+
+#pubmed-datasource-in-title {
+    font-weight: bold;
+}
+
+#ngram-size-in-title {
+    font-weight: bold;
+
 }
