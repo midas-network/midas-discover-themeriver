@@ -339,18 +339,18 @@ $(document).ready(function () {
         const papersJsonFilename = `${baseFilename}papers.json`;
 
         // log the filenames if you want
-        // console.log("countsCsvFilename", countsCsvFilename)
-        // console.log("papersJsonFilename", papersJsonFilename)
+        console.log("countsCsvFilename", countsCsvFilename)
+        console.log("papersJsonFilename", papersJsonFilename)
 
         //NAOMI, uncomment the next line once you have the csv and json files created --- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        //drawRiver(countsCsvFilename, papersJsonFilename);
+        drawRiver("./data/" + countsCsvFilename, "./data/" + papersJsonFilename);
 
 
         //NAMOI, delete the next 3 lines of code once you have the csv and json files created --- !!!!!!!!!!!!!!!!!!!!!!
         //this is just a hack to make things work with the old data --- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        const oldBadCSVFilename = './data/year_counts_full.csv';
-        const oldBadJSONFilename = "./data/papers_per_word_full.json"
-        drawRiver(oldBadCSVFilename, oldBadJSONFilename);
+        // const oldBadCSVFilename = './data/year_counts_full.csv';
+        // const oldBadJSONFilename = "./data/papers_per_word_full.json"
+        // drawRiver(oldBadCSVFilename, oldBadJSONFilename);
 
 
     }
