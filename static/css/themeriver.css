@@ -262,3 +262,7 @@ text {
     font-weight: bold;
 
 }
+
+.box_with_arrow {
+    padding: 5px;
+}
