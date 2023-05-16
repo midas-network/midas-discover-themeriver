@@ -25,9 +25,28 @@
         </div>
     </div>
     <div id="info-row" class="row">
-        <div class="col-md-2">
+        <div class="col-md-3 ">
             <div id="options">
-                <div class="options-header" id="ngram-line">N-gram Size:</div>
+                <div class="options-header center-options" id="pubmed-rb-line">PubMed Field for Topics:</div>
+                <div class="center-options control-group-pubmed-source">
+                    <label class="control control-radio">
+                        MeSH Terms
+                        <input type="radio" name="pubmed-source-radio" value="meshTerms" checked="checked"/>
+                        <div class="control_indicator"></div>
+                    </label>
+                    <label class="control control-radio">
+                        PubMed Keywords
+                        <input type="radio" name="pubmed-source-radio" value="pubmedKeywords"/>
+                        <div class="control_indicator"></div>
+                    </label>
+                    <label class="control control-radio">
+                        Title + Abstracts
+                        <input type="radio" name="pubmed-source-radio" value="paperAbstract"/>
+                        <div class="control_indicator"></div>
+                    </label>
+
+                </div>
+                <div class="center-options options-header" id="ngram-line">N-gram Size:</div>
                 <div class="control-group-ngram">
 
                     <label class="control control-radio">
@@ -46,41 +65,29 @@
                         <div class="control_indicator"></div>
                     </label>
                 </div>
-                <div class="options-header" id="pubmed-rb-line">PubMed Field for Topics:</div>
-                <div class="control-group-pubmed-source">
-                    <label class="control control-radio">
-                        MeSH Terms
-                        <input type="radio" name="pubmed-source-radio" value="meshTerms" checked="checked"/>
-                        <div class="control_indicator"></div>
-                    </label>
-                    <label class="control control-radio">
-                        Keywords
-                        <input type="radio" name="pubmed-source-radio" value="pubmedKeywords"/>
-                        <div class="control_indicator"></div>
-                    </label>
-                    <label class="control control-radio">
-                        Abstracts
-                        <input type="radio" name="pubmed-source-radio" value="paperAbstract"/>
-                        <div class="control_indicator"></div>
-                    </label>
 
-                </div>
             </div>
         </div>
 
-        <div class="col-md-10">
-            <div id="topic-line"><span id="current-topic-count"></span> papers with topic "<span
+        <div class="paper-display col-md-9 ">
+            <div id="topic-line">Showing <span id="current-topic-count"></span> papers with topic "<span
                     id="current-topic"></span>" in <span id="current-year"></span>:
             </div>
             <div id="instruction-line">Click the graph to display list of papers for year and topic.</div>
             <div id="paper-list" class="side-panel"></div>
         </div>
     </div>
-    <div class="box_with_arrow" id="word-box">
-        <div id="word-label"></div>
-        <div id="freq-count"></div>
+    <div class="tooltip" id="word-box">
+        <div class="right">
+            <div id="theme-color">.</div>
+            <div><span>Word: </span><span id="word-label"></span></div>
+            <div id="freq-count"></div>
+
+            <i></i>
+
+        </div>
     </div>
 </div>
 </body>
-    <script src="./js/main.js"></script>
+<script src="./js/main.js"></script>
 </html>

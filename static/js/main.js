@@ -9,6 +9,9 @@ let maxX, maxY;
 let dates;
 let currentColor = 0;
 let xScale, limited_dataset;
+let mouseOutEnabled = false;
+let mouseOutTimeout;
+let fadeInDuration = 750;
 
 const xValue = (datum) => {
     return dates.indexOf(datum['date']);
@@ -67,11 +70,6 @@ $(document).ready(function () {
                 .tickFormat("")
                 .tickPadding(10);
 
-
-            const xAxis = d3.axisBottom(xScale)
-                .tickFormat((d, i) => dates[i].substring(0, 4))
-
-
             let yAxisGroup = g.append('g').call(yAxis).attr('id', 'yaxis')
             // d3.selectAll('#yaxis .tick text').attr('transform', `translate(${0}, ${-3})`); // transform shifts the labels on y axis toward the left
             yAxisGroup.append('text')
@@ -82,17 +80,6 @@ $(document).ready(function () {
                 .text(yAxisLabel)
                 .attr('text-anchor', 'middle'); // Make label at the middle of the axis (seemingly in conjunction with the x attribute)
             yAxisGroup.selectAll('.domain').remove(); // [Not sure what this is doing] We can select multiple tags using comma to seperate them and we can use space to signify nesting
-
-            let xAxisGroup = g.append('g').call(xAxis).attr('transform', `translate(0, ${$("svg")[0].getBoundingClientRect().height - heightOfXAxis})`).attr('id', 'xaxis');
-            // let xAxisGroup = g.append('g').call(xAxis).attr('transform', `translate(0,0)`).attr('id', 'xaxis');
-            //  d3.selectAll('#xaxis .tick text').attr('transform', `translate(${0}, ${5})`);
-            // xAxisGroup.append('text')
-            //     .attr('y', 60)
-            //     .attr('x', $("svg")[0].getBoundingClientRect().width / 2)
-            //     .attr('fill', 'black')
-            //     .text(xAxisLabel)
-            // xAxisGroup.selectAll('.domain').remove();
-
         };
 
         const render = function (dataset, keys, area) {
@@ -127,31 +114,36 @@ $(document).ready(function () {
                     return d['key']
                 })
                 .on("mousemove", onMouseMove)
+                .on("mouseout", onMouseOut)
                 .on("click", onMouseClick);
 
+            // Add the X Axis
             // Show label on hover
+            function onMouseOut(e) {
+                console.log(e)
+                const elem = $('#word-box')
+                mouseOutTimeout = setTimeout(() => {
+                    elem.fadeTo(750, 0);
+                    fadeInDuration = 750
+                }, 250);
+            }
+
             function onMouseMove(e) {
+                clearTimeout(mouseOutTimeout)
                 const elem = $('#word-box')
 
-                elem.css('display', 'block');
+
                 // elem.css('left', g_width + 20 + 'px');
-                if (d3.event.pageX + 10 + 80 > width) {
-                    elem.css('left', (width - 45) + 'px')
-                } else {
-                    elem.css('left', d3.event.pageX + 20 + 'px');
-                }
+
+                elem.css('left', d3.event.pageX + 'px');
+
                 elem.css('top', d3.event.pageY - (elem.height() / 2) + 'px');
 
                 // Color label box
-                elem.css('backgroundColor', d3.event.currentTarget.getAttribute('fill'));
-                const arrowSide = "right"
-                const nonArrowSide = "left"
-                const cssClass = "box_with_arrow_on_" + arrowSide;
-                elem.removeClass("box_with_arrow_on_" + nonArrowSide)
-                elem.addClass(cssClass)
+                elem.css('backgroundColor', 'transparent');
+                $('#theme-color').css('backgroundColor', d3.event.currentTarget.getAttribute('fill'));
+                $('#theme-color').css('color', d3.event.currentTarget.getAttribute('fill'));
                 const fill = d3.event.currentTarget.getAttribute('fill')
-
-                document.styleSheets[0].addRule('.box_with_arrow_on_right:after', 'border-left-color: ' + fill + ';');
 
 
                 //  styleElem.innerHTML = "." + cssClass+ ":after {border-"+nonArrowSide+"-color: " + fill + " :before {border-"+nonArrowSide+"-color: " + fill + "}";
@@ -164,10 +156,12 @@ $(document).ready(function () {
                         topic_count = limited_dataset[i]['count'];
                     }
                 }
+                $('#word-label').html(this.classList['value'] + "<br>Year: " + dates[date_index].substr(0, 4) + "<br>Count: " + topic_count);
+
+                $('#word-box').fadeTo(fadeInDuration, 1);
 
 
-                $('#word-label').html(this.classList['value'] + "<br>year: " + dates[date_index].substr(0, 4) + "<br>count: " + topic_count);
-
+                fadeInDuration = 0
             }
 
             function onMouseClick() {
@@ -228,7 +222,7 @@ $(document).ready(function () {
                 datum['count'] = +(datum['count']);
             });
 
-            filtered_set = getFilteredSet(dataset);
+            let filtered_set = getFilteredSet(dataset);
 
             let odds = [],
                 evens = []
@@ -243,7 +237,6 @@ $(document).ready(function () {
                     evens.push(x)
                 }
             }
-
 
             evens.reverse().forEach((index) => {
                 sorting_set.push(filtered_set[index]['key'])
@@ -264,8 +257,6 @@ $(document).ready(function () {
             });
             dates = alldates;
 
-            // set up bar chart
-
             // generate sequential data
             let sequential = [];
             alldates.forEach(() => {
@@ -275,7 +266,6 @@ $(document).ready(function () {
             limited_dataset.forEach(datum => {
                 sequential[alldates.indexOf(datum['date'])].push(datum);
             });
-
 
             // generate max for Y-scale
             up_max = d3.max(sequential, seq => {
@@ -289,28 +279,23 @@ $(document).ready(function () {
             // put arrays in correct display order and get adjusted counts
             sequential = rebalanceSet(sequential, sorting_set, up_max);
 
-
             // stack data
             let prestack = seqgen(limited_dataset);
             let keys = sorting_set;
 
             renderInit(limited_dataset);
 
-
-            const yScreenPercentage = 0.5;
-
             const getYScale = (yScaleVal) => {
-                const yQuarterOfTheScreen = ((innerHeight / 2));
+                const yHalfOfTheScreen = ((innerHeight / 2));
                 const heightOffset = 85;
-                const yScreenPercentage = 0.78;
-                return ((yScale(yScaleVal) - (yQuarterOfTheScreen)) + heightOffset) * yScreenPercentage
+                const yScreenPercentage = 0.75;
+                return ((yScale(yScaleVal) - (yHalfOfTheScreen)) + heightOffset) * yScreenPercentage
             }
             const area = d3.area()
                 .curve(d3.curveCardinal.tension(0.0001)) // default is d3.curveLinear, d3.curveBundle.beta(1.0)
                 .x(d => xScale(xValue(d.data)))
                 .y0(d => getYScale(d[0]))
                 .y1(d => getYScale(d[1]))
-
             render(prestack, keys, area);
         });
     }
@@ -324,6 +309,18 @@ $(document).ready(function () {
             $("#ngram-size-in-title").text(ngramSizeLookup[ngramValue]);
             return `${pubmedSourceValue}-ngram_${ngramValue}-`;
         }
+
+        const updateNgramControl = (enable) => {
+            const color = enable ? "white" : "lightgray"
+            $("#ngram-line").css("color", color)
+            $(".control-group-ngram label").css("color", color)
+            $(".control-group-ngram .control input").prop("disabled", isMeshTerms)
+        }
+
+        const isMeshTerms = $('.control-group-pubmed-source input[type=radio]:checked').val() === 'meshTerms';
+
+        updateNgramControl(!isMeshTerms);
+
 
         // open file based on Pubmed Source + N-gram Size
         // csv filename format: {field}-ngram_{ngram number}-counts.csv
