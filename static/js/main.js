@@ -70,6 +70,11 @@ $(document).ready(function () {
                 .tickFormat("")
                 .tickPadding(10);
 
+
+            const xAxis = d3.axisBottom(xScale)
+                .tickFormat((d, i) => dates[i].substring(0, 4))
+
+
             let yAxisGroup = g.append('g').call(yAxis).attr('id', 'yaxis')
             // d3.selectAll('#yaxis .tick text').attr('transform', `translate(${0}, ${-3})`); // transform shifts the labels on y axis toward the left
             yAxisGroup.append('text')
@@ -80,6 +85,17 @@ $(document).ready(function () {
                 .text(yAxisLabel)
                 .attr('text-anchor', 'middle'); // Make label at the middle of the axis (seemingly in conjunction with the x attribute)
             yAxisGroup.selectAll('.domain').remove(); // [Not sure what this is doing] We can select multiple tags using comma to seperate them and we can use space to signify nesting
+
+            let xAxisGroup = g.append('g').call(xAxis).attr('transform', `translate(0, ${$("svg")[0].getBoundingClientRect().height - heightOfXAxis})`).attr('id', 'xaxis');
+            // let xAxisGroup = g.append('g').call(xAxis).attr('transform', `translate(0,0)`).attr('id', 'xaxis');
+            //  d3.selectAll('#xaxis .tick text').attr('transform', `translate(${0}, ${5})`);
+            // xAxisGroup.append('text')
+            //     .attr('y', 60)
+            //     .attr('x', $("svg")[0].getBoundingClientRect().width / 2)
+            //     .attr('fill', 'black')
+            //     .text(xAxisLabel)
+            // xAxisGroup.selectAll('.domain').remove();
+
         };
 
         const render = function (dataset, keys, area) {
@@ -137,12 +153,12 @@ $(document).ready(function () {
 
                 elem.css('left', d3.event.pageX + 'px');
 
-                elem.css('top', d3.event.pageY - (elem.height() / 2) + 'px');
+                elem.css('top', d3.event.pageY - (elem.height() / 2) - 10 + 'px');
 
                 // Color label box
                 elem.css('backgroundColor', 'transparent');
                 $('#theme-color').css('backgroundColor', d3.event.currentTarget.getAttribute('fill'));
-                $('#theme-color').css('color', d3.event.currentTarget.getAttribute('fill'));
+                //$('#theme-color').css('color', d3.event.currentTarget.getAttribute('fill'));
                 const fill = d3.event.currentTarget.getAttribute('fill')
 
 
@@ -156,7 +172,8 @@ $(document).ready(function () {
                         topic_count = limited_dataset[i]['count'];
                     }
                 }
-                $('#word-label').html(this.classList['value'] + "<br>Year: " + dates[date_index].substr(0, 4) + "<br>Count: " + topic_count);
+                $('#theme-color').html(this.classList['value']);
+                $('#word-label').html(topic_count + " papers in " + dates[date_index].substr(0, 4));
 
                 $('#word-box').fadeTo(fadeInDuration, 1);
 
@@ -287,7 +304,7 @@ $(document).ready(function () {
 
             const getYScale = (yScaleVal) => {
                 const yHalfOfTheScreen = ((innerHeight / 2));
-                const heightOffset = 85;
+                const heightOffset = 150;
                 const yScreenPercentage = 0.75;
                 return ((yScale(yScaleVal) - (yHalfOfTheScreen)) + heightOffset) * yScreenPercentage
             }
