@@ -1,20 +1,827 @@
 date,topic,count
-2016/1/1,Adolescent,96
-2016/1/1,Adult,148
-2016/1/1,Aged,71
-2016/1/1,Animals,149
-2016/1/1,Child,81
-2016/1/1,"Child, Preschool",78
-2016/1/1,Computer Simulation,48
+2010/1/1,Age Factors,10
+2011/1/1,Age Factors,9
+2012/1/1,Age Factors,13
+2013/1/1,Age Factors,18
+2014/1/1,Age Factors,16
+2015/1/1,Age Factors,16
+2016/1/1,Age Factors,22
+2017/1/1,Age Factors,12
+2018/1/1,Age Factors,24
+2019/1/1,Age Factors,16
+2020/1/1,Age Factors,14
+2021/1/1,Age Factors,3
+2022/1/1,Age Factors,1
+2023/1/1,Age Factors,0
+2010/1/1,"Aged, 80 and over",13
+2011/1/1,"Aged, 80 and over",15
+2012/1/1,"Aged, 80 and over",19
+2013/1/1,"Aged, 80 and over",17
+2014/1/1,"Aged, 80 and over",24
+2015/1/1,"Aged, 80 and over",21
+2016/1/1,"Aged, 80 and over",35
+2017/1/1,"Aged, 80 and over",19
+2018/1/1,"Aged, 80 and over",47
+2019/1/1,"Aged, 80 and over",34
+2020/1/1,"Aged, 80 and over",24
+2021/1/1,"Aged, 80 and over",10
+2022/1/1,"Aged, 80 and over",1
+2023/1/1,"Aged, 80 and over",0
+2010/1/1,Algorithms,15
+2011/1/1,Algorithms,12
+2012/1/1,Algorithms,25
+2013/1/1,Algorithms,19
+2014/1/1,Algorithms,21
+2015/1/1,Algorithms,30
+2016/1/1,Algorithms,22
+2017/1/1,Algorithms,30
+2018/1/1,Algorithms,29
+2019/1/1,Algorithms,34
+2020/1/1,Algorithms,11
+2021/1/1,Algorithms,6
+2022/1/1,Algorithms,5
+2023/1/1,Algorithms,0
+2010/1/1,Anti-Bacterial Agents,4
+2011/1/1,Anti-Bacterial Agents,6
+2012/1/1,Anti-Bacterial Agents,4
+2013/1/1,Anti-Bacterial Agents,9
+2014/1/1,Anti-Bacterial Agents,12
+2015/1/1,Anti-Bacterial Agents,15
+2016/1/1,Anti-Bacterial Agents,10
+2017/1/1,Anti-Bacterial Agents,17
+2018/1/1,Anti-Bacterial Agents,30
+2019/1/1,Anti-Bacterial Agents,25
+2020/1/1,Anti-Bacterial Agents,18
+2021/1/1,Anti-Bacterial Agents,5
+2022/1/1,Anti-Bacterial Agents,13
+2023/1/1,Anti-Bacterial Agents,0
+2010/1/1,"Antibodies, Viral",8
+2011/1/1,"Antibodies, Viral",8
+2012/1/1,"Antibodies, Viral",14
+2013/1/1,"Antibodies, Viral",6
+2014/1/1,"Antibodies, Viral",9
+2015/1/1,"Antibodies, Viral",17
+2016/1/1,"Antibodies, Viral",21
+2017/1/1,"Antibodies, Viral",19
+2018/1/1,"Antibodies, Viral",27
+2019/1/1,"Antibodies, Viral",24
+2020/1/1,"Antibodies, Viral",8
+2021/1/1,"Antibodies, Viral",11
+2022/1/1,"Antibodies, Viral",9
+2023/1/1,"Antibodies, Viral",0
+2010/1/1,Bayes Theorem,3
+2011/1/1,Bayes Theorem,4
+2012/1/1,Bayes Theorem,6
+2013/1/1,Bayes Theorem,12
+2014/1/1,Bayes Theorem,10
+2015/1/1,Bayes Theorem,18
+2016/1/1,Bayes Theorem,20
+2017/1/1,Bayes Theorem,17
+2018/1/1,Bayes Theorem,27
+2019/1/1,Bayes Theorem,16
+2020/1/1,Bayes Theorem,13
+2021/1/1,Bayes Theorem,4
+2022/1/1,Bayes Theorem,20
+2023/1/1,Bayes Theorem,0
+2010/1/1,Betacoronavirus,0
+2011/1/1,Betacoronavirus,0
+2012/1/1,Betacoronavirus,0
+2013/1/1,Betacoronavirus,0
+2014/1/1,Betacoronavirus,0
+2015/1/1,Betacoronavirus,0
+2016/1/1,Betacoronavirus,0
+2017/1/1,Betacoronavirus,0
+2018/1/1,Betacoronavirus,0
+2019/1/1,Betacoronavirus,0
+2020/1/1,Betacoronavirus,109
+2021/1/1,Betacoronavirus,0
+2022/1/1,Betacoronavirus,0
+2023/1/1,Betacoronavirus,0
+2010/1/1,Breast,0
+2011/1/1,Breast,0
+2012/1/1,Breast,0
+2013/1/1,Breast,0
+2014/1/1,Breast,0
+2015/1/1,Breast,0
+2016/1/1,Breast,0
+2017/1/1,Breast,0
+2018/1/1,Breast,0
+2019/1/1,Breast,1
+2020/1/1,Breast,0
+2021/1/1,Breast,0
+2022/1/1,Breast,0
+2023/1/1,Breast,1
+2010/1/1,Breast Neoplasms,1
+2011/1/1,Breast Neoplasms,0
+2012/1/1,Breast Neoplasms,0
+2013/1/1,Breast Neoplasms,1
+2014/1/1,Breast Neoplasms,1
+2015/1/1,Breast Neoplasms,0
+2016/1/1,Breast Neoplasms,2
+2017/1/1,Breast Neoplasms,2
+2018/1/1,Breast Neoplasms,3
+2019/1/1,Breast Neoplasms,3
+2020/1/1,Breast Neoplasms,2
+2021/1/1,Breast Neoplasms,2
+2022/1/1,Breast Neoplasms,0
+2023/1/1,Breast Neoplasms,1
+2010/1/1,COVID-19,0
+2011/1/1,COVID-19,0
+2012/1/1,COVID-19,0
+2013/1/1,COVID-19,0
+2014/1/1,COVID-19,0
+2015/1/1,COVID-19,0
+2016/1/1,COVID-19,0
+2017/1/1,COVID-19,0
+2018/1/1,COVID-19,0
+2019/1/1,COVID-19,0
+2020/1/1,COVID-19,137
+2021/1/1,COVID-19,128
+2022/1/1,COVID-19,202
+2023/1/1,COVID-19,0
+2010/1/1,COVID-19 Vaccines,0
+2011/1/1,COVID-19 Vaccines,0
+2012/1/1,COVID-19 Vaccines,0
+2013/1/1,COVID-19 Vaccines,0
+2014/1/1,COVID-19 Vaccines,0
+2015/1/1,COVID-19 Vaccines,0
+2016/1/1,COVID-19 Vaccines,0
+2017/1/1,COVID-19 Vaccines,0
+2018/1/1,COVID-19 Vaccines,0
+2019/1/1,COVID-19 Vaccines,0
+2020/1/1,COVID-19 Vaccines,6
+2021/1/1,COVID-19 Vaccines,20
+2022/1/1,COVID-19 Vaccines,24
+2023/1/1,COVID-19 Vaccines,0
+2010/1/1,China,4
+2011/1/1,China,5
+2012/1/1,China,6
+2013/1/1,China,11
+2014/1/1,China,16
+2015/1/1,China,14
+2016/1/1,China,13
+2017/1/1,China,16
+2018/1/1,China,15
+2019/1/1,China,13
+2020/1/1,China,24
+2021/1/1,China,12
+2022/1/1,China,9
+2023/1/1,China,0
+2010/1/1,Cohort Studies,13
+2011/1/1,Cohort Studies,6
+2012/1/1,Cohort Studies,7
+2013/1/1,Cohort Studies,8
+2014/1/1,Cohort Studies,13
+2015/1/1,Cohort Studies,19
+2016/1/1,Cohort Studies,14
+2017/1/1,Cohort Studies,19
+2018/1/1,Cohort Studies,27
+2019/1/1,Cohort Studies,20
+2020/1/1,Cohort Studies,11
+2021/1/1,Cohort Studies,7
+2022/1/1,Cohort Studies,11
+2023/1/1,Cohort Studies,0
+2010/1/1,Communicable Disease Control,12
+2011/1/1,Communicable Disease Control,7
+2012/1/1,Communicable Disease Control,6
+2013/1/1,Communicable Disease Control,11
+2014/1/1,Communicable Disease Control,10
+2015/1/1,Communicable Disease Control,19
+2016/1/1,Communicable Disease Control,12
+2017/1/1,Communicable Disease Control,9
+2018/1/1,Communicable Disease Control,13
+2019/1/1,Communicable Disease Control,11
+2020/1/1,Communicable Disease Control,22
+2021/1/1,Communicable Disease Control,20
+2022/1/1,Communicable Disease Control,13
+2023/1/1,Communicable Disease Control,0
+2010/1/1,Communicable Diseases,9
+2011/1/1,Communicable Diseases,11
+2012/1/1,Communicable Diseases,11
+2013/1/1,Communicable Diseases,16
+2014/1/1,Communicable Diseases,17
+2015/1/1,Communicable Diseases,30
+2016/1/1,Communicable Diseases,21
+2017/1/1,Communicable Diseases,29
+2018/1/1,Communicable Diseases,31
+2019/1/1,Communicable Diseases,20
+2020/1/1,Communicable Diseases,7
+2021/1/1,Communicable Diseases,4
+2022/1/1,Communicable Diseases,15
+2023/1/1,Communicable Diseases,0
+2010/1/1,Contact Tracing,0
+2011/1/1,Contact Tracing,5
+2012/1/1,Contact Tracing,6
+2013/1/1,Contact Tracing,4
+2014/1/1,Contact Tracing,5
+2015/1/1,Contact Tracing,8
+2016/1/1,Contact Tracing,5
+2017/1/1,Contact Tracing,8
+2018/1/1,Contact Tracing,6
+2019/1/1,Contact Tracing,8
+2020/1/1,Contact Tracing,15
+2021/1/1,Contact Tracing,10
+2022/1/1,Contact Tracing,11
+2023/1/1,Contact Tracing,0
+2010/1/1,Contrast Media,0
+2011/1/1,Contrast Media,0
+2012/1/1,Contrast Media,0
+2013/1/1,Contrast Media,0
+2014/1/1,Contrast Media,0
+2015/1/1,Contrast Media,0
+2016/1/1,Contrast Media,1
+2017/1/1,Contrast Media,0
+2018/1/1,Contrast Media,0
+2019/1/1,Contrast Media,1
+2020/1/1,Contrast Media,0
+2021/1/1,Contrast Media,1
+2022/1/1,Contrast Media,0
+2023/1/1,Contrast Media,1
+2010/1/1,Coronavirus Infections,0
+2011/1/1,Coronavirus Infections,0
+2012/1/1,Coronavirus Infections,1
+2013/1/1,Coronavirus Infections,1
+2014/1/1,Coronavirus Infections,7
+2015/1/1,Coronavirus Infections,3
+2016/1/1,Coronavirus Infections,7
+2017/1/1,Coronavirus Infections,3
+2018/1/1,Coronavirus Infections,6
+2019/1/1,Coronavirus Infections,1
+2020/1/1,Coronavirus Infections,136
+2021/1/1,Coronavirus Infections,2
+2022/1/1,Coronavirus Infections,0
+2023/1/1,Coronavirus Infections,0
+2010/1/1,Cost-Benefit Analysis,17
+2011/1/1,Cost-Benefit Analysis,16
+2012/1/1,Cost-Benefit Analysis,18
+2013/1/1,Cost-Benefit Analysis,14
+2014/1/1,Cost-Benefit Analysis,19
+2015/1/1,Cost-Benefit Analysis,20
+2016/1/1,Cost-Benefit Analysis,35
+2017/1/1,Cost-Benefit Analysis,27
+2018/1/1,Cost-Benefit Analysis,39
+2019/1/1,Cost-Benefit Analysis,24
+2020/1/1,Cost-Benefit Analysis,10
+2021/1/1,Cost-Benefit Analysis,5
+2022/1/1,Cost-Benefit Analysis,12
+2023/1/1,Cost-Benefit Analysis,0
+2010/1/1,Cross-Sectional Studies,6
+2011/1/1,Cross-Sectional Studies,12
+2012/1/1,Cross-Sectional Studies,6
+2013/1/1,Cross-Sectional Studies,5
+2014/1/1,Cross-Sectional Studies,16
+2015/1/1,Cross-Sectional Studies,14
+2016/1/1,Cross-Sectional Studies,15
+2017/1/1,Cross-Sectional Studies,15
+2018/1/1,Cross-Sectional Studies,18
+2019/1/1,Cross-Sectional Studies,19
+2020/1/1,Cross-Sectional Studies,21
+2021/1/1,Cross-Sectional Studies,18
+2022/1/1,Cross-Sectional Studies,18
+2023/1/1,Cross-Sectional Studies,0
+2010/1/1,Dengue,8
+2011/1/1,Dengue,10
+2012/1/1,Dengue,13
+2013/1/1,Dengue,19
+2014/1/1,Dengue,20
+2015/1/1,Dengue,25
+2016/1/1,Dengue,28
+2017/1/1,Dengue,22
+2018/1/1,Dengue,38
+2019/1/1,Dengue,25
+2020/1/1,Dengue,4
+2021/1/1,Dengue,4
+2022/1/1,Dengue,3
+2023/1/1,Dengue,0
+2010/1/1,Dengue Virus,7
+2011/1/1,Dengue Virus,7
+2012/1/1,Dengue Virus,13
+2013/1/1,Dengue Virus,12
+2014/1/1,Dengue Virus,19
+2015/1/1,Dengue Virus,16
+2016/1/1,Dengue Virus,16
+2017/1/1,Dengue Virus,14
+2018/1/1,Dengue Virus,29
+2019/1/1,Dengue Virus,15
+2020/1/1,Dengue Virus,1
+2021/1/1,Dengue Virus,4
+2022/1/1,Dengue Virus,1
+2023/1/1,Dengue Virus,0
+2010/1/1,Disease Outbreaks,38
+2011/1/1,Disease Outbreaks,30
+2012/1/1,Disease Outbreaks,29
+2013/1/1,Disease Outbreaks,42
+2014/1/1,Disease Outbreaks,55
+2015/1/1,Disease Outbreaks,72
 2016/1/1,Disease Outbreaks,67
-2016/1/1,Female,210
+2017/1/1,Disease Outbreaks,79
+2018/1/1,Disease Outbreaks,85
+2019/1/1,Disease Outbreaks,55
+2020/1/1,Disease Outbreaks,47
+2021/1/1,Disease Outbreaks,12
+2022/1/1,Disease Outbreaks,27
+2023/1/1,Disease Outbreaks,0
+2010/1/1,Epidemics,5
+2011/1/1,Epidemics,11
+2012/1/1,Epidemics,13
+2013/1/1,Epidemics,14
+2014/1/1,Epidemics,16
+2015/1/1,Epidemics,40
+2016/1/1,Epidemics,28
+2017/1/1,Epidemics,37
+2018/1/1,Epidemics,67
+2019/1/1,Epidemics,37
+2020/1/1,Epidemics,15
+2021/1/1,Epidemics,9
+2022/1/1,Epidemics,17
+2023/1/1,Epidemics,0
+2010/1/1,"Evolution, Molecular",12
+2011/1/1,"Evolution, Molecular",9
+2012/1/1,"Evolution, Molecular",10
+2013/1/1,"Evolution, Molecular",20
+2014/1/1,"Evolution, Molecular",12
+2015/1/1,"Evolution, Molecular",21
+2016/1/1,"Evolution, Molecular",14
+2017/1/1,"Evolution, Molecular",21
+2018/1/1,"Evolution, Molecular",19
+2019/1/1,"Evolution, Molecular",9
+2020/1/1,"Evolution, Molecular",5
+2021/1/1,"Evolution, Molecular",3
+2022/1/1,"Evolution, Molecular",0
+2023/1/1,"Evolution, Molecular",0
+2010/1/1,Forecasting,5
+2011/1/1,Forecasting,2
+2012/1/1,Forecasting,4
+2013/1/1,Forecasting,3
+2014/1/1,Forecasting,6
+2015/1/1,Forecasting,5
+2016/1/1,Forecasting,21
+2017/1/1,Forecasting,16
+2018/1/1,Forecasting,31
+2019/1/1,Forecasting,19
+2020/1/1,Forecasting,9
+2021/1/1,Forecasting,4
+2022/1/1,Forecasting,12
+2023/1/1,Forecasting,0
+2010/1/1,Genomics,2
+2011/1/1,Genomics,3
+2012/1/1,Genomics,5
+2013/1/1,Genomics,5
+2014/1/1,Genomics,6
+2015/1/1,Genomics,9
+2016/1/1,Genomics,8
+2017/1/1,Genomics,13
+2018/1/1,Genomics,11
+2019/1/1,Genomics,6
+2020/1/1,Genomics,3
+2021/1/1,Genomics,3
+2022/1/1,Genomics,14
+2023/1/1,Genomics,0
+2010/1/1,HIV Infections,25
+2011/1/1,HIV Infections,26
+2012/1/1,HIV Infections,25
+2013/1/1,HIV Infections,30
+2014/1/1,HIV Infections,28
+2015/1/1,HIV Infections,33
 2016/1/1,HIV Infections,47
-2016/1/1,Humans,521
-2016/1/1,Infant,70
+2017/1/1,HIV Infections,36
+2018/1/1,HIV Infections,56
+2019/1/1,HIV Infections,37
+2020/1/1,HIV Infections,20
+2021/1/1,HIV Infections,7
+2022/1/1,HIV Infections,25
+2023/1/1,HIV Infections,0
+2010/1/1,"Hemorrhagic Fever, Ebola",0
+2011/1/1,"Hemorrhagic Fever, Ebola",0
+2012/1/1,"Hemorrhagic Fever, Ebola",0
+2013/1/1,"Hemorrhagic Fever, Ebola",0
+2014/1/1,"Hemorrhagic Fever, Ebola",12
+2015/1/1,"Hemorrhagic Fever, Ebola",47
+2016/1/1,"Hemorrhagic Fever, Ebola",23
+2017/1/1,"Hemorrhagic Fever, Ebola",18
+2018/1/1,"Hemorrhagic Fever, Ebola",19
+2019/1/1,"Hemorrhagic Fever, Ebola",7
+2020/1/1,"Hemorrhagic Fever, Ebola",4
+2021/1/1,"Hemorrhagic Fever, Ebola",1
+2022/1/1,"Hemorrhagic Fever, Ebola",5
+2023/1/1,"Hemorrhagic Fever, Ebola",0
+2010/1/1,Hospitalization,2
+2011/1/1,Hospitalization,9
+2012/1/1,Hospitalization,8
+2013/1/1,Hospitalization,10
+2014/1/1,Hospitalization,12
+2015/1/1,Hospitalization,16
+2016/1/1,Hospitalization,18
+2017/1/1,Hospitalization,15
+2018/1/1,Hospitalization,16
+2019/1/1,Hospitalization,14
+2020/1/1,Hospitalization,16
+2021/1/1,Hospitalization,11
+2022/1/1,Hospitalization,13
+2023/1/1,Hospitalization,0
+2010/1/1,Host-Pathogen Interactions,6
+2011/1/1,Host-Pathogen Interactions,1
+2012/1/1,Host-Pathogen Interactions,6
+2013/1/1,Host-Pathogen Interactions,15
+2014/1/1,Host-Pathogen Interactions,9
+2015/1/1,Host-Pathogen Interactions,21
+2016/1/1,Host-Pathogen Interactions,16
+2017/1/1,Host-Pathogen Interactions,12
+2018/1/1,Host-Pathogen Interactions,23
+2019/1/1,Host-Pathogen Interactions,9
+2020/1/1,Host-Pathogen Interactions,1
+2021/1/1,Host-Pathogen Interactions,0
+2022/1/1,Host-Pathogen Interactions,2
+2023/1/1,Host-Pathogen Interactions,0
+2010/1/1,"Infant, Newborn",10
+2011/1/1,"Infant, Newborn",11
+2012/1/1,"Infant, Newborn",19
+2013/1/1,"Infant, Newborn",13
+2014/1/1,"Infant, Newborn",19
+2015/1/1,"Infant, Newborn",28
+2016/1/1,"Infant, Newborn",39
+2017/1/1,"Infant, Newborn",24
+2018/1/1,"Infant, Newborn",43
+2019/1/1,"Infant, Newborn",32
+2020/1/1,"Infant, Newborn",12
+2021/1/1,"Infant, Newborn",11
+2022/1/1,"Infant, Newborn",12
+2023/1/1,"Infant, Newborn",0
+2010/1/1,"Influenza A Virus, H1N1 Subtype",34
+2011/1/1,"Influenza A Virus, H1N1 Subtype",45
+2012/1/1,"Influenza A Virus, H1N1 Subtype",25
+2013/1/1,"Influenza A Virus, H1N1 Subtype",19
+2014/1/1,"Influenza A Virus, H1N1 Subtype",17
+2015/1/1,"Influenza A Virus, H1N1 Subtype",15
+2016/1/1,"Influenza A Virus, H1N1 Subtype",16
+2017/1/1,"Influenza A Virus, H1N1 Subtype",10
+2018/1/1,"Influenza A Virus, H1N1 Subtype",15
+2019/1/1,"Influenza A Virus, H1N1 Subtype",11
+2020/1/1,"Influenza A Virus, H1N1 Subtype",7
+2021/1/1,"Influenza A Virus, H1N1 Subtype",1
+2022/1/1,"Influenza A Virus, H1N1 Subtype",3
+2023/1/1,"Influenza A Virus, H1N1 Subtype",0
+2010/1/1,Influenza A virus,6
+2011/1/1,Influenza A virus,6
+2012/1/1,Influenza A virus,7
+2013/1/1,Influenza A virus,23
+2014/1/1,Influenza A virus,14
+2015/1/1,Influenza A virus,10
+2016/1/1,Influenza A virus,14
+2017/1/1,Influenza A virus,11
+2018/1/1,Influenza A virus,17
+2019/1/1,Influenza A virus,6
+2020/1/1,Influenza A virus,0
+2021/1/1,Influenza A virus,0
+2022/1/1,Influenza A virus,2
+2023/1/1,Influenza A virus,0
+2010/1/1,Influenza Vaccines,21
+2011/1/1,Influenza Vaccines,21
+2012/1/1,Influenza Vaccines,30
+2013/1/1,Influenza Vaccines,15
+2014/1/1,Influenza Vaccines,27
+2015/1/1,Influenza Vaccines,19
+2016/1/1,Influenza Vaccines,30
+2017/1/1,Influenza Vaccines,29
+2018/1/1,Influenza Vaccines,35
+2019/1/1,Influenza Vaccines,27
+2020/1/1,Influenza Vaccines,9
+2021/1/1,Influenza Vaccines,3
+2022/1/1,Influenza Vaccines,5
+2023/1/1,Influenza Vaccines,0
+2010/1/1,"Influenza, Human",60
+2011/1/1,"Influenza, Human",76
+2012/1/1,"Influenza, Human",78
+2013/1/1,"Influenza, Human",74
+2014/1/1,"Influenza, Human",82
+2015/1/1,"Influenza, Human",78
 2016/1/1,"Influenza, Human",72
-2016/1/1,Male,192
-2016/1/1,Middle Aged,109
+2017/1/1,"Influenza, Human",76
+2018/1/1,"Influenza, Human",96
+2019/1/1,"Influenza, Human",52
+2020/1/1,"Influenza, Human",21
+2021/1/1,"Influenza, Human",8
+2022/1/1,"Influenza, Human",18
+2023/1/1,"Influenza, Human",0
+2010/1/1,Magnetic Resonance Imaging,0
+2011/1/1,Magnetic Resonance Imaging,0
+2012/1/1,Magnetic Resonance Imaging,0
+2013/1/1,Magnetic Resonance Imaging,0
+2014/1/1,Magnetic Resonance Imaging,0
+2015/1/1,Magnetic Resonance Imaging,0
+2016/1/1,Magnetic Resonance Imaging,2
+2017/1/1,Magnetic Resonance Imaging,1
+2018/1/1,Magnetic Resonance Imaging,1
+2019/1/1,Magnetic Resonance Imaging,2
+2020/1/1,Magnetic Resonance Imaging,1
+2021/1/1,Magnetic Resonance Imaging,3
+2022/1/1,Magnetic Resonance Imaging,1
+2023/1/1,Magnetic Resonance Imaging,1
+2010/1/1,Malaria,3
+2011/1/1,Malaria,5
+2012/1/1,Malaria,4
+2013/1/1,Malaria,10
+2014/1/1,Malaria,12
+2015/1/1,Malaria,12
+2016/1/1,Malaria,17
+2017/1/1,Malaria,7
+2018/1/1,Malaria,14
+2019/1/1,Malaria,17
+2020/1/1,Malaria,13
+2021/1/1,Malaria,2
+2022/1/1,Malaria,13
+2023/1/1,Malaria,0
+2010/1/1,"Models, Biological",41
+2011/1/1,"Models, Biological",44
+2012/1/1,"Models, Biological",59
+2013/1/1,"Models, Biological",51
+2014/1/1,"Models, Biological",47
+2015/1/1,"Models, Biological",59
 2016/1/1,"Models, Biological",53
+2017/1/1,"Models, Biological",56
+2018/1/1,"Models, Biological",65
+2019/1/1,"Models, Biological",44
+2020/1/1,"Models, Biological",24
+2021/1/1,"Models, Biological",15
+2022/1/1,"Models, Biological",12
+2023/1/1,"Models, Biological",0
+2010/1/1,"Models, Statistical",23
+2011/1/1,"Models, Statistical",27
+2012/1/1,"Models, Statistical",44
+2013/1/1,"Models, Statistical",32
+2014/1/1,"Models, Statistical",36
+2015/1/1,"Models, Statistical",46
+2016/1/1,"Models, Statistical",40
+2017/1/1,"Models, Statistical",42
+2018/1/1,"Models, Statistical",48
+2019/1/1,"Models, Statistical",38
+2020/1/1,"Models, Statistical",19
+2021/1/1,"Models, Statistical",7
+2022/1/1,"Models, Statistical",4
+2023/1/1,"Models, Statistical",0
+2010/1/1,"Models, Theoretical",24
+2011/1/1,"Models, Theoretical",37
+2012/1/1,"Models, Theoretical",31
+2013/1/1,"Models, Theoretical",45
+2014/1/1,"Models, Theoretical",66
+2015/1/1,"Models, Theoretical",85
 2016/1/1,"Models, Theoretical",75
+2017/1/1,"Models, Theoretical",78
+2018/1/1,"Models, Theoretical",83
+2019/1/1,"Models, Theoretical",51
+2020/1/1,"Models, Theoretical",42
+2021/1/1,"Models, Theoretical",22
+2022/1/1,"Models, Theoretical",7
+2023/1/1,"Models, Theoretical",0
+2010/1/1,Pandemics,8
+2011/1/1,Pandemics,41
+2012/1/1,Pandemics,23
+2013/1/1,Pandemics,21
+2014/1/1,Pandemics,16
+2015/1/1,Pandemics,17
+2016/1/1,Pandemics,9
+2017/1/1,Pandemics,14
+2018/1/1,Pandemics,15
+2019/1/1,Pandemics,9
+2020/1/1,Pandemics,152
+2021/1/1,Pandemics,48
+2022/1/1,Pandemics,77
+2023/1/1,Pandemics,0
+2010/1/1,Phylogeny,13
+2011/1/1,Phylogeny,20
+2012/1/1,Phylogeny,19
+2013/1/1,Phylogeny,18
+2014/1/1,Phylogeny,21
+2015/1/1,Phylogeny,21
+2016/1/1,Phylogeny,28
+2017/1/1,Phylogeny,24
+2018/1/1,Phylogeny,37
+2019/1/1,Phylogeny,36
+2020/1/1,Phylogeny,21
+2021/1/1,Phylogeny,4
+2022/1/1,Phylogeny,12
+2023/1/1,Phylogeny,0
+2010/1/1,"Pneumonia, Viral",0
+2011/1/1,"Pneumonia, Viral",0
+2012/1/1,"Pneumonia, Viral",0
+2013/1/1,"Pneumonia, Viral",1
+2014/1/1,"Pneumonia, Viral",0
+2015/1/1,"Pneumonia, Viral",1
+2016/1/1,"Pneumonia, Viral",0
+2017/1/1,"Pneumonia, Viral",1
+2018/1/1,"Pneumonia, Viral",0
+2019/1/1,"Pneumonia, Viral",0
+2020/1/1,"Pneumonia, Viral",132
+2021/1/1,"Pneumonia, Viral",1
+2022/1/1,"Pneumonia, Viral",0
+2023/1/1,"Pneumonia, Viral",0
+2010/1/1,Population Dynamics,12
+2011/1/1,Population Dynamics,13
+2012/1/1,Population Dynamics,14
+2013/1/1,Population Dynamics,8
+2014/1/1,Population Dynamics,10
+2015/1/1,Population Dynamics,19
+2016/1/1,Population Dynamics,15
+2017/1/1,Population Dynamics,15
+2018/1/1,Population Dynamics,11
+2019/1/1,Population Dynamics,11
+2020/1/1,Population Dynamics,5
+2021/1/1,Population Dynamics,0
+2022/1/1,Population Dynamics,6
+2023/1/1,Population Dynamics,0
+2010/1/1,Population Surveillance,12
+2011/1/1,Population Surveillance,18
+2012/1/1,Population Surveillance,19
+2013/1/1,Population Surveillance,16
+2014/1/1,Population Surveillance,18
+2015/1/1,Population Surveillance,23
+2016/1/1,Population Surveillance,25
+2017/1/1,Population Surveillance,18
+2018/1/1,Population Surveillance,30
+2019/1/1,Population Surveillance,14
+2020/1/1,Population Surveillance,4
+2021/1/1,Population Surveillance,3
+2022/1/1,Population Surveillance,2
+2023/1/1,Population Surveillance,0
+2010/1/1,Pregnancy,5
+2011/1/1,Pregnancy,5
+2012/1/1,Pregnancy,4
+2013/1/1,Pregnancy,4
+2014/1/1,Pregnancy,9
+2015/1/1,Pregnancy,13
+2016/1/1,Pregnancy,28
+2017/1/1,Pregnancy,18
+2018/1/1,Pregnancy,13
+2019/1/1,Pregnancy,17
+2020/1/1,Pregnancy,5
+2021/1/1,Pregnancy,3
+2022/1/1,Pregnancy,15
+2023/1/1,Pregnancy,0
+2010/1/1,Public Health,8
+2011/1/1,Public Health,10
+2012/1/1,Public Health,7
+2013/1/1,Public Health,10
+2014/1/1,Public Health,14
+2015/1/1,Public Health,18
+2016/1/1,Public Health,18
+2017/1/1,Public Health,26
+2018/1/1,Public Health,27
+2019/1/1,Public Health,24
+2020/1/1,Public Health,19
+2021/1/1,Public Health,9
+2022/1/1,Public Health,19
+2023/1/1,Public Health,0
+2010/1/1,Retrospective Studies,10
+2011/1/1,Retrospective Studies,6
+2012/1/1,Retrospective Studies,8
+2013/1/1,Retrospective Studies,6
+2014/1/1,Retrospective Studies,12
+2015/1/1,Retrospective Studies,15
+2016/1/1,Retrospective Studies,21
+2017/1/1,Retrospective Studies,27
+2018/1/1,Retrospective Studies,38
+2019/1/1,Retrospective Studies,29
+2020/1/1,Retrospective Studies,16
+2021/1/1,Retrospective Studies,15
+2022/1/1,Retrospective Studies,15
+2023/1/1,Retrospective Studies,1
+2010/1/1,Risk Assessment,8
+2011/1/1,Risk Assessment,8
+2012/1/1,Risk Assessment,8
+2013/1/1,Risk Assessment,10
+2014/1/1,Risk Assessment,10
+2015/1/1,Risk Assessment,16
+2016/1/1,Risk Assessment,20
+2017/1/1,Risk Assessment,27
+2018/1/1,Risk Assessment,24
+2019/1/1,Risk Assessment,11
+2020/1/1,Risk Assessment,10
+2021/1/1,Risk Assessment,6
+2022/1/1,Risk Assessment,1
+2023/1/1,Risk Assessment,0
+2010/1/1,Risk Factors,23
+2011/1/1,Risk Factors,11
+2012/1/1,Risk Factors,28
+2013/1/1,Risk Factors,21
+2014/1/1,Risk Factors,28
+2015/1/1,Risk Factors,27
+2016/1/1,Risk Factors,29
+2017/1/1,Risk Factors,32
+2018/1/1,Risk Factors,55
+2019/1/1,Risk Factors,54
+2020/1/1,Risk Factors,22
+2021/1/1,Risk Factors,10
+2022/1/1,Risk Factors,9
+2023/1/1,Risk Factors,0
+2010/1/1,SARS-CoV-2,0
+2011/1/1,SARS-CoV-2,0
+2012/1/1,SARS-CoV-2,0
+2013/1/1,SARS-CoV-2,0
+2014/1/1,SARS-CoV-2,0
+2015/1/1,SARS-CoV-2,0
+2016/1/1,SARS-CoV-2,0
+2017/1/1,SARS-CoV-2,0
+2018/1/1,SARS-CoV-2,0
+2019/1/1,SARS-CoV-2,0
+2020/1/1,SARS-CoV-2,109
+2021/1/1,SARS-CoV-2,105
+2022/1/1,SARS-CoV-2,143
+2023/1/1,SARS-CoV-2,0
+2010/1/1,Seasons,13
+2011/1/1,Seasons,19
+2012/1/1,Seasons,24
+2013/1/1,Seasons,30
+2014/1/1,Seasons,26
+2015/1/1,Seasons,35
+2016/1/1,Seasons,30
+2017/1/1,Seasons,40
+2018/1/1,Seasons,71
+2019/1/1,Seasons,35
+2020/1/1,Seasons,15
+2021/1/1,Seasons,6
+2022/1/1,Seasons,7
+2023/1/1,Seasons,0
+2010/1/1,Seroepidemiologic Studies,5
+2011/1/1,Seroepidemiologic Studies,9
+2012/1/1,Seroepidemiologic Studies,8
+2013/1/1,Seroepidemiologic Studies,4
+2014/1/1,Seroepidemiologic Studies,5
+2015/1/1,Seroepidemiologic Studies,11
+2016/1/1,Seroepidemiologic Studies,9
+2017/1/1,Seroepidemiologic Studies,11
+2018/1/1,Seroepidemiologic Studies,15
+2019/1/1,Seroepidemiologic Studies,19
+2020/1/1,Seroepidemiologic Studies,4
+2021/1/1,Seroepidemiologic Studies,11
+2022/1/1,Seroepidemiologic Studies,9
+2023/1/1,Seroepidemiologic Studies,0
+2010/1/1,Stochastic Processes,7
+2011/1/1,Stochastic Processes,17
+2012/1/1,Stochastic Processes,8
+2013/1/1,Stochastic Processes,13
+2014/1/1,Stochastic Processes,15
+2015/1/1,Stochastic Processes,10
+2016/1/1,Stochastic Processes,8
+2017/1/1,Stochastic Processes,15
+2018/1/1,Stochastic Processes,14
+2019/1/1,Stochastic Processes,9
+2020/1/1,Stochastic Processes,4
+2021/1/1,Stochastic Processes,0
+2022/1/1,Stochastic Processes,1
+2023/1/1,Stochastic Processes,0
+2010/1/1,Surveys and Questionnaires,6
+2011/1/1,Surveys and Questionnaires,3
+2012/1/1,Surveys and Questionnaires,4
+2013/1/1,Surveys and Questionnaires,5
+2014/1/1,Surveys and Questionnaires,4
+2015/1/1,Surveys and Questionnaires,10
+2016/1/1,Surveys and Questionnaires,7
+2017/1/1,Surveys and Questionnaires,14
+2018/1/1,Surveys and Questionnaires,19
+2019/1/1,Surveys and Questionnaires,31
+2020/1/1,Surveys and Questionnaires,13
+2021/1/1,Surveys and Questionnaires,6
+2022/1/1,Surveys and Questionnaires,10
+2023/1/1,Surveys and Questionnaires,0
+2010/1/1,Time Factors,26
+2011/1/1,Time Factors,19
+2012/1/1,Time Factors,29
+2013/1/1,Time Factors,26
+2014/1/1,Time Factors,18
+2015/1/1,Time Factors,29
+2016/1/1,Time Factors,40
+2017/1/1,Time Factors,18
+2018/1/1,Time Factors,30
+2019/1/1,Time Factors,28
+2020/1/1,Time Factors,19
+2021/1/1,Time Factors,9
+2022/1/1,Time Factors,3
+2023/1/1,Time Factors,0
+2010/1/1,United States,30
+2011/1/1,United States,39
+2012/1/1,United States,36
+2013/1/1,United States,44
+2014/1/1,United States,38
+2015/1/1,United States,50
 2016/1/1,United States,50
-2016/1/1,Young Adult,88
+2017/1/1,United States,53
+2018/1/1,United States,75
+2019/1/1,United States,60
+2020/1/1,United States,61
+2021/1/1,United States,19
+2022/1/1,United States,32
+2023/1/1,United States,0
+2010/1/1,Vaccination,15
+2011/1/1,Vaccination,18
+2012/1/1,Vaccination,31
+2013/1/1,Vaccination,22
+2014/1/1,Vaccination,27
+2015/1/1,Vaccination,34
+2016/1/1,Vaccination,46
+2017/1/1,Vaccination,45
+2018/1/1,Vaccination,63
+2019/1/1,Vaccination,34
+2020/1/1,Vaccination,20
+2021/1/1,Vaccination,20
+2022/1/1,Vaccination,37
+2023/1/1,Vaccination,0
