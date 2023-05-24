@@ -124,7 +124,7 @@ $(document).ready(function () {
                 })
                 .attr('clip-path', 'url(#rectClip)')
                 .attr('fill', function (d, i) {
-                    return next_bar_color();
+                    return next_bar_color(d, i);
                 })
                 .attr('class', function (d, i) {
                     return d['key']
@@ -136,7 +136,6 @@ $(document).ready(function () {
             // Add the X Axis
             // Show label on hover
             function onMouseOut(e) {
-                console.log(e)
                 const elem = $('#word-box')
                 mouseOutTimeout = setTimeout(() => {
                     elem.fadeTo(750, 0);
@@ -150,14 +149,27 @@ $(document).ready(function () {
 
 
                 // elem.css('left', g_width + 20 + 'px');
+                const X = d3.event.pageX;
+                let adjustX = 0;
+                if (X < 275) {
+                    adjustX = -19;
+                                     $("#tooltip-arrow").removeClass("left").addClass("right")
 
-                elem.css('left', d3.event.pageX + 'px');
+                } else {
+                    adjustX = 8;
+
+                        $("#tooltip-arrow").removeClass("right").addClass("left")
+
+                }
+
+                elem.css('left', d3.event.pageX + adjustX + 'px');
 
                 elem.css('top', d3.event.pageY - (elem.height() / 2) - 10 + 'px');
 
                 // Color label box
                 elem.css('backgroundColor', 'transparent');
-                $('#theme-color').css('backgroundColor', d3.event.currentTarget.getAttribute('fill'));
+                $('#tooltip-inner').css('border-color', d3.event.currentTarget.getAttribute('fill'));
+                  $('#word-label').css('border-color', d3.event.currentTarget.getAttribute('fill'));
                 //$('#theme-color').css('color', d3.event.currentTarget.getAttribute('fill'));
                 const fill = d3.event.currentTarget.getAttribute('fill')
 
@@ -172,7 +184,7 @@ $(document).ready(function () {
                         topic_count = limited_dataset[i]['count'];
                     }
                 }
-                $('#theme-color').html(this.classList['value']);
+                $('#river-word').html(this.classList['value']);
                 $('#word-label').html(topic_count + " papers in " + dates[date_index].substr(0, 4));
 
                 $('#word-box').fadeTo(fadeInDuration, 1);
@@ -309,7 +321,7 @@ $(document).ready(function () {
                 return ((yScale(yScaleVal) - (yHalfOfTheScreen)) + heightOffset) * yScreenPercentage
             }
             const area = d3.area()
-                .curve(d3.curveCardinal.tension(0.0001)) // default is d3.curveLinear, d3.curveBundle.beta(1.0)
+                .curve(d3.curveCardinal.tension(0.1)) // default is d3.curveLinear, d3.curveBundle.beta(1.0)
                 .x(d => xScale(xValue(d.data)))
                 .y0(d => getYScale(d[0]))
                 .y1(d => getYScale(d[1]))
@@ -353,8 +365,8 @@ $(document).ready(function () {
         const papersJsonFilename = `${baseFilename}papers.json`;
 
         // log the filenames if you want
-        console.log("countsCsvFilename", countsCsvFilename)
-        console.log("papersJsonFilename", papersJsonFilename)
+        // console.log("countsCsvFilename", countsCsvFilename)
+        // console.log("papersJsonFilename", papersJsonFilename)
 
         //NAOMI, uncomment the next line once you have the csv and json files created --- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         drawRiver("./data/" + countsCsvFilename, "./data/" + papersJsonFilename);

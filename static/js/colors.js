@@ -1,4 +1,6 @@
-  const next_bar_color =  () => {
+const bar_colors = new Object()
+
+const next_bar_color =  (d,i) => {
         colors = [
             "#FF007F",
             "#FFBF00",
@@ -61,5 +63,10 @@
         if (currentColor > 55) {
             currentColor = 0;
         }
-        return colors[currentColor++];
+
+        if (bar_colors[d.key] == undefined) {
+           bar_colors[d.key] = colors[currentColor++]
+        }
+        console.log(i)
+        return bar_colors[d.key];
     }
