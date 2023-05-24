@@ -15,10 +15,12 @@ const getFilteredSet = (dataset) => {
 }
 
 const rebalanceSet = (dataset, sorting_set, up_max) => {
+    let year;
     for (year of dataset){
         year.sort((a,b) => sorting_set.indexOf(a['topic']) - sorting_set.indexOf(b['topic']));
 
         let total = 0;
+        let term;
         for (term of year){
             total += term['count'];
         }
@@ -26,9 +28,11 @@ const rebalanceSet = (dataset, sorting_set, up_max) => {
         for (term of year){
             term['raw_percent'] = (term['count']/total || 0);
             term['year_total'] = total;
-            term['adjusted_percent'] = Math.round((term['raw_percent']*(total/up_max) || 0) * 100);
+            term['adjusted_percent'] = Math.max(Math.round((term['raw_percent']*(total/up_max) || 0) * 100));
         }
+
     }
+  debugger;
 
     return dataset;
 }
