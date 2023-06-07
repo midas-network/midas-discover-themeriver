@@ -50,7 +50,7 @@ $(document).ready(function () {
             // Introducing y-Scale
             yScale = d3.scaleLinear()
                 .domain([0, 100])
-                .range([$("svg")[0].getBoundingClientRect().height, 0])
+                .range([$("svg")[0].getBoundingClientRect().height-107, 0]) // height 107 -> figure out height of x-axis
                 .nice();
 
             // generate maxX and maxY
@@ -297,14 +297,23 @@ $(document).ready(function () {
             });
 
             // generate max for Y-scale
-            up_max = d3.max(sequential, seq => {
+            up_max_index = d3.maxIndex(sequential, seq => {
                 result = 0;
                 seq.forEach(s => {
                     result += yRaw(s)
                 })
+                // result = result + (result*.1)
                 return result;
             });
 
+            up_max = 0
+            sequential[up_max_index].forEach( s => {
+                up_max += yRaw(s)
+            })
+            // up_max = up_max + (up_max*.1)
+
+            console.log(up_max_index)
+            console.log(up_max)
             // put arrays in correct display order and get adjusted counts
             sequential = rebalanceSet(sequential, sorting_set, up_max);
 
@@ -314,11 +323,26 @@ $(document).ready(function () {
 
             renderInit(limited_dataset);
 
+            top_side = 0
+            bot_side = 0
+            for (const x of Array(sequential[up_max_index].length).keys()){
+                if(x % 2 === 1){
+                    bot_side += yRaw(sequential[up_max_index][x])
+                }
+                else {
+                    top_side += yRaw(sequential[up_max_index][x])
+                }
+            }
+            console.log(top_side)
+            console.log(bot_side)
+            offset = (top_side/((top_side+bot_side)/2))
             const getYScale = (yScaleVal) => {
-                const yHalfOfTheScreen = ((innerHeight / 2));
-                const heightOffset = 150;
-                const yScreenPercentage = 0.75;
+                // const yHalfOfTheScreen = ((innerHeight / 3)); // 178
+                const yHalfOfTheScreen = (534-107)*(301/890); // height of wrapper-height of x-axis times height of info box/height of screen
+                const heightOffset = 0 //offset;
+                const yScreenPercentage = 1 //0.75;
                 return ((yScale(yScaleVal) - (yHalfOfTheScreen)) + heightOffset) * yScreenPercentage
+                // return ((yScale(yScaleVal) + heightOffset) * yScreenPercentage)
             }
             const area = d3.area()
                 .curve(d3.curveCardinal.tension(0.1)) // default is d3.curveLinear, d3.curveBundle.beta(1.0)

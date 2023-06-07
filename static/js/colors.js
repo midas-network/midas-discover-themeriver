@@ -67,6 +67,5 @@ const next_bar_color =  (d,i) => {
         if (bar_colors[d.key] == undefined) {
            bar_colors[d.key] = colors[currentColor++]
         }
-        console.log(i)
         return bar_colors[d.key];
     }
