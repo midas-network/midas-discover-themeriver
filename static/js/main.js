@@ -36,12 +36,11 @@ const ngramSizeLookup = {
 $(document).ready(function () {
 
     const drawRiver = (countsCsvFilename, papersJsonFilename) => {
-        const renderInit = function (data, seq) {
+        const renderInit = function (data) {
 
             const graphHeight = $("#wrapper")[0].offsetHeight;
             const graphWidth = $("#wrapper")[0].offsetWidth;
-            const heightOfXAxis = 75;
-
+            const heightOfXAxis = 30;
             // Linear Scale: Data Space -> Screen Space
             xScale = d3.scaleLinear()
                 .domain([0, dates.length - 1])
@@ -50,15 +49,20 @@ $(document).ready(function () {
             // Introducing y-Scale
             yScale = d3.scaleLinear()
                 .domain([0, 100])
-                .range([$("svg")[0].getBoundingClientRect().height-107, 0]) // height 107 -> figure out height of x-axis
-                .nice();
+                .range([$("svg")[0].getBoundingClientRect().height-50, 0]) // height 107 -> figure out height of x-axis
+              //  .nice();
 
             // generate maxX and maxY
             maxX = xScale(d3.max(data, xValue));
             maxY = yScale(d3.max(data, yValue));
 
-            const g = svg.append('g')
+             const gForXAxis = svg.append('g')
                 .attr('transform', `translate(0,0)`)
+                //.attr('transform', `translate(${graphWidth * .3}, ${graphHeight * .1})`)
+                .attr('id', 'xaxisgroup')
+
+            const g = svg.append('g')
+                .attr('transform', 'translate(0,0)')
                 //.attr('transform', `translate(${graphWidth * .3}, ${graphHeight * .1})`)
                 .attr('id', 'maingroup')
 
@@ -66,27 +70,30 @@ $(document).ready(function () {
             // Adding axes
 
             const yAxis = d3.axisLeft(yScale)
-                .tickSize(0)
-                .tickFormat("")
-                .tickPadding(10);
+
+                 .tickSize(-300)
+                // .tickFormat("ASD")
+                // .tickPadding(1);
 
 
             const xAxis = d3.axisBottom(xScale)
                 .tickFormat((d, i) => dates[i].substring(0, 4))
 
 
-            let yAxisGroup = g.append('g').call(yAxis).attr('id', 'yaxis')
+            let yAxisGroup = gForXAxis.append('g').call(yAxis).attr('id', 'yaxis')
             // d3.selectAll('#yaxis .tick text').attr('transform', `translate(${0}, ${-3})`); // transform shifts the labels on y axis toward the left
-            yAxisGroup.append('text')
-                .attr('transform', 'rotate(-90)')
-                .attr('x', -graphHeight / 2)
-                .attr('y', -80)
-                .attr('fill', 'black')
-                .text(yAxisLabel)
-                .attr('text-anchor', 'middle'); // Make label at the middle of the axis (seemingly in conjunction with the x attribute)
-            yAxisGroup.selectAll('.domain').remove(); // [Not sure what this is doing] We can select multiple tags using comma to seperate them and we can use space to signify nesting
+            // yAxisGroup.append('text')
+            //     .attr('transform', 'rotate(-90)')
+            //     .attr('x', -graphHeight / 2)
+            //     .attr('y', -80)
+            //     .attr('fill', 'black')
+            //     .text(yAxisLabel)
+            //     .attr('text-anchor', 'middle'); // Make label at the middle of the axis (seemingly in conjunction with the x attribute)
+            //yAxisGroup.selectAll('.domain').remove(); // [Not sure what this is doing] We can select multiple tags using comma to seperate them and we can use space to signify nesting
+ gForXAxis.append('g').call(xAxis).attr('transform', `translate(0, ${$("svg")[0].getBoundingClientRect().height - heightOfXAxis})`).attr('id', 'xaxis');
 
-            let xAxisGroup = g.append('g').call(xAxis).attr('transform', `translate(0, ${$("svg")[0].getBoundingClientRect().height - heightOfXAxis})`).attr('id', 'xaxis');
+            //let xAxisGroup =
+
             // let xAxisGroup = g.append('g').call(xAxis).attr('transform', `translate(0,0)`).attr('id', 'xaxis');
             //  d3.selectAll('#xaxis .tick text').attr('transform', `translate(${0}, ${5})`);
             // xAxisGroup.append('text')
@@ -112,7 +119,7 @@ $(document).ready(function () {
                 .append('rect')
                 .attr('class', 'rect-clip')
                 .attr('width', 0)
-                .attr('height', $("svg")[0].getBoundingClientRect().height)
+                .attr('height', $("svg")[0].getBoundingClientRect().height + 100)
             // .attr('height', height)
 
             g.selectAll('path')
@@ -350,6 +357,13 @@ $(document).ready(function () {
                 .y0(d => getYScale(d[0]))
                 .y1(d => getYScale(d[1]))
             render(prestack, keys, area);
+
+            function fixTranslate() {
+                const maingroupHeight =  $('g#maingroup').get(0).getBoundingClientRect().top
+                const svgHeight = $('#rectClip').get(0).getBoundingClientRect().top
+                $("#maingroup").attr("transform", 'translate(0,' + (svgHeight - maingroupHeight) + ')')
+            }
+            fixTranslate()
         });
     }
 
