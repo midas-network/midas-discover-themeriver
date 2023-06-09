@@ -3,6 +3,7 @@ const width = +svg.attr('width');
 const height = +svg.attr('height');
 const innerHeight = $("#wrapper")[0].offsetHeight;
 const yAxisLabel = 'Topic Frequency'
+const heightOfXAxis = 30;
 let up_max = 5000;
 let yScale;
 let maxX, maxY;
@@ -40,17 +41,18 @@ $(document).ready(function () {
 
             const graphHeight = $("#wrapper")[0].offsetHeight;
             const graphWidth = $("#wrapper")[0].offsetWidth;
-            const heightOfXAxis = 30;
+
             // Linear Scale: Data Space -> Screen Space
             xScale = d3.scaleLinear()
                 .domain([0, dates.length - 1])
                 .range([$("svg")[0].getBoundingClientRect().x + 50, $("svg")[0].getBoundingClientRect().width - 50]);
 
             // Introducing y-Scale
+            console.log(innerHeight)
             yScale = d3.scaleLinear()
                 .domain([0, 100])
-                .range([$("svg")[0].getBoundingClientRect().height-50, 0]) // height 107 -> figure out height of x-axis
-              //  .nice();
+                .range([$("svg")[0].getBoundingClientRect().height-heightOfXAxis, 0])
+                .nice();
 
             // generate maxX and maxY
             maxX = xScale(d3.max(data, xValue));
@@ -66,34 +68,35 @@ $(document).ready(function () {
                 //.attr('transform', `translate(${graphWidth * .3}, ${graphHeight * .1})`)
                 .attr('id', 'maingroup')
 
+            const g_axes = svg.append('g')
+                .attr('transform', `translate(0,0)`)
+                .attr('id', 'g_axes')
+
 
             // Adding axes
 
             const yAxis = d3.axisLeft(yScale)
-
-                 .tickSize(-300)
-                // .tickFormat("ASD")
-                // .tickPadding(1);
+                .tickSize(0);
+                // .tickFormat("")
+                // .tickPadding(10);
 
 
             const xAxis = d3.axisBottom(xScale)
                 .tickFormat((d, i) => dates[i].substring(0, 4))
 
 
-            let yAxisGroup = gForXAxis.append('g').call(yAxis).attr('id', 'yaxis')
+            let yAxisGroup = g_axes.append('g').call(yAxis).attr('id', 'yaxis')
             // d3.selectAll('#yaxis .tick text').attr('transform', `translate(${0}, ${-3})`); // transform shifts the labels on y axis toward the left
-            // yAxisGroup.append('text')
-            //     .attr('transform', 'rotate(-90)')
-            //     .attr('x', -graphHeight / 2)
-            //     .attr('y', -80)
-            //     .attr('fill', 'black')
-            //     .text(yAxisLabel)
-            //     .attr('text-anchor', 'middle'); // Make label at the middle of the axis (seemingly in conjunction with the x attribute)
-            //yAxisGroup.selectAll('.domain').remove(); // [Not sure what this is doing] We can select multiple tags using comma to seperate them and we can use space to signify nesting
- gForXAxis.append('g').call(xAxis).attr('transform', `translate(0, ${$("svg")[0].getBoundingClientRect().height - heightOfXAxis})`).attr('id', 'xaxis');
+            yAxisGroup.append('text')
+                .attr('transform', 'rotate(-90)')
+                .attr('x', -graphHeight / 2)
+                .attr('y', -80)
+                .attr('fill', 'black')
+                .text(yAxisLabel)
+                .attr('text-anchor', 'middle'); // Make label at the middle of the axis (seemingly in conjunction with the x attribute)
+            // yAxisGroup.selectAll('.domain').remove(); // [Not sure what this is doing] We can select multiple tags using comma to seperate them and we can use space to signify nesting
 
-            //let xAxisGroup =
-
+            g_axes.append('g').call(xAxis).attr('transform', `translate(0, ${$("svg")[0].getBoundingClientRect().height - heightOfXAxis})`).attr('id', 'xaxis');
             // let xAxisGroup = g.append('g').call(xAxis).attr('transform', `translate(0,0)`).attr('id', 'xaxis');
             //  d3.selectAll('#xaxis .tick text').attr('transform', `translate(${0}, ${5})`);
             // xAxisGroup.append('text')
@@ -330,26 +333,40 @@ $(document).ready(function () {
 
             renderInit(limited_dataset);
 
-            top_side = 0
-            bot_side = 0
-            for (const x of Array(sequential[up_max_index].length).keys()){
-                if(x % 2 === 1){
-                    bot_side += yRaw(sequential[up_max_index][x])
+            function add_up_top_and_bot(index_value) {
+                let top=0,
+                    bot=0;
+                for (const x of Array(sequential[index_value].length).keys()){
+                    if(x % 2 === 1){
+                        bot += yRaw(sequential[index_value][x])
+                    }
+                    else {
+                        top += yRaw(sequential[index_value][x])
+                    }
                 }
-                else {
-                    top_side += yRaw(sequential[up_max_index][x])
-                }
+                return [top, bot]
             }
-            console.log(top_side)
-            console.log(bot_side)
-            offset = (top_side/((top_side+bot_side)/2))
+            
+            // Get counts for 2010
+            let initial_side_weights = add_up_top_and_bot(0)
+            offset = Math.abs(innerHeight - (innerHeight*(initial_side_weights[0]/
+                ((initial_side_weights[0]+initial_side_weights[1])/2))))
+            console.log(offset)
+
+            // Get counts for largest year
+            let max_side_weights = add_up_top_and_bot(up_max_index)
+            let percentage_offset = (up_max/2)/d3.max(max_side_weights)
+            console.log(percentage_offset)
+
             const getYScale = (yScaleVal) => {
-                // const yHalfOfTheScreen = ((innerHeight / 3)); // 178
-                const yHalfOfTheScreen = (534-107)*(301/890); // height of wrapper-height of x-axis times height of info box/height of screen
-                const heightOffset = 0 //offset;
-                const yScreenPercentage = 1 //0.75;
-                return ((yScale(yScaleVal) - (yHalfOfTheScreen)) + heightOffset) * yScreenPercentage
-                // return ((yScale(yScaleVal) + heightOffset) * yScreenPercentage)
+                // const heightOffset = (innerHeight - heightOfXAxis - $("#title")[0].getBoundingClientRect().height)*
+                //     ($("#info-row")[0].offsetHeight/$(window).height()); // height of wrapper-height of x-axis times height of info box/height of screen
+                const heightOffset = (innerHeight - heightOfXAxis - $("#title")[0].getBoundingClientRect().height + offset)*
+                    ($("#info-row")[0].offsetHeight/$(window).height()); // height of wrapper-height of x-axis times height of info box/height of screen
+                // console.log(heightOfXAxis + $("#title")[0].getBoundingClientRect().height)
+                // console.log(heightOffset)
+                const yScreenPercentage = percentage_offset //1 //0.75;
+                return ((yScale(yScaleVal) - heightOffset)) * yScreenPercentage
             }
             const area = d3.area()
                 .curve(d3.curveCardinal.tension(0.1)) // default is d3.curveLinear, d3.curveBundle.beta(1.0)
@@ -370,8 +387,13 @@ $(document).ready(function () {
     function updateOptions() {
         function getBaseFilename() {
             //get the values of the radio buttons
-            const ngramValue = $('.control-group-ngram input[type=radio]:checked').val();
             const pubmedSourceValue = $('.control-group-pubmed-source input[type=radio]:checked').val();
+            let ngramValue;
+
+            if (pubmedSourceValue == 'meshTerms'){
+                ngramValue = 1;
+            } else
+                ngramValue = $('.control-group-ngram input[type=radio]:checked').val();
             $("#pubmed-datasource-in-title").text(pubmedDatasourceLookup[pubmedSourceValue]);
             $("#ngram-size-in-title").text(ngramSizeLookup[ngramValue]);
             return `${pubmedSourceValue}-ngram_${ngramValue}-`;
