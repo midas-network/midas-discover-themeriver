@@ -71,7 +71,7 @@ $(document).ready(function () {
 
             const yAxis = d3.axisLeft(yScale)
 
-                 .tickSize(-300)
+                 .tickSize(0)
                 // .tickFormat("ASD")
                 // .tickPadding(1);
 
@@ -127,6 +127,8 @@ $(document).ready(function () {
                 .join('path')
                 .attr('opacity', 0.9)
                 .attr('d', function (d, i) {
+                    // if(d.key=='Epidemics')
+                    //     { debugger;}
                     return area(d);
                 })
                 .attr('clip-path', 'url(#rectClip)')
@@ -192,7 +194,11 @@ $(document).ready(function () {
                     }
                 }
                 $('#river-word').html(this.classList['value']);
-                $('#word-label').html(topic_count + " papers in " + dates[date_index].substr(0, 4));
+                if (topic_count==0){
+                    $('#word-label').html("Not in top 20 in " + dates[date_index].substr(0, 4));
+                } else{
+                    $('#word-label').html(topic_count + " papers in " + dates[date_index].substr(0, 4));
+                }
 
                 $('#word-box').fadeTo(fadeInDuration, 1);
 
@@ -226,7 +232,8 @@ $(document).ready(function () {
                             }
                             paper_list += "</ul>"
                             year_elem.text(dates[date_index].substr(0, 4))
-                            topic_count_elem.text(topic_count)
+                            // topic_count_elem.text(topic_count)
+                            topic_count_elem.text(papers[dates[date_index].substr(0, 4)][this.classList['value']].length)
                             topic_elem[0].innerHTML = this.classList['value']
                             paper_elem[0].innerHTML = paper_list;
                             paper_elem[0].scrollTop = 0;
@@ -352,10 +359,17 @@ $(document).ready(function () {
                 // return ((yScale(yScaleVal) + heightOffset) * yScreenPercentage)
             }
             const area = d3.area()
-                .curve(d3.curveCardinal.tension(0.1)) // default is d3.curveLinear, d3.curveBundle.beta(1.0)
+                // .curve(d3.curveCardinal.tension(0.1)) // default is d3.curveLinear, d3.curveBundle.beta(1.0)
+                .curve(d3.curveBundle.beta(1.0)) // default is d3.curveLinear, d3.curveBundle.beta(1.0)
                 .x(d => xScale(xValue(d.data)))
                 .y0(d => getYScale(d[0]))
                 .y1(d => getYScale(d[1]))
+            // .x(d => {if (d[0]==d[1]) return 0;
+            //             return xScale(xValue(d.data))})
+            // .y0(d => {if (d[0]==d[1]) return 0;
+            //             return getYScale(d[0])})
+            // .y1(d => {if (d[0]==d[1]) return 0;
+            //             return getYScale(d[1])})
             render(prestack, keys, area);
 
             function fixTranslate() {
@@ -370,8 +384,12 @@ $(document).ready(function () {
     function updateOptions() {
         function getBaseFilename() {
             //get the values of the radio buttons
-            const ngramValue = $('.control-group-ngram input[type=radio]:checked').val();
             const pubmedSourceValue = $('.control-group-pubmed-source input[type=radio]:checked').val();
+            let ngramValue;
+            if (pubmedSourceValue == 'meshTerms'){
+                ngramValue = '1'}
+            else{
+                ngramValue = $('.control-group-ngram input[type=radio]:checked').val();}
             $("#pubmed-datasource-in-title").text(pubmedDatasourceLookup[pubmedSourceValue]);
             $("#ngram-size-in-title").text(ngramSizeLookup[ngramValue]);
             return `${pubmedSourceValue}-ngram_${ngramValue}-`;

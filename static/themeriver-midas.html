@@ -66,11 +66,19 @@
                         <div class="control_indicator"></div>
                     </label>
                 </div>
+                <div class="slidecontainer">
+                    <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+                  </div>
 
             </div>
         </div>
 
-        <div class="paper-display col-md-9 ">
+        <div class="term-display col-md-2 ">
+            <label for="year-picker">Year: </label><select name="year-picker" id="year-list"></select>
+            <div id="term-list" class="side-panel"></div>
+        </div>
+
+        <div class="paper-display col-md-7 ">
             <div id="topic-line">Showing <span id="current-topic-count"></span> papers with topic "<span
                     id="current-topic"></span>" in <span id="current-year"></span>:
             </div>
