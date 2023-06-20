@@ -217,6 +217,28 @@ text {
 
 }
 
+#term-list {
+  overflow: auto;
+    height: 28vh;
+    margin-bottom: 25px;
+    background-color: #fefefed4;
+    font-size:14px;
+
+
+}
+#term-list ul {
+        list-style-type: auto;
+}
+#term-list li::marker{
+    font-size:11px;
+
+}
+
+.term-display label{
+    color: white;
+    font-size: 18px;
+}
+
 .side-panel {
     border: 2px solid #1C6EA4;
     border-radius: 5px;
