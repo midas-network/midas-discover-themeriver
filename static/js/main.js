@@ -12,6 +12,7 @@ let xScale, limited_dataset;
 let mouseOutEnabled = false;
 let mouseOutTimeout;
 let fadeInDuration = 750;
+const year_select = $('#year-list');
 
 const xValue = (datum) => {
     return dates.indexOf(datum['date']);
@@ -377,6 +378,16 @@ svg.selectAll("*").remove()
                 $("#maingroup").attr("transform", 'translate(0,' + (svgHeight - maingroupHeight) + ')')
             }
             fixTranslate()
+
+            // write out year list for dropdown select
+            let year_options = ''
+            for(var i in dates){
+                let date = dates[i].substr(0,4)
+                year_options += '<option value="' + date + '">' + date + '</option>'
+            }
+           
+           year_select[0].innerHTML = year_options 
+           fillTopics()
         });
     }
 
@@ -436,6 +447,107 @@ svg.selectAll("*").remove()
         // drawRiver(oldBadCSVFilename, oldBadJSONFilename);
 
 
+        $('#term-list')[0].onclick = function(event){
+            if (event.target.tagName !='LI') return;
+
+            toggleSelect(event.target)
+
+            const topic_elem = $('#current-topic')
+            const topic_count_elem = $('#current-topic-count')
+            const year_elem = $('#current-year')
+            const paper_elem = $('#paper-list')
+            let s_date = year_select[0].value+'/1/1'
+            let date_index = dates.findIndex(x => x==s_date);
+            let topic_count; 
+            let topic = event.target.innerHTML
+
+            fetch("./data/" + papersJsonFilename)
+                .then(response => {
+                    return response.json()
+                })
+                .then(papers => {
+                        let paper_list = "<ul>"
+                        for (let article of papers[year_select[0].value][topic]) {
+                            paper_list += "<li><a href='" + article['uri'] + "' target='_blank'>" + article['title'] + "</a></li>"
+                        }
+                        for (let i = 0; i < limited_dataset.length; i++) {
+                            if (limited_dataset[i]['date'] === s_date && limited_dataset[i]['topic'] === topic) {
+                                topic_count = limited_dataset[i]['count'];
+                            }
+                        }
+                        paper_list += "</ul>"
+                        year_elem.text(year_select[0].value)
+                        // topic_count_elem.text(topic_count)
+                        topic_count_elem.text(papers[year_select[0].value][topic].length)
+                        topic_elem[0].innerHTML = topic
+                        paper_elem[0].innerHTML = paper_list;
+                        paper_elem[0].scrollTop = 0;
+                        $("#instruction-line").hide()
+                        $("#topic-line").show()
+                    }
+                )
+        }
+
+    }
+
+    function fillTopics(){
+        console.log(year_select[0].value)
+        let s_date = year_select[0].value+'/1/1'
+        let year_topics = limited_dataset.filter(d => d.date== s_date && d.count !=0)
+                                    .map(function(d) {return d.topic})
+
+        topic_list = "<ul>"
+        for(var i in year_topics){
+            topic_list += "<li>" + year_topics[i] + "</li>"
+        }
+        topic_list += "</ul>"
+        $("#term-list")[0].innerHTML = topic_list
+    }
+
+    function toggleSelect(li){
+        let selected = $('#term-list').find('.selected');
+        for (let elem of selected){
+            elem.classList.remove('selected');
+        }
+        li.classList.toggle('selected');
+    }
+
+    function showPapers(topic, baseFilename){
+        const papersJsonFilename = `${baseFilename}papers.json`;
+
+        const topic_elem = $('#current-topic')
+        const topic_count_elem = $('#current-topic-count')
+        const year_elem = $('#current-year')
+        const paper_elem = $('#paper-list')
+        let s_date = year_select[0].value+'/1/1'
+        let date_index = dates.findIndex(x => x==s_date);
+        let topic_count; 
+
+        fetch(papersJsonFilename)
+            .then(response => {
+                return response.json()
+            })
+            .then(papers => {
+                    let paper_list = "<ul>"
+                    for (let article of papers[year_select[0]][topic]) {
+                        paper_list += "<li><a href='" + article['uri'] + "' target='_blank'>" + article['title'] + "</a></li>"
+                    }
+                    for (let i = 0; i < limited_dataset.length; i++) {
+                        if (limited_dataset[i]['date'] === s_date && limited_dataset[i]['topic'] === topic) {
+                            topic_count = limited_dataset[i]['count'];
+                        }
+                    }
+                    paper_list += "</ul>"
+                    year_elem.text(dates[date_index].substr(0, 4))
+                    // topic_count_elem.text(topic_count)
+                    topic_count_elem.text(papers[dates[date_index].substr(0, 4)][this.classList['value']].length)
+                    topic_elem[0].innerHTML = this.classList['value']
+                    paper_elem[0].innerHTML = paper_list;
+                    paper_elem[0].scrollTop = 0;
+                    $("#instruction-line").hide()
+                    $("#topic-line").show()
+                }
+            )
     }
 
     $('.control-group-ngram input[type=radio], .control-group-pubmed-source input[type=radio]').change(() => {
@@ -450,4 +562,8 @@ svg.selectAll("*").remove()
         updateOptions()
     })
     updateOptions();
+
+    year_select.change(() => {
+        fillTopics()
+    })
 });

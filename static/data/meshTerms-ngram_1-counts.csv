@@ -1,7 +1,4 @@
 date,topic,count
-2010/1/1,Age Factors,0
-2011/1/1,Age Factors,0
-2012/1/1,Age Factors,0
 2013/1/1,Age Factors,18
 2014/1/1,Age Factors,0
 2015/1/1,Age Factors,0
@@ -12,9 +9,6 @@ date,topic,count
 2020/1/1,Age Factors,0
 2021/1/1,Age Factors,0
 2022/1/1,Age Factors,0
-2010/1/1,Algorithms,15
-2011/1/1,Algorithms,0
-2012/1/1,Algorithms,25
 2013/1/1,Algorithms,19
 2014/1/1,Algorithms,21
 2015/1/1,Algorithms,30
@@ -25,22 +19,16 @@ date,topic,count
 2020/1/1,Algorithms,0
 2021/1/1,Algorithms,0
 2022/1/1,Algorithms,0
-2010/1/1,Anti-Bacterial Agents,0
-2011/1/1,Anti-Bacterial Agents,0
-2012/1/1,Anti-Bacterial Agents,0
 2013/1/1,Anti-Bacterial Agents,0
 2014/1/1,Anti-Bacterial Agents,0
 2015/1/1,Anti-Bacterial Agents,0
 2016/1/1,Anti-Bacterial Agents,0
 2017/1/1,Anti-Bacterial Agents,0
-2018/1/1,Anti-Bacterial Agents,0
+2018/1/1,Anti-Bacterial Agents,30
 2019/1/1,Anti-Bacterial Agents,25
 2020/1/1,Anti-Bacterial Agents,0
 2021/1/1,Anti-Bacterial Agents,0
 2022/1/1,Anti-Bacterial Agents,13
-2010/1/1,"Antibodies, Viral",0
-2011/1/1,"Antibodies, Viral",0
-2012/1/1,"Antibodies, Viral",0
 2013/1/1,"Antibodies, Viral",0
 2014/1/1,"Antibodies, Viral",0
 2015/1/1,"Antibodies, Viral",0
@@ -51,9 +39,6 @@ date,topic,count
 2020/1/1,"Antibodies, Viral",0
 2021/1/1,"Antibodies, Viral",11
 2022/1/1,"Antibodies, Viral",0
-2010/1/1,Bayes Theorem,0
-2011/1/1,Bayes Theorem,0
-2012/1/1,Bayes Theorem,0
 2013/1/1,Bayes Theorem,0
 2014/1/1,Bayes Theorem,0
 2015/1/1,Bayes Theorem,0
@@ -64,9 +49,6 @@ date,topic,count
 2020/1/1,Bayes Theorem,0
 2021/1/1,Bayes Theorem,0
 2022/1/1,Bayes Theorem,20
-2010/1/1,Betacoronavirus,0
-2011/1/1,Betacoronavirus,0
-2012/1/1,Betacoronavirus,0
 2013/1/1,Betacoronavirus,0
 2014/1/1,Betacoronavirus,0
 2015/1/1,Betacoronavirus,0
@@ -77,9 +59,6 @@ date,topic,count
 2020/1/1,Betacoronavirus,109
 2021/1/1,Betacoronavirus,0
 2022/1/1,Betacoronavirus,0
-2010/1/1,COVID-19,0
-2011/1/1,COVID-19,0
-2012/1/1,COVID-19,0
 2013/1/1,COVID-19,0
 2014/1/1,COVID-19,0
 2015/1/1,COVID-19,0
@@ -90,9 +69,6 @@ date,topic,count
 2020/1/1,COVID-19,137
 2021/1/1,COVID-19,128
 2022/1/1,COVID-19,202
-2010/1/1,COVID-19 Vaccines,0
-2011/1/1,COVID-19 Vaccines,0
-2012/1/1,COVID-19 Vaccines,0
 2013/1/1,COVID-19 Vaccines,0
 2014/1/1,COVID-19 Vaccines,0
 2015/1/1,COVID-19 Vaccines,0
@@ -103,9 +79,6 @@ date,topic,count
 2020/1/1,COVID-19 Vaccines,0
 2021/1/1,COVID-19 Vaccines,20
 2022/1/1,COVID-19 Vaccines,24
-2010/1/1,China,0
-2011/1/1,China,0
-2012/1/1,China,0
 2013/1/1,China,0
 2014/1/1,China,0
 2015/1/1,China,0
@@ -116,35 +89,6 @@ date,topic,count
 2020/1/1,China,24
 2021/1/1,China,12
 2022/1/1,China,0
-2010/1/1,Cluster Analysis,12
-2011/1/1,Cluster Analysis,0
-2012/1/1,Cluster Analysis,0
-2013/1/1,Cluster Analysis,0
-2014/1/1,Cluster Analysis,0
-2015/1/1,Cluster Analysis,0
-2016/1/1,Cluster Analysis,0
-2017/1/1,Cluster Analysis,0
-2018/1/1,Cluster Analysis,0
-2019/1/1,Cluster Analysis,0
-2020/1/1,Cluster Analysis,0
-2021/1/1,Cluster Analysis,0
-2022/1/1,Cluster Analysis,0
-2010/1/1,Cohort Studies,13
-2011/1/1,Cohort Studies,0
-2012/1/1,Cohort Studies,0
-2013/1/1,Cohort Studies,0
-2014/1/1,Cohort Studies,0
-2015/1/1,Cohort Studies,0
-2016/1/1,Cohort Studies,0
-2017/1/1,Cohort Studies,0
-2018/1/1,Cohort Studies,0
-2019/1/1,Cohort Studies,0
-2020/1/1,Cohort Studies,0
-2021/1/1,Cohort Studies,0
-2022/1/1,Cohort Studies,0
-2010/1/1,Communicable Disease Control,0
-2011/1/1,Communicable Disease Control,0
-2012/1/1,Communicable Disease Control,0
 2013/1/1,Communicable Disease Control,0
 2014/1/1,Communicable Disease Control,0
 2015/1/1,Communicable Disease Control,0
@@ -154,10 +98,7 @@ date,topic,count
 2019/1/1,Communicable Disease Control,0
 2020/1/1,Communicable Disease Control,22
 2021/1/1,Communicable Disease Control,20
-2022/1/1,Communicable Disease Control,0
-2010/1/1,Communicable Diseases,0
-2011/1/1,Communicable Diseases,0
-2012/1/1,Communicable Diseases,0
+2022/1/1,Communicable Disease Control,13
 2013/1/1,Communicable Diseases,0
 2014/1/1,Communicable Diseases,0
 2015/1/1,Communicable Diseases,30
@@ -168,9 +109,6 @@ date,topic,count
 2020/1/1,Communicable Diseases,0
 2021/1/1,Communicable Diseases,0
 2022/1/1,Communicable Diseases,15
-2010/1/1,Contact Tracing,0
-2011/1/1,Contact Tracing,0
-2012/1/1,Contact Tracing,0
 2013/1/1,Contact Tracing,0
 2014/1/1,Contact Tracing,0
 2015/1/1,Contact Tracing,0
@@ -181,9 +119,6 @@ date,topic,count
 2020/1/1,Contact Tracing,0
 2021/1/1,Contact Tracing,10
 2022/1/1,Contact Tracing,0
-2010/1/1,Coronavirus Infections,0
-2011/1/1,Coronavirus Infections,0
-2012/1/1,Coronavirus Infections,0
 2013/1/1,Coronavirus Infections,0
 2014/1/1,Coronavirus Infections,0
 2015/1/1,Coronavirus Infections,0
@@ -194,9 +129,6 @@ date,topic,count
 2020/1/1,Coronavirus Infections,136
 2021/1/1,Coronavirus Infections,0
 2022/1/1,Coronavirus Infections,0
-2010/1/1,Cost-Benefit Analysis,17
-2011/1/1,Cost-Benefit Analysis,16
-2012/1/1,Cost-Benefit Analysis,18
 2013/1/1,Cost-Benefit Analysis,0
 2014/1/1,Cost-Benefit Analysis,19
 2015/1/1,Cost-Benefit Analysis,0
@@ -207,9 +139,6 @@ date,topic,count
 2020/1/1,Cost-Benefit Analysis,0
 2021/1/1,Cost-Benefit Analysis,0
 2022/1/1,Cost-Benefit Analysis,0
-2010/1/1,Cross-Sectional Studies,0
-2011/1/1,Cross-Sectional Studies,12
-2012/1/1,Cross-Sectional Studies,0
 2013/1/1,Cross-Sectional Studies,0
 2014/1/1,Cross-Sectional Studies,0
 2015/1/1,Cross-Sectional Studies,0
@@ -220,22 +149,16 @@ date,topic,count
 2020/1/1,Cross-Sectional Studies,21
 2021/1/1,Cross-Sectional Studies,18
 2022/1/1,Cross-Sectional Studies,18
-2010/1/1,Dengue,0
-2011/1/1,Dengue,0
-2012/1/1,Dengue,0
 2013/1/1,Dengue,19
 2014/1/1,Dengue,20
 2015/1/1,Dengue,25
 2016/1/1,Dengue,28
 2017/1/1,Dengue,0
 2018/1/1,Dengue,38
-2019/1/1,Dengue,0
+2019/1/1,Dengue,25
 2020/1/1,Dengue,0
 2021/1/1,Dengue,0
 2022/1/1,Dengue,0
-2010/1/1,Dengue Virus,0
-2011/1/1,Dengue Virus,0
-2012/1/1,Dengue Virus,0
 2013/1/1,Dengue Virus,0
 2014/1/1,Dengue Virus,19
 2015/1/1,Dengue Virus,0
@@ -246,9 +169,6 @@ date,topic,count
 2020/1/1,Dengue Virus,0
 2021/1/1,Dengue Virus,0
 2022/1/1,Dengue Virus,0
-2010/1/1,Disease Outbreaks,38
-2011/1/1,Disease Outbreaks,30
-2012/1/1,Disease Outbreaks,29
 2013/1/1,Disease Outbreaks,42
 2014/1/1,Disease Outbreaks,55
 2015/1/1,Disease Outbreaks,72
@@ -259,9 +179,6 @@ date,topic,count
 2020/1/1,Disease Outbreaks,47
 2021/1/1,Disease Outbreaks,12
 2022/1/1,Disease Outbreaks,27
-2010/1/1,Epidemics,0
-2011/1/1,Epidemics,0
-2012/1/1,Epidemics,0
 2013/1/1,Epidemics,0
 2014/1/1,Epidemics,0
 2015/1/1,Epidemics,40
@@ -272,9 +189,6 @@ date,topic,count
 2020/1/1,Epidemics,0
 2021/1/1,Epidemics,0
 2022/1/1,Epidemics,17
-2010/1/1,"Evolution, Molecular",12
-2011/1/1,"Evolution, Molecular",0
-2012/1/1,"Evolution, Molecular",0
 2013/1/1,"Evolution, Molecular",20
 2014/1/1,"Evolution, Molecular",0
 2015/1/1,"Evolution, Molecular",0
@@ -285,9 +199,6 @@ date,topic,count
 2020/1/1,"Evolution, Molecular",0
 2021/1/1,"Evolution, Molecular",0
 2022/1/1,"Evolution, Molecular",0
-2010/1/1,Forecasting,0
-2011/1/1,Forecasting,0
-2012/1/1,Forecasting,0
 2013/1/1,Forecasting,0
 2014/1/1,Forecasting,0
 2015/1/1,Forecasting,0
@@ -298,9 +209,6 @@ date,topic,count
 2020/1/1,Forecasting,0
 2021/1/1,Forecasting,0
 2022/1/1,Forecasting,0
-2010/1/1,Genomics,0
-2011/1/1,Genomics,0
-2012/1/1,Genomics,0
 2013/1/1,Genomics,0
 2014/1/1,Genomics,0
 2015/1/1,Genomics,0
@@ -311,9 +219,6 @@ date,topic,count
 2020/1/1,Genomics,0
 2021/1/1,Genomics,0
 2022/1/1,Genomics,14
-2010/1/1,HIV Infections,25
-2011/1/1,HIV Infections,26
-2012/1/1,HIV Infections,25
 2013/1/1,HIV Infections,30
 2014/1/1,HIV Infections,28
 2015/1/1,HIV Infections,33
@@ -324,9 +229,6 @@ date,topic,count
 2020/1/1,HIV Infections,20
 2021/1/1,HIV Infections,0
 2022/1/1,HIV Infections,25
-2010/1/1,"Hemorrhagic Fever, Ebola",0
-2011/1/1,"Hemorrhagic Fever, Ebola",0
-2012/1/1,"Hemorrhagic Fever, Ebola",0
 2013/1/1,"Hemorrhagic Fever, Ebola",0
 2014/1/1,"Hemorrhagic Fever, Ebola",0
 2015/1/1,"Hemorrhagic Fever, Ebola",47
@@ -337,9 +239,6 @@ date,topic,count
 2020/1/1,"Hemorrhagic Fever, Ebola",0
 2021/1/1,"Hemorrhagic Fever, Ebola",0
 2022/1/1,"Hemorrhagic Fever, Ebola",0
-2010/1/1,Hospitalization,0
-2011/1/1,Hospitalization,0
-2012/1/1,Hospitalization,0
 2013/1/1,Hospitalization,0
 2014/1/1,Hospitalization,0
 2015/1/1,Hospitalization,0
@@ -350,9 +249,6 @@ date,topic,count
 2020/1/1,Hospitalization,0
 2021/1/1,Hospitalization,11
 2022/1/1,Hospitalization,0
-2010/1/1,Host-Pathogen Interactions,0
-2011/1/1,Host-Pathogen Interactions,0
-2012/1/1,Host-Pathogen Interactions,0
 2013/1/1,Host-Pathogen Interactions,0
 2014/1/1,Host-Pathogen Interactions,0
 2015/1/1,Host-Pathogen Interactions,21
@@ -363,9 +259,6 @@ date,topic,count
 2020/1/1,Host-Pathogen Interactions,0
 2021/1/1,Host-Pathogen Interactions,0
 2022/1/1,Host-Pathogen Interactions,0
-2010/1/1,"Infant, Newborn",0
-2011/1/1,"Infant, Newborn",0
-2012/1/1,"Infant, Newborn",19
 2013/1/1,"Infant, Newborn",0
 2014/1/1,"Infant, Newborn",19
 2015/1/1,"Infant, Newborn",28
@@ -376,11 +269,8 @@ date,topic,count
 2020/1/1,"Infant, Newborn",0
 2021/1/1,"Infant, Newborn",11
 2022/1/1,"Infant, Newborn",0
-2010/1/1,"Influenza A Virus, H1N1 Subtype",34
-2011/1/1,"Influenza A Virus, H1N1 Subtype",45
-2012/1/1,"Influenza A Virus, H1N1 Subtype",25
 2013/1/1,"Influenza A Virus, H1N1 Subtype",19
-2014/1/1,"Influenza A Virus, H1N1 Subtype",0
+2014/1/1,"Influenza A Virus, H1N1 Subtype",17
 2015/1/1,"Influenza A Virus, H1N1 Subtype",0
 2016/1/1,"Influenza A Virus, H1N1 Subtype",0
 2017/1/1,"Influenza A Virus, H1N1 Subtype",0
@@ -389,9 +279,6 @@ date,topic,count
 2020/1/1,"Influenza A Virus, H1N1 Subtype",0
 2021/1/1,"Influenza A Virus, H1N1 Subtype",0
 2022/1/1,"Influenza A Virus, H1N1 Subtype",0
-2010/1/1,Influenza A virus,0
-2011/1/1,Influenza A virus,0
-2012/1/1,Influenza A virus,0
 2013/1/1,Influenza A virus,23
 2014/1/1,Influenza A virus,0
 2015/1/1,Influenza A virus,0
@@ -402,9 +289,6 @@ date,topic,count
 2020/1/1,Influenza A virus,0
 2021/1/1,Influenza A virus,0
 2022/1/1,Influenza A virus,0
-2010/1/1,Influenza Vaccines,21
-2011/1/1,Influenza Vaccines,21
-2012/1/1,Influenza Vaccines,30
 2013/1/1,Influenza Vaccines,0
 2014/1/1,Influenza Vaccines,27
 2015/1/1,Influenza Vaccines,0
@@ -415,9 +299,6 @@ date,topic,count
 2020/1/1,Influenza Vaccines,0
 2021/1/1,Influenza Vaccines,0
 2022/1/1,Influenza Vaccines,0
-2010/1/1,"Influenza, Human",60
-2011/1/1,"Influenza, Human",76
-2012/1/1,"Influenza, Human",78
 2013/1/1,"Influenza, Human",74
 2014/1/1,"Influenza, Human",82
 2015/1/1,"Influenza, Human",78
@@ -428,9 +309,6 @@ date,topic,count
 2020/1/1,"Influenza, Human",21
 2021/1/1,"Influenza, Human",0
 2022/1/1,"Influenza, Human",18
-2010/1/1,Malaria,0
-2011/1/1,Malaria,0
-2012/1/1,Malaria,0
 2013/1/1,Malaria,0
 2014/1/1,Malaria,0
 2015/1/1,Malaria,0
@@ -441,9 +319,6 @@ date,topic,count
 2020/1/1,Malaria,0
 2021/1/1,Malaria,0
 2022/1/1,Malaria,13
-2010/1/1,"Models, Biological",41
-2011/1/1,"Models, Biological",44
-2012/1/1,"Models, Biological",59
 2013/1/1,"Models, Biological",51
 2014/1/1,"Models, Biological",47
 2015/1/1,"Models, Biological",59
@@ -454,9 +329,16 @@ date,topic,count
 2020/1/1,"Models, Biological",24
 2021/1/1,"Models, Biological",15
 2022/1/1,"Models, Biological",0
-2010/1/1,"Models, Statistical",23
-2011/1/1,"Models, Statistical",27
-2012/1/1,"Models, Statistical",44
+2013/1/1,"Models, Genetic",16
+2014/1/1,"Models, Genetic",0
+2015/1/1,"Models, Genetic",0
+2016/1/1,"Models, Genetic",0
+2017/1/1,"Models, Genetic",0
+2018/1/1,"Models, Genetic",0
+2019/1/1,"Models, Genetic",0
+2020/1/1,"Models, Genetic",0
+2021/1/1,"Models, Genetic",0
+2022/1/1,"Models, Genetic",0
 2013/1/1,"Models, Statistical",32
 2014/1/1,"Models, Statistical",36
 2015/1/1,"Models, Statistical",46
@@ -467,9 +349,6 @@ date,topic,count
 2020/1/1,"Models, Statistical",19
 2021/1/1,"Models, Statistical",0
 2022/1/1,"Models, Statistical",0
-2010/1/1,"Models, Theoretical",24
-2011/1/1,"Models, Theoretical",37
-2012/1/1,"Models, Theoretical",31
 2013/1/1,"Models, Theoretical",45
 2014/1/1,"Models, Theoretical",66
 2015/1/1,"Models, Theoretical",85
@@ -480,9 +359,6 @@ date,topic,count
 2020/1/1,"Models, Theoretical",42
 2021/1/1,"Models, Theoretical",22
 2022/1/1,"Models, Theoretical",0
-2010/1/1,Pandemics,0
-2011/1/1,Pandemics,41
-2012/1/1,Pandemics,23
 2013/1/1,Pandemics,21
 2014/1/1,Pandemics,0
 2015/1/1,Pandemics,0
@@ -493,22 +369,16 @@ date,topic,count
 2020/1/1,Pandemics,152
 2021/1/1,Pandemics,48
 2022/1/1,Pandemics,77
-2010/1/1,Phylogeny,13
-2011/1/1,Phylogeny,20
-2012/1/1,Phylogeny,19
 2013/1/1,Phylogeny,18
 2014/1/1,Phylogeny,21
-2015/1/1,Phylogeny,0
+2015/1/1,Phylogeny,21
 2016/1/1,Phylogeny,28
-2017/1/1,Phylogeny,0
+2017/1/1,Phylogeny,24
 2018/1/1,Phylogeny,37
 2019/1/1,Phylogeny,36
 2020/1/1,Phylogeny,21
 2021/1/1,Phylogeny,0
 2022/1/1,Phylogeny,0
-2010/1/1,"Pneumonia, Viral",0
-2011/1/1,"Pneumonia, Viral",0
-2012/1/1,"Pneumonia, Viral",0
 2013/1/1,"Pneumonia, Viral",0
 2014/1/1,"Pneumonia, Viral",0
 2015/1/1,"Pneumonia, Viral",0
@@ -519,22 +389,6 @@ date,topic,count
 2020/1/1,"Pneumonia, Viral",132
 2021/1/1,"Pneumonia, Viral",0
 2022/1/1,"Pneumonia, Viral",0
-2010/1/1,Population Dynamics,0
-2011/1/1,Population Dynamics,13
-2012/1/1,Population Dynamics,0
-2013/1/1,Population Dynamics,0
-2014/1/1,Population Dynamics,0
-2015/1/1,Population Dynamics,0
-2016/1/1,Population Dynamics,0
-2017/1/1,Population Dynamics,0
-2018/1/1,Population Dynamics,0
-2019/1/1,Population Dynamics,0
-2020/1/1,Population Dynamics,0
-2021/1/1,Population Dynamics,0
-2022/1/1,Population Dynamics,0
-2010/1/1,Population Surveillance,0
-2011/1/1,Population Surveillance,18
-2012/1/1,Population Surveillance,19
 2013/1/1,Population Surveillance,0
 2014/1/1,Population Surveillance,18
 2015/1/1,Population Surveillance,23
@@ -545,9 +399,6 @@ date,topic,count
 2020/1/1,Population Surveillance,0
 2021/1/1,Population Surveillance,0
 2022/1/1,Population Surveillance,0
-2010/1/1,Pregnancy,0
-2011/1/1,Pregnancy,0
-2012/1/1,Pregnancy,0
 2013/1/1,Pregnancy,0
 2014/1/1,Pregnancy,0
 2015/1/1,Pregnancy,0
@@ -558,9 +409,6 @@ date,topic,count
 2020/1/1,Pregnancy,0
 2021/1/1,Pregnancy,0
 2022/1/1,Pregnancy,15
-2010/1/1,Public Health,0
-2011/1/1,Public Health,0
-2012/1/1,Public Health,0
 2013/1/1,Public Health,0
 2014/1/1,Public Health,0
 2015/1/1,Public Health,0
@@ -571,9 +419,6 @@ date,topic,count
 2020/1/1,Public Health,0
 2021/1/1,Public Health,0
 2022/1/1,Public Health,19
-2010/1/1,Retrospective Studies,0
-2011/1/1,Retrospective Studies,0
-2012/1/1,Retrospective Studies,0
 2013/1/1,Retrospective Studies,0
 2014/1/1,Retrospective Studies,0
 2015/1/1,Retrospective Studies,0
@@ -584,9 +429,6 @@ date,topic,count
 2020/1/1,Retrospective Studies,0
 2021/1/1,Retrospective Studies,15
 2022/1/1,Retrospective Studies,15
-2010/1/1,Risk Assessment,0
-2011/1/1,Risk Assessment,0
-2012/1/1,Risk Assessment,0
 2013/1/1,Risk Assessment,0
 2014/1/1,Risk Assessment,0
 2015/1/1,Risk Assessment,0
@@ -597,9 +439,6 @@ date,topic,count
 2020/1/1,Risk Assessment,0
 2021/1/1,Risk Assessment,0
 2022/1/1,Risk Assessment,0
-2010/1/1,Risk Factors,23
-2011/1/1,Risk Factors,0
-2012/1/1,Risk Factors,28
 2013/1/1,Risk Factors,21
 2014/1/1,Risk Factors,28
 2015/1/1,Risk Factors,27
@@ -610,9 +449,6 @@ date,topic,count
 2020/1/1,Risk Factors,22
 2021/1/1,Risk Factors,10
 2022/1/1,Risk Factors,0
-2010/1/1,SARS-CoV-2,0
-2011/1/1,SARS-CoV-2,0
-2012/1/1,SARS-CoV-2,0
 2013/1/1,SARS-CoV-2,0
 2014/1/1,SARS-CoV-2,0
 2015/1/1,SARS-CoV-2,0
@@ -623,9 +459,6 @@ date,topic,count
 2020/1/1,SARS-CoV-2,109
 2021/1/1,SARS-CoV-2,105
 2022/1/1,SARS-CoV-2,143
-2010/1/1,Seasons,13
-2011/1/1,Seasons,19
-2012/1/1,Seasons,24
 2013/1/1,Seasons,30
 2014/1/1,Seasons,26
 2015/1/1,Seasons,35
@@ -636,9 +469,6 @@ date,topic,count
 2020/1/1,Seasons,0
 2021/1/1,Seasons,0
 2022/1/1,Seasons,0
-2010/1/1,Seroepidemiologic Studies,0
-2011/1/1,Seroepidemiologic Studies,0
-2012/1/1,Seroepidemiologic Studies,0
 2013/1/1,Seroepidemiologic Studies,0
 2014/1/1,Seroepidemiologic Studies,0
 2015/1/1,Seroepidemiologic Studies,0
@@ -649,22 +479,6 @@ date,topic,count
 2020/1/1,Seroepidemiologic Studies,0
 2021/1/1,Seroepidemiologic Studies,11
 2022/1/1,Seroepidemiologic Studies,0
-2010/1/1,Stochastic Processes,0
-2011/1/1,Stochastic Processes,17
-2012/1/1,Stochastic Processes,0
-2013/1/1,Stochastic Processes,0
-2014/1/1,Stochastic Processes,0
-2015/1/1,Stochastic Processes,0
-2016/1/1,Stochastic Processes,0
-2017/1/1,Stochastic Processes,0
-2018/1/1,Stochastic Processes,0
-2019/1/1,Stochastic Processes,0
-2020/1/1,Stochastic Processes,0
-2021/1/1,Stochastic Processes,0
-2022/1/1,Stochastic Processes,0
-2010/1/1,Surveys and Questionnaires,0
-2011/1/1,Surveys and Questionnaires,0
-2012/1/1,Surveys and Questionnaires,0
 2013/1/1,Surveys and Questionnaires,0
 2014/1/1,Surveys and Questionnaires,0
 2015/1/1,Surveys and Questionnaires,0
@@ -675,9 +489,6 @@ date,topic,count
 2020/1/1,Surveys and Questionnaires,0
 2021/1/1,Surveys and Questionnaires,0
 2022/1/1,Surveys and Questionnaires,0
-2010/1/1,Time Factors,26
-2011/1/1,Time Factors,19
-2012/1/1,Time Factors,29
 2013/1/1,Time Factors,26
 2014/1/1,Time Factors,18
 2015/1/1,Time Factors,29
@@ -685,12 +496,9 @@ date,topic,count
 2017/1/1,Time Factors,0
 2018/1/1,Time Factors,0
 2019/1/1,Time Factors,28
-2020/1/1,Time Factors,0
-2021/1/1,Time Factors,0
+2020/1/1,Time Factors,19
+2021/1/1,Time Factors,9
 2022/1/1,Time Factors,0
-2010/1/1,United States,30
-2011/1/1,United States,39
-2012/1/1,United States,36
 2013/1/1,United States,44
 2014/1/1,United States,38
 2015/1/1,United States,50
@@ -701,9 +509,6 @@ date,topic,count
 2020/1/1,United States,61
 2021/1/1,United States,19
 2022/1/1,United States,32
-2010/1/1,Vaccination,15
-2011/1/1,Vaccination,18
-2012/1/1,Vaccination,31
 2013/1/1,Vaccination,22
 2014/1/1,Vaccination,27
 2015/1/1,Vaccination,34
@@ -714,3 +519,13 @@ date,topic,count
 2020/1/1,Vaccination,20
 2021/1/1,Vaccination,20
 2022/1/1,Vaccination,37
+2013/1/1,Zika Virus Infection,0
+2014/1/1,Zika Virus Infection,0
+2015/1/1,Zika Virus Infection,0
+2016/1/1,Zika Virus Infection,25
+2017/1/1,Zika Virus Infection,0
+2018/1/1,Zika Virus Infection,0
+2019/1/1,Zika Virus Infection,0
+2020/1/1,Zika Virus Infection,0
+2021/1/1,Zika Virus Infection,0
+2022/1/1,Zika Virus Infection,0
