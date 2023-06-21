@@ -217,6 +217,14 @@ text {
 
 }
 
+#year-list{
+    margin-left: 1em;
+}
+
+.selected{
+    background-color: #2aa1c0;
+}
+
 #term-list {
   overflow: auto;
     height: 28vh;
