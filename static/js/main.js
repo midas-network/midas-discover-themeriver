@@ -37,6 +37,56 @@ const ngramSizeLookup = {
 $(document).ready(function () {
 
     const drawRiver = (countsCsvFilename, papersJsonFilename, tension) => {
+
+        const updateInfoPanel = (year, topic, paper_list, count) => {
+            const paper_elem = $('#paper-list')
+
+            $('#current-year').text(year)
+            $('#current-topic-count').text(count)
+
+            $('#current-topic').innerHTML = topic
+            paper_elem[0].innerHTML = paper_list;
+            paper_elem[0].scrollTop = 0;
+
+            $("#instruction-line").hide()
+            $("#topic-line, #topic-line2, #term-list").show()
+
+            fillTopics(year)
+        }
+        const showPapers = (that) => {
+
+            $('#term-list')[0].onclick = function (event) {
+                if (event.target.tagName != 'LI') return;
+                toggleSelect(event.target)
+                showPapers(that)
+            }
+
+            let date_index, topic;
+            if (d3.event == null) {
+                let s_date = $('#current-year').text() + '/1/1'
+                date_index = dates.findIndex(x => x == s_date);
+                topic = event.target.textContent
+            } else {
+                date_index = Math.round(xScale.invert(d3.mouse(that)[0]));
+                topic = d3.event.target.classList.toString()
+            }
+            const year = dates[date_index].substr(0, 4)
+
+            fetch(papersJsonFilename)
+                .then(response => {
+                    return response.json()
+                })
+                .then(papers => {
+                        let paper_list = "<ul>"
+                        for (let article of papers[year][topic]) {
+                            paper_list += "<li><a title=\"This is some text I want to display.\" href='" + article['uri'] + "' target='_blank'>" + article['title'] + "</a></li>"
+                        }
+                        paper_list += "</ul>"
+                        updateInfoPanel(year, topic, paper_list, papers[year][topic].length)
+                    }
+                )
+        }
+
         const renderInit = function (data) {
 
             const graphHeight = $("#wrapper")[0].offsetHeight;
@@ -45,19 +95,19 @@ $(document).ready(function () {
             // Linear Scale: Data Space -> Screen Space
             xScale = d3.scaleLinear()
                 .domain([0, dates.length - 1])
-                .range([$("svg")[0].getBoundingClientRect().x + 50, $("svg")[0].getBoundingClientRect().width - 50]);
+                .range([$("#main-svg")[0].getBoundingClientRect().x + 50, $("#main-svg")[0].getBoundingClientRect().width - 50]);
 
             // Introducing y-Scale
             yScale = d3.scaleLinear()
                 .domain([0, 100])
-                .range([$("svg")[0].getBoundingClientRect().height-50, 0]) // height 107 -> figure out height of x-axis
-              //  .nice();
+                .range([$("#main-svg")[0].getBoundingClientRect().height - 50, 0]) // height 107 -> figure out height of x-axis
+            //  .nice();
 
             // generate maxX and maxY
             maxX = xScale(d3.max(data, xValue));
             maxY = yScale(d3.max(data, yValue));
 
-             const gForXAxis = svg.append('g')
+            const gForXAxis = svg.append('g')
                 .attr('transform', `translate(0,0)`)
                 //.attr('transform', `translate(${graphWidth * .3}, ${graphHeight * .1})`)
                 .attr('id', 'xaxisgroup')
@@ -72,9 +122,9 @@ $(document).ready(function () {
 
             const yAxis = d3.axisLeft(yScale)
 
-                 .tickSize(0)
-                // .tickFormat("ASD")
-                // .tickPadding(1);
+                .tickSize(0)
+            // .tickFormat("ASD")
+            // .tickPadding(1);
 
 
             const xAxis = d3.axisBottom(xScale)
@@ -91,7 +141,7 @@ $(document).ready(function () {
             //     .text(yAxisLabel)
             //     .attr('text-anchor', 'middle'); // Make label at the middle of the axis (seemingly in conjunction with the x attribute)
             //yAxisGroup.selectAll('.domain').remove(); // [Not sure what this is doing] We can select multiple tags using comma to seperate them and we can use space to signify nesting
- gForXAxis.append('g').call(xAxis).attr('transform', `translate(0, ${$("svg")[0].getBoundingClientRect().height - heightOfXAxis})`).attr('id', 'xaxis');
+            gForXAxis.append('g').call(xAxis).attr('transform', `translate(0, ${$("#main-svg")[0].getBoundingClientRect().height - heightOfXAxis})`).attr('id', 'xaxis');
 
             //let xAxisGroup =
 
@@ -120,7 +170,7 @@ $(document).ready(function () {
                 .append('rect')
                 .attr('class', 'rect-clip')
                 .attr('width', 0)
-                .attr('height', $("svg")[0].getBoundingClientRect().height + 100)
+                .attr('height', $("#main-svg")[0].getBoundingClientRect().height + 100)
             // .attr('height', height)
 
             g.selectAll('path')
@@ -163,12 +213,12 @@ $(document).ready(function () {
                 let adjustX = 0;
                 if (X < 275) {
                     adjustX = -19;
-                                     $("#tooltip-arrow").removeClass("left").addClass("right")
+                    $("#tooltip-arrow").removeClass("left").addClass("right")
 
                 } else {
                     adjustX = 8;
 
-                        $("#tooltip-arrow").removeClass("right").addClass("left")
+                    $("#tooltip-arrow").removeClass("right").addClass("left")
 
                 }
 
@@ -179,7 +229,7 @@ $(document).ready(function () {
                 // Color label box
                 elem.css('backgroundColor', 'transparent');
                 $('#tooltip-inner').css('border-color', d3.event.currentTarget.getAttribute('fill'));
-                  $('#word-label').css('border-color', d3.event.currentTarget.getAttribute('fill'));
+                $('#word-label').css('border-color', d3.event.currentTarget.getAttribute('fill'));
                 //$('#theme-color').css('color', d3.event.currentTarget.getAttribute('fill'));
                 const fill = d3.event.currentTarget.getAttribute('fill')
 
@@ -195,9 +245,9 @@ $(document).ready(function () {
                     }
                 }
                 $('#river-word').html(this.classList['value']);
-                if (topic_count==0){
+                if (topic_count == 0) {
                     $('#word-label').html("Not in top 20 in " + dates[date_index].substr(0, 4));
-                } else{
+                } else {
                     $('#word-label').html(topic_count + " papers in " + dates[date_index].substr(0, 4));
                 }
 
@@ -207,45 +257,14 @@ $(document).ready(function () {
                 fadeInDuration = 0
             }
 
-            function onMouseClick() {
+            function onMouseClick(e) {
 
+                showPapers(this)
 
-                const topic_elem = $('#current-topic')
-                const topic_count_elem = $('#current-topic-count')
-                const year_elem = $('#current-year')
-                const paper_elem = $('#paper-list')
-                let date_index = Math.round(xScale.invert(d3.mouse(this)[0]));
-                let topic_count = this.__data__[date_index]['data'][this.classList[0]];
-
-                fetch(papersJsonFilename)
-                    .then(response => {
-                        return response.json()
-                    })
-                    .then(papers => {
-                            let paper_list = "<ul>"
-                            for (let article of papers[dates[date_index].substr(0, 4)][this.classList['value']]) {
-                                paper_list += "<li><a href='" + article['uri'] + "' target='_blank'>" + article['title'] + "</a></li>"
-                            }
-                            for (let i = 0; i < limited_dataset.length; i++) {
-                                if (limited_dataset[i]['date'] === dates[date_index] && limited_dataset[i]['topic'] === this.classList['value']) {
-                                    topic_count = limited_dataset[i]['count'];
-                                }
-                            }
-                            paper_list += "</ul>"
-                            year_elem.text(dates[date_index].substr(0, 4))
-                            // topic_count_elem.text(topic_count)
-                            topic_count_elem.text(papers[dates[date_index].substr(0, 4)][this.classList['value']].length)
-                            topic_elem[0].innerHTML = this.classList['value']
-                            paper_elem[0].innerHTML = paper_list;
-                            paper_elem[0].scrollTop = 0;
-                            $("#instruction-line").hide()
-                            $("#topic-line").show()
-                        }
-                    )
 
             }
 
-            clippedrect.transition().ease(d3.easeLinear).duration(0).attr("width", $("svg")[0].getBoundingClientRect().width);
+            clippedrect.transition().ease(d3.easeLinear).duration(0).attr("width", $("#main-svg")[0].getBoundingClientRect().width);
         };
 
         const seqgen = function (data) {
@@ -322,7 +341,7 @@ $(document).ready(function () {
             });
 
             up_max = 0
-            sequential[up_max_index].forEach( s => {
+            sequential[up_max_index].forEach(s => {
                 up_max += yRaw(s)
             })
             // up_max = up_max + (up_max*.1)
@@ -335,26 +354,34 @@ $(document).ready(function () {
             // stack data
             let prestack = seqgen(limited_dataset);
             let keys = sorting_set;
-svg.selectAll("*").remove()
+            svg.selectAll("*").remove()
             renderInit(limited_dataset);
 
             top_side = 0
             bot_side = 0
-            for (const x of Array(sequential[up_max_index].length).keys()){
-                if(x % 2 === 1){
+            for (const x of Array(sequential[up_max_index].length).keys()) {
+                if (x % 2 === 1) {
                     bot_side += yRaw(sequential[up_max_index][x])
-                }
-                else {
+                } else {
                     top_side += yRaw(sequential[up_max_index][x])
                 }
             }
             console.log(top_side)
             console.log(bot_side)
-            offset = (top_side/((top_side+bot_side)/2))
+            offset = (top_side / ((top_side + bot_side) / 2))
             const getYScale = (yScaleVal) => {
                 // const yHalfOfTheScreen = ((innerHeight / 3)); // 178
-                const yHalfOfTheScreen = (534-107)*(301/890); // height of wrapper-height of x-axis times height of info box/height of screen
-                const heightOffset = 0 //offset;
+
+                //const yHalfOfTheScreen = $("#wrapper").get(0).getBoundingClientRect().height - $("g#xaxis").get(0).getBoundingClientRect().height;
+                const height_of_screen = window.innerHeight
+                const height_of_info_row = $("#info-row").get(0).getBoundingClientRect().height
+                const height_of_xaxis = $("g#xaxis").get(0).getBoundingClientRect().height + 25
+                const height_of_svg_wrapper = $("#wrapper").get(0).getBoundingClientRect().height
+
+
+                //height of wrapper-height of x-axis times height of info box/height of screen
+                const yHalfOfTheScreen = (height_of_svg_wrapper - height_of_xaxis) * (height_of_info_row / height_of_screen); // height of wrapper-height of x-axis times height of info box/height of screen
+                const heightOffset = 100 //offset;
                 const yScreenPercentage = 1 //0.75;
                 return ((yScale(yScaleVal) - (yHalfOfTheScreen)) + heightOffset) * yScreenPercentage
                 // return ((yScale(yScaleVal) + heightOffset) * yScreenPercentage)
@@ -373,21 +400,22 @@ svg.selectAll("*").remove()
             render(prestack, keys, area);
 
             function fixTranslate() {
-                const maingroupHeight =  $('g#maingroup').get(0).getBoundingClientRect().top
-                const svgHeight = $('#rectClip').get(0).getBoundingClientRect().top
+                const maingroupHeight = $('g#maingroup').get(0).getBoundingClientRect().top
+                const svgHeight = $('#main-svg #rectClip').get(0).getBoundingClientRect().top
                 $("#maingroup").attr("transform", 'translate(0,' + (svgHeight - maingroupHeight) + ')')
             }
+
             fixTranslate()
 
             // write out year list for dropdown select
             let year_options = ''
-            for(var i in dates){
-                let date = dates[i].substr(0,4)
+            for (var i in dates) {
+                let date = dates[i].substr(0, 4)
                 year_options += '<option value="' + date + '">' + date + '</option>'
             }
-           
-           year_select[0].innerHTML = year_options 
-           fillTopics()
+
+            //year_select[0].innerHTML = year_options
+            // fillTopics()
         });
     }
 
@@ -396,10 +424,11 @@ svg.selectAll("*").remove()
             //get the values of the radio buttons
             const pubmedSourceValue = $('.control-group-pubmed-source input[type=radio]:checked').val();
             let ngramValue;
-            if (pubmedSourceValue == 'meshTerms'){
-                ngramValue = '1'}
-            else{
-                ngramValue = $('.control-group-ngram input[type=radio]:checked').val();}
+            if (pubmedSourceValue == 'meshTerms') {
+                ngramValue = '1'
+            } else {
+                ngramValue = $('.control-group-ngram input[type=radio]:checked').val();
+            }
             $("#pubmed-datasource-in-title").text(pubmedDatasourceLookup[pubmedSourceValue]);
             $("#ngram-size-in-title").text(ngramSizeLookup[ngramValue]);
             return `${pubmedSourceValue}-ngram_${ngramValue}-`;
@@ -414,7 +443,7 @@ svg.selectAll("*").remove()
 
         const isMeshTerms = $('.control-group-pubmed-source input[type=radio]:checked').val() === 'meshTerms';
 
-        const tension = $("#myRange").val()/100
+        const tension = $("#myRange").val() / 100
 
         updateNgramControl(!isMeshTerms);
 
@@ -426,7 +455,7 @@ svg.selectAll("*").remove()
         // Possible N-gram Sizes: ngramSizeLookup keys
 
         //clear the svg
-       // svg.selectAll("*").remove()
+        // svg.selectAll("*").remove()
 
         const baseFilename = getBaseFilename()
         const countsCsvFilename = `${baseFilename}counts.csv`;
@@ -447,108 +476,34 @@ svg.selectAll("*").remove()
         // drawRiver(oldBadCSVFilename, oldBadJSONFilename);
 
 
-        $('#term-list')[0].onclick = function(event){
-            if (event.target.tagName !='LI') return;
-
-            toggleSelect(event.target)
-
-            const topic_elem = $('#current-topic')
-            const topic_count_elem = $('#current-topic-count')
-            const year_elem = $('#current-year')
-            const paper_elem = $('#paper-list')
-            let s_date = year_select[0].value+'/1/1'
-            let date_index = dates.findIndex(x => x==s_date);
-            let topic_count; 
-            let topic = event.target.innerHTML
-
-            fetch("./data/" + papersJsonFilename)
-                .then(response => {
-                    return response.json()
-                })
-                .then(papers => {
-                        let paper_list = "<ul>"
-                        for (let article of papers[year_select[0].value][topic]) {
-                            paper_list += "<li><a href='" + article['uri'] + "' target='_blank'>" + article['title'] + "</a></li>"
-                        }
-                        for (let i = 0; i < limited_dataset.length; i++) {
-                            if (limited_dataset[i]['date'] === s_date && limited_dataset[i]['topic'] === topic) {
-                                topic_count = limited_dataset[i]['count'];
-                            }
-                        }
-                        paper_list += "</ul>"
-                        year_elem.text(year_select[0].value)
-                        // topic_count_elem.text(topic_count)
-                        topic_count_elem.text(papers[year_select[0].value][topic].length)
-                        topic_elem[0].innerHTML = topic
-                        paper_elem[0].innerHTML = paper_list;
-                        paper_elem[0].scrollTop = 0;
-                        $("#instruction-line").hide()
-                        $("#topic-line").show()
-                    }
-                )
-        }
-
     }
 
-    function fillTopics(){
-        console.log(year_select[0].value)
-        let s_date = year_select[0].value+'/1/1'
-        let year_topics = limited_dataset.filter(d => d.date== s_date && d.count !=0)
-                                    .map(function(d) {return d.topic})
+    function fillTopics(year) {
+
+        // console.log(year_select[0].value)
+        // let s_date = year_select[0].value+'/1/1'
+        let s_date = year + '/1/1'
+        let year_topics = limited_dataset.filter(d => d.date == s_date && d.count != 0)
+            .map(function (d) {
+                return d.topic
+            })
 
         topic_list = "<ul>"
-        for(var i in year_topics){
+        for (var i in year_topics) {
             topic_list += "<li>" + year_topics[i] + "</li>"
         }
         topic_list += "</ul>"
         $("#term-list")[0].innerHTML = topic_list
     }
 
-    function toggleSelect(li){
+    function toggleSelect(li) {
         let selected = $('#term-list').find('.selected');
-        for (let elem of selected){
+        for (let elem of selected) {
             elem.classList.remove('selected');
         }
         li.classList.toggle('selected');
     }
 
-    function showPapers(topic, baseFilename){
-        const papersJsonFilename = `${baseFilename}papers.json`;
-
-        const topic_elem = $('#current-topic')
-        const topic_count_elem = $('#current-topic-count')
-        const year_elem = $('#current-year')
-        const paper_elem = $('#paper-list')
-        let s_date = year_select[0].value+'/1/1'
-        let date_index = dates.findIndex(x => x==s_date);
-        let topic_count; 
-
-        fetch(papersJsonFilename)
-            .then(response => {
-                return response.json()
-            })
-            .then(papers => {
-                    let paper_list = "<ul>"
-                    for (let article of papers[year_select[0]][topic]) {
-                        paper_list += "<li><a href='" + article['uri'] + "' target='_blank'>" + article['title'] + "</a></li>"
-                    }
-                    for (let i = 0; i < limited_dataset.length; i++) {
-                        if (limited_dataset[i]['date'] === s_date && limited_dataset[i]['topic'] === topic) {
-                            topic_count = limited_dataset[i]['count'];
-                        }
-                    }
-                    paper_list += "</ul>"
-                    year_elem.text(dates[date_index].substr(0, 4))
-                    // topic_count_elem.text(topic_count)
-                    topic_count_elem.text(papers[dates[date_index].substr(0, 4)][this.classList['value']].length)
-                    topic_elem[0].innerHTML = this.classList['value']
-                    paper_elem[0].innerHTML = paper_list;
-                    paper_elem[0].scrollTop = 0;
-                    $("#instruction-line").hide()
-                    $("#topic-line").show()
-                }
-            )
-    }
 
     $('.control-group-ngram input[type=radio], .control-group-pubmed-source input[type=radio]').change(() => {
         updateOptions()
@@ -563,7 +518,7 @@ svg.selectAll("*").remove()
     })
     updateOptions();
 
-    year_select.change(() => {
-        fillTopics()
-    })
+    // year_select.change(() => {
+
+    //  })
 });
