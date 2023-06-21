@@ -493,7 +493,8 @@ $(document).ready(function () {
         console.log(year_select[0].value)
         let s_date = year_select[0].value+'/1/1'
         let year_topics = limited_dataset.filter(d => d.date== s_date && d.count !=0)
-                                    .map(function(d) {return d.topic})
+                                         .sort((a,b) => (a.count < b.count) ? 1 : ((b.count < a.count) ? -1 : 0))
+                                         .map(function(d) {return d.topic})
 
         topic_list = "<ul>"
         for(var i in year_topics){
