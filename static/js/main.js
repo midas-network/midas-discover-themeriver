@@ -35,7 +35,7 @@ const ngramSizeLookup = {
 
 $(document).ready(function () {
 
-    const drawRiver = (countsCsvFilename, papersJsonFilename) => {
+    const drawRiver = (countsCsvFilename, papersJsonFilename, tension) => {
         const renderInit = function (data) {
 
             const graphHeight = $("#wrapper")[0].offsetHeight;
@@ -334,7 +334,7 @@ $(document).ready(function () {
             // stack data
             let prestack = seqgen(limited_dataset);
             let keys = sorting_set;
-
+svg.selectAll("*").remove()
             renderInit(limited_dataset);
 
             top_side = 0
@@ -359,8 +359,7 @@ $(document).ready(function () {
                 // return ((yScale(yScaleVal) + heightOffset) * yScreenPercentage)
             }
             const area = d3.area()
-                // .curve(d3.curveCardinal.tension(0.1)) // default is d3.curveLinear, d3.curveBundle.beta(1.0)
-                .curve(d3.curveBundle.beta(1.0)) // default is d3.curveLinear, d3.curveBundle.beta(1.0)
+                .curve(d3.curveCardinal.tension(tension)) // default is d3.curveLinear, d3.curveBundle.beta(1.0)
                 .x(d => xScale(xValue(d.data)))
                 .y0(d => getYScale(d[0]))
                 .y1(d => getYScale(d[1]))
@@ -404,6 +403,8 @@ $(document).ready(function () {
 
         const isMeshTerms = $('.control-group-pubmed-source input[type=radio]:checked').val() === 'meshTerms';
 
+        const tension = $("#myRange").val()/100
+
         updateNgramControl(!isMeshTerms);
 
 
@@ -414,7 +415,7 @@ $(document).ready(function () {
         // Possible N-gram Sizes: ngramSizeLookup keys
 
         //clear the svg
-        svg.selectAll("*").remove()
+       // svg.selectAll("*").remove()
 
         const baseFilename = getBaseFilename()
         const countsCsvFilename = `${baseFilename}counts.csv`;
@@ -425,7 +426,7 @@ $(document).ready(function () {
         // console.log("papersJsonFilename", papersJsonFilename)
 
         //NAOMI, uncomment the next line once you have the csv and json files created --- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        drawRiver("./data/" + countsCsvFilename, "./data/" + papersJsonFilename);
+        drawRiver("./data/" + countsCsvFilename, "./data/" + papersJsonFilename, tension);
 
 
         //NAMOI, delete the next 3 lines of code once you have the csv and json files created --- !!!!!!!!!!!!!!!!!!!!!!
@@ -438,6 +439,10 @@ $(document).ready(function () {
     }
 
     $('.control-group-ngram input[type=radio], .control-group-pubmed-source input[type=radio]').change(() => {
+        updateOptions()
+    })
+
+    $("#myRange").on("input", function () {
         updateOptions()
     })
 
