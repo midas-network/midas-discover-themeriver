@@ -12,6 +12,7 @@ let xScale, limited_dataset;
 let mouseOutEnabled = false;
 let mouseOutTimeout;
 let fadeInDuration = 750;
+let papersJsonFilename2;
 const year_select = $('#year-list');
 
 const xValue = (datum) => {
@@ -34,58 +35,102 @@ const ngramSizeLookup = {
     '3': 'Trigrams'
 }
 
+const showPapers = (that) => {
+    const updateInfoPanel = (year, topic, paper_list, count) => {
+        const paper_elem = $('#paper-list')
+
+        $('#current-year').text(year)
+        $('#current-year2').text(year)
+        $('#current-topic-count').text(count)
+
+        $('#current-topic').text(topic)
+        paper_elem[0].innerHTML = paper_list;
+        paper_elem[0].scrollTop = 0;
+
+        $("#instruction-line").hide()
+        $("#topic-line, #topic-line2, #term-list").show()
+
+        fillTopics(year, topic)
+    }
+
+    // $('#topic-list *').on("click", function (event) {
+    //     debugger;
+    //     if (event.target.tagName != 'LI') return;
+    //     toggleSelect(event.target)
+    //     showPapers(that)
+    // })
+
+    let date_index, topic;
+    if (d3.event == null) {
+        let s_date = $('#current-year').text() + '/1/1'
+        date_index = dates.findIndex(x => x == s_date);
+        topic = event.target.textContent
+    } else {
+        date_index = Math.round(xScale.invert(d3.mouse(that)[0]));
+        topic = d3.event.target.classList.toString()
+    }
+    const year = dates[date_index].substr(0, 4)
+
+    fetch(papersJsonFilename2)
+        .then(response => {
+            return response.json()
+        })
+        .then(papers => {
+                let paper_list = "<ul>"
+                for (let article of papers[year][topic]) {
+                    paper_list += "<li><a title=\"This is some text I want to display.\" href='" + article['uri'] + "' target='_blank'>" + article['title'] + "</a></li>"
+                }
+                paper_list += "</ul>"
+
+                updateInfoPanel(year, topic, paper_list, papers[year][topic].length)
+            }
+        )
+}
+
+function fillTopics(year, selected_topic) {
+
+    let s_date = year + '/1/1'
+    let year_topics = limited_dataset.filter(d => d.date == s_date && d.count != 0)
+        .sort((a, b) => (a.count < b.count) ? 1 : ((b.count < a.count) ? -1 : 0))
+        .map(function (d) {
+            return d.topic
+        })
+
+    let topic_list = "<table id='topic-list'>"
+    topic_list += "<col class='topic-rank'>"
+    topic_list += "<col class='topic-name'>"
+    topic_list += "<col class='topic-color'>"
+    let line = 0;
+    year_topics.forEach((topic, i) => {
+        topic_list += "<tr onclick='showPapers(this)'>"
+        topic_list += "<td class='term-rank-number'>" + (i + 1) + ".</td>"
+
+        let background = ""
+        let id = ""
+        if (selected_topic == topic) {
+            id = "id=selected-topic"
+            background = "background-color: #4fc02a52;"
+            line = i;
+        }
+        topic_list += "<td " + id + " style='" + background + "'>" + topic + "</td>"
+        d = new Object()
+        d.key = topic
+        console.log(topic + " " + next_bar_color(d))
+        topic_list += "<td style='background:" + next_bar_color(d) + "'></td>"
+        topic_list += "</tr>"
+    })
+    topic_list += "</table>"
+    $("#term-list")[0].innerHTML = topic_list
+    var elem = document.getElementById("selected-topic");
+    elem.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
+}
+
 $(document).ready(function () {
 
+
     const drawRiver = (countsCsvFilename, papersJsonFilename, tension) => {
+        papersJsonFilename2 = papersJsonFilename
 
-        const updateInfoPanel = (year, topic, paper_list, count) => {
-            const paper_elem = $('#paper-list')
-
-            $('#current-year').text(year)
-            $('#current-topic-count').text(count)
-
-            $('#current-topic').innerHTML = topic
-            paper_elem[0].innerHTML = paper_list;
-            paper_elem[0].scrollTop = 0;
-
-            $("#instruction-line").hide()
-            $("#topic-line, #topic-line2, #term-list").show()
-
-            fillTopics(year)
-        }
-        const showPapers = (that) => {
-
-            $('#term-list')[0].onclick = function (event) {
-                if (event.target.tagName != 'LI') return;
-                toggleSelect(event.target)
-                showPapers(that)
-            }
-
-            let date_index, topic;
-            if (d3.event == null) {
-                let s_date = $('#current-year').text() + '/1/1'
-                date_index = dates.findIndex(x => x == s_date);
-                topic = event.target.textContent
-            } else {
-                date_index = Math.round(xScale.invert(d3.mouse(that)[0]));
-                topic = d3.event.target.classList.toString()
-            }
-            const year = dates[date_index].substr(0, 4)
-
-            fetch(papersJsonFilename)
-                .then(response => {
-                    return response.json()
-                })
-                .then(papers => {
-                        let paper_list = "<ul>"
-                        for (let article of papers[year][topic]) {
-                            paper_list += "<li><a title=\"This is some text I want to display.\" href='" + article['uri'] + "' target='_blank'>" + article['title'] + "</a></li>"
-                        }
-                        paper_list += "</ul>"
-                        updateInfoPanel(year, topic, paper_list, papers[year][topic].length)
-                    }
-                )
-        }
 
         const renderInit = function (data) {
 
@@ -478,23 +523,6 @@ $(document).ready(function () {
 
     }
 
-    function fillTopics(year) {
-
-        // console.log(year_select[0].value)
-        // let s_date = year_select[0].value+'/1/1'
-        let s_date = year + '/1/1'
-        let year_topics = limited_dataset.filter(d => d.date == s_date && d.count != 0)
-            .map(function (d) {
-                return d.topic
-            })
-
-        topic_list = "<ul>"
-        for (var i in year_topics) {
-            topic_list += "<li>" + year_topics[i] + "</li>"
-        }
-        topic_list += "</ul>"
-        $("#term-list")[0].innerHTML = topic_list
-    }
 
     function toggleSelect(li) {
         let selected = $('#term-list').find('.selected');

@@ -235,8 +235,8 @@ text {
     margin-bottom: 25px;
     background-color: #ffffff;
     font-size:14px;
-    color: var(--bs-link-color);
-    text-decoration: underline;
+
+
     display: none;
 
 
@@ -491,4 +491,32 @@ padding-right: 45px;
 
     display: inline-block;
     vertical-align: bottom;
+}
+
+#topic-list .topic-rank {
+width:10%
+}
+
+#topic-list .topic-color {
+    width:10%
+}
+
+#topic-list > tbody > tr > td:nth-child(2) {
+    text-decoration: underline;
+    color: var(--bs-link-color);
+    width: 80%
+}
+
+.term-rank-number {
+   font-size:10px
+}
+#term-list thead {
+    display: none;
+}
+#term-list thead th.Rank {
+  width: 15%
+}
+
+#term-list thead th.Color {
+  width: 15%
 }
