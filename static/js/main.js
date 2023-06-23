@@ -13,6 +13,8 @@ let mouseOutEnabled = false;
 let mouseOutTimeout;
 let fadeInDuration = 750;
 let papersJsonFilename2;
+let flashTimer, flashTimer2;
+const base_opacity = 0.7;
 const year_select = $('#year-list');
 
 const xValue = (datum) => {
@@ -56,22 +58,28 @@ const showPapers = (that) => {
     function flash(topic, n) {
 
         if (n > 0) {
-            $($("[class='" + topic + "']")[0]).css("filter","brightness(75%)");
+            $($("[class='" + topic + "']")[0]).css("filter", "brightness(0%)");
 
-            setTimeout(function () {
-                $($("[class='" + topic + "']")[0]).css("filter","brightness(100%)");
+            flashTimer = setTimeout(function () {
+                $($("[class='" + topic + "']")[0]).css("filter", "brightness(100%)");
 
-                setTimeout(function () {
-                    flash(topic,n - 1);
-                }, 500);
-            }, 500);
+                flashTimer2 = setTimeout(function () {
+                    flash(topic, n - 1);
+                }, 250);
+            }, 250);
         } else {
 
 
         }
 
 
+    }
 
+    function resetPaths() {
+        clearTimeout(flashTimer)
+        clearTimeout(flashTimer2)
+        $("#main-svg path").attr("opacity", base_opacity);
+        $("#main-svg path").css("filter", "");
     }
 
 
@@ -92,9 +100,9 @@ const showPapers = (that) => {
         topic = d3.event.target.classList.toString()
     }
     const year = dates[date_index].substr(0, 4)
-
-    flash(topic, 3)
-
+    resetPaths()
+    flash(topic, 10)
+    $($("[class='" + topic + "']")[0]).css("filter", "brightness(100%)");
 
     fetch(papersJsonFilename2)
         .then(response => {
@@ -141,7 +149,7 @@ function fillTopics(year, selected_topic) {
         d = new Object()
         d.key = topic
 
-        topic_list += "<td style='opacity: 0.6; background:" + next_bar_color(d) + "'></td>"
+        topic_list += "<td style='opacity: "+base_opacity+"; background:" + next_bar_color(d) + "'></td>"
         topic_list += "</tr>"
     })
     topic_list += "</table>"
@@ -246,7 +254,7 @@ $(document).ready(function () {
             g.selectAll('path')
                 .data(layers)
                 .join('path')
-                .attr('opacity', 0.7)
+                .attr('opacity', base_opacity)
                 .attr('d', function (d, i) {
                     // if(d.key=='Epidemics')
                     //     { debugger;}

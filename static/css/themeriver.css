@@ -508,6 +508,7 @@ text {
 
     display: inline-block;
     vertical-align: bottom;
+    width: 50%;
 }
 
 #main-svg path:hover {
