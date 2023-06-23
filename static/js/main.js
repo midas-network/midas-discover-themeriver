@@ -53,6 +53,20 @@ const showPapers = (that) => {
         fillTopics(year, topic)
     }
 
+    function flash(topic, n) {
+
+        if (n > 0) {
+            $($("[class='" + topic + "']")[0]).css('opacity', 1)
+            setTimeout(function () {
+                $($("[class='" + topic + "']")[0]).css('opacity', 0.6)
+                setTimeout(function () {
+                    flash(topic,n - 1);
+                }, 500);
+            }, 500);
+        }
+    }
+
+
     // $('#topic-list *').on("click", function (event) {
     //     debugger;
     //     if (event.target.tagName != 'LI') return;
@@ -70,6 +84,9 @@ const showPapers = (that) => {
         topic = d3.event.target.classList.toString()
     }
     const year = dates[date_index].substr(0, 4)
+
+    flash(topic, 3)
+
 
     fetch(papersJsonFilename2)
         .then(response => {
@@ -115,14 +132,14 @@ function fillTopics(year, selected_topic) {
         topic_list += "<td " + id + " style='" + background + "'>" + topic + "</td>"
         d = new Object()
         d.key = topic
-        console.log(topic + " " + next_bar_color(d))
-        topic_list += "<td style='background:" + next_bar_color(d) + "'></td>"
+
+        topic_list += "<td style='opacity: 0.6; background:" + next_bar_color(d) + "'></td>"
         topic_list += "</tr>"
     })
     topic_list += "</table>"
     $("#term-list")[0].innerHTML = topic_list
     var elem = document.getElementById("selected-topic");
-    elem.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
+    elem.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
 }
 
 $(document).ready(function () {
@@ -221,7 +238,7 @@ $(document).ready(function () {
             g.selectAll('path')
                 .data(layers)
                 .join('path')
-                .attr('opacity', 0.9)
+                .attr('opacity', 0.7)
                 .attr('d', function (d, i) {
                     // if(d.key=='Epidemics')
                     //     { debugger;}

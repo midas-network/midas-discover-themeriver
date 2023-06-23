@@ -493,18 +493,34 @@ padding-right: 45px;
     vertical-align: bottom;
 }
 
-#topic-list .topic-rank {
-width:10%
+#main-svg path:hover {
+     transition: 0.2s;
+ opacity: 1;
+
 }
 
-#topic-list .topic-color {
-    width:10%
+
+
+#topic-list {
+    width:100%;
+}
+
+#topic-list > tbody > tr > td:nth-child(1) {
+    text-decoration: underline;
+    color: var(--bs-link-color);
+    width: 10%
 }
 
 #topic-list > tbody > tr > td:nth-child(2) {
     text-decoration: underline;
     color: var(--bs-link-color);
     width: 80%
+}
+
+#topic-list > tbody > tr > td:nth-child(3) {
+    text-decoration: underline;
+    color: var(--bs-link-color);
+    width: 10%
 }
 
 .term-rank-number {
