@@ -56,14 +56,22 @@ const showPapers = (that) => {
     function flash(topic, n) {
 
         if (n > 0) {
-            $($("[class='" + topic + "']")[0]).css('opacity', 1)
+            $($("[class='" + topic + "']")[0]).css("filter","brightness(75%)");
+
             setTimeout(function () {
-                $($("[class='" + topic + "']")[0]).css('opacity', 0.6)
+                $($("[class='" + topic + "']")[0]).css("filter","brightness(100%)");
+
                 setTimeout(function () {
                     flash(topic,n - 1);
                 }, 500);
             }, 500);
+        } else {
+
+
         }
+
+
+
     }
 
 

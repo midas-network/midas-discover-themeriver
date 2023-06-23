@@ -8,11 +8,13 @@
     cursor: pointer;
     font-size: 16px;
 }
-    .control input {
-        position: absolute;
-        z-index: -1;
-        opacity: 0;
-    }
+
+.control input {
+    position: absolute;
+    z-index: -1;
+    opacity: 0;
+}
+
 .control_indicator {
     position: absolute;
     top: 2px;
@@ -23,6 +25,7 @@
     border: 0 solid #000000;
     border-radius: 0px;
 }
+
 .control:hover input ~ .control_indicator,
 .control input:focus ~ .control_indicator {
     background: #cccccc;
@@ -31,25 +34,29 @@
 .control input:checked ~ .control_indicator {
     background: #2aa1c0;
 }
-.control:hover input:not([disabled]):checked ~ .control_indicator,
 
+.control:hover input:not([disabled]):checked ~ .control_indicator,
 .control input:checked:focus ~ .control_indicator {
     background: #0e6647d;
 }
+
 .control input:disabled ~ .control_indicator {
     background: #e6e6e6;
     opacity: 0.6;
     pointer-events: none;
 }
+
 .control_indicator:after {
     box-sizing: unset;
     content: '';
     position: absolute;
     display: none;
 }
+
 .control input:checked ~ .control_indicator:after {
     display: block;
 }
+
 .control-radio .control_indicator {
     border-radius: 50%;
 }
@@ -63,10 +70,13 @@
     background: #ffffff;
     transition: background 250ms;
 }
+
 .control-radio input:disabled ~ .control_indicator:after {
     background: #7b7b7b;
     display: none;
-}.control-radio .control_indicator::before {
+}
+
+.control-radio .control_indicator::before {
     content: '';
     display: block;
     position: absolute;
@@ -82,6 +92,7 @@
     z-index: 99999;
     transform: scale(0);
 }
+
 @keyframes s-ripple {
     0% {
         opacity: 0;
@@ -95,11 +106,12 @@
         transform: scale(1);
     }
 }
+
 @keyframes s-ripple-dup {
-   0% {
-       transform: scale(0);
+    0% {
+        transform: scale(0);
     }
-   30% {
+    30% {
         transform: scale(1);
     }
     60% {
@@ -110,9 +122,11 @@
         transform: scale(1);
     }
 }
+
 .control-radio input + .control_indicator::before {
     animation: s-ripple 250ms ease-out;
 }
+
 .control-radio input:checked + .control_indicator::before {
     animation-name: s-ripple-dup;
 }
@@ -176,14 +190,14 @@ text {
 
 #title {
 
-  text-align: center;
+    text-align: center;
     font-size: 20px;
 }
 
 
 #subtitle {
 
-  text-align: center;
+    text-align: center;
     font-size: 14px;
 }
 
@@ -195,61 +209,65 @@ text {
 #chart-row {
     height: 60vh;
 }
+
 #info-row {
-        background-color: #4f5287;
+    background-color: #4f5287;
     height: 33vh;
-        display: flex;
+    display: flex;
     align-items: center;
 }
 
 
-
 #paper-list {
-  overflow: auto;
+    overflow: auto;
     height: 28vh;
     margin-bottom: 25px;
     background-color: #ffffff;
-    font-size:14px;
+    font-size: 14px;
 
 
 }
+
 #paper-list ul {
-        list-style-type: auto;
+    list-style-type: auto;
 }
-#paper-list li::marker{
-    font-size:11px;
+
+#paper-list li::marker {
+    font-size: 11px;
 
 }
 
-#year-list{
+#year-list {
     margin-left: 1em;
 }
 
-.selected{
+.selected {
     background-color: #2aa1c0;
 }
 
 #term-list {
-  overflow: auto;
+    overflow: auto;
     height: 28vh;
     margin-bottom: 25px;
     background-color: #ffffff;
-    font-size:14px;
+    font-size: 14px;
 
 
     display: none;
 
 
 }
+
 #term-list ul {
-        list-style-type: auto;
+    list-style-type: auto;
 }
-#term-list li::marker{
-    font-size:11px;
+
+#term-list li::marker {
+    font-size: 11px;
 
 }
 
-.term-display label{
+.term-display label {
     color: white;
     font-size: 18px;
 }
@@ -271,15 +289,15 @@ text {
 }
 
 .options-header {
-    color:white;
+    color: white;
 }
 
-#current-topic-count,#current-topic-count2, #current-topic, #current-year {
-      font-weight: bold;
+#current-topic-count, #current-topic-count2, #current-topic, #current-year {
+    font-weight: bold;
 }
 
 .control {
-    color:white;
+    color: white;
 }
 
 
@@ -289,10 +307,10 @@ text {
     max-width: 300px;
     margin-top: auto;
     margin-left: auto;
-    margin-right:auto;
+    margin-right: auto;
     margin-bottom: auto;
     padding: 5px 5px 5px 5px;
-    border: 2px solid white ;
+    border: 2px solid white;
     border-radius: 10px;
 }
 
@@ -304,7 +322,6 @@ text {
     font-weight: bold;
 
 
-
 }
 
 .box_with_arrow {
@@ -314,7 +331,7 @@ text {
 .center-options {
     margin-left: auto;
     margin-right: auto;
-    display:table;
+    display: table;
 }
 
 .control-group-ngram {
@@ -324,46 +341,46 @@ text {
 }
 
 .control-group-ngram .control {
-       padding-right: 10px;
+    padding-right: 10px;
 }
 
 #ngram-line {
     margin-top: 10px;
-       font-size: 16px;
+    font-size: 16px;
 }
 
 #tension-line {
     margin-top: 10px;
-       font-size: 16px;
+    font-size: 16px;
 }
 
 .paper-display {
-padding-right: 45px;
+    padding-right: 45px;
 }
 
 .tooltip {
-    display:inline-block;
-    position:relative;
+    display: inline-block;
+    position: relative;
     /*border-bottom:1px dotted #666;*/
-    text-align:left;
+    text-align: left;
 }
 
 .tooltip .right {
-    min-width:150px;
-    max-width:250px;
-    top:50%;
-    left:100%;
-    margin-left:20px;
-    transform:translate(0, -50%);
-    padding:2px 2px;
-    color:#444444;
-    background-color:white;
-    font-weight:normal;
-    font-size:13px;
-    border-radius:8px;
-    position:absolute;
-    z-index:99999999;
-    box-sizing:border-box;
+    min-width: 150px;
+    max-width: 250px;
+    top: 50%;
+    left: 100%;
+    margin-left: 20px;
+    transform: translate(0, -50%);
+    padding: 2px 2px;
+    color: #444444;
+    background-color: white;
+    font-weight: normal;
+    font-size: 13px;
+    border-radius: 8px;
+    position: absolute;
+    z-index: 99999999;
+    box-sizing: border-box;
 
     /*visibility:hidden; opacity:0; transition:opacity 0.8s;*/
 }
@@ -373,99 +390,99 @@ padding-right: 45px;
 }
 
 .tooltip .right i {
-    position:absolute;
-    top:50%;
-    right:100%;
-    margin-top:-12px;
-    width:12px;
-    height:24px;
-    overflow:hidden;
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    margin-top: -12px;
+    width: 12px;
+    height: 24px;
+    overflow: hidden;
 }
 
 .tooltip .right i::before {
-    content:'';
-    position:absolute;
-    width:12px;
-    height:12px;
-    left:0;
-    top:50%;
-    transform:translate(50%,-50%) rotate(-45deg);
-    background-color:white;
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    left: 0;
+    top: 50%;
+    transform: translate(50%, -50%) rotate(-45deg);
+    background-color: white;
 
 }
 
 .tooltip .left {
-    min-width:150px;
+    min-width: 150px;
     /*max-width:300px;*/
-    top:50%;
-    right:100%;
-    margin-right:20px;
-    transform:translate(0, -50%);
-    padding:2px 2px;
-    color:#444444;
-    background-color:white;
-    font-weight:normal;
-    font-size:13px;
-    border-radius:8px;
-    position:absolute;
-    z-index:99999999;
-    box-sizing:border-box;
+    top: 50%;
+    right: 100%;
+    margin-right: 20px;
+    transform: translate(0, -50%);
+    padding: 2px 2px;
+    color: #444444;
+    background-color: white;
+    font-weight: normal;
+    font-size: 13px;
+    border-radius: 8px;
+    position: absolute;
+    z-index: 99999999;
+    box-sizing: border-box;
 
     /*display:none;*/
 }
 
 .tooltip:hover .left {
-    display:block;
+    display: block;
 }
 
 .tooltip .left i {
-    position:absolute;
-    top:50%;
-    left:100%;
-    margin-top:-12px;
-    width:12px;
-    height:24px;
-    overflow:hidden;
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    margin-top: -12px;
+    width: 12px;
+    height: 24px;
+    overflow: hidden;
 }
 
 .tooltip .left i::after {
-    content:'';
-    position:absolute;
-    width:12px;
-    height:12px;
-    left:0;
-    top:50%;
-    transform:translate(-50%,-50%) rotate(-45deg);
-    background-color:white;
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    left: 0;
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    background-color: white;
 
 }
 
 #theme-color {
 
-    color:black;
+    color: black;
     text-align: center;
 }
 
 /*noinspection CssInvalidPropertyValue*/
 #river-word {
     background-color: white;
-    color:black;
+    color: black;
     font-size: 16px;
     text-wrap: nowrap;
-    margin-left:5px;
-    margin-right:5px;
+    margin-left: 5px;
+    margin-right: 5px;
 }
 
 #tooltip-inner {
     background-color: white;
-    color:black;
+    color: black;
     border: 4px solid;
     border-radius: 8px;
 }
 
 #word-label-row {
     text-align: center;
-    margin-bottom:0px;
+    margin-bottom: 0px;
 }
 
 
@@ -473,8 +490,8 @@ padding-right: 45px;
     /*    border: 2px orange solid;*/
     /*border-bottom: 0;*/
     /*margin-bottom: -7px;*/
-    padding-right:5px;
-    padding-left:5px;
+    padding-right: 5px;
+    padding-left: 5px;
     /*border-top-left-radius: 8px;*/
     /*border-top-right-radius: 8px;*/
 }
@@ -482,27 +499,26 @@ padding-right: 45px;
 .slidecontainer {
 
 
- text-align: center;
+    text-align: center;
 
 }
 
 #myRange {
-        height: 30px;
+    height: 30px;
 
     display: inline-block;
     vertical-align: bottom;
 }
 
 #main-svg path:hover {
-     transition: 0.2s;
- opacity: 1;
+    transition: 0.1s;
+    opacity: 1;
 
 }
 
 
-
 #topic-list {
-    width:100%;
+    width: 100%;
 }
 
 #topic-list > tbody > tr > td:nth-child(1) {
@@ -524,15 +540,17 @@ padding-right: 45px;
 }
 
 .term-rank-number {
-   font-size:10px
+    font-size: 10px
 }
+
 #term-list thead {
     display: none;
 }
+
 #term-list thead th.Rank {
-  width: 15%
+    width: 15%
 }
 
 #term-list thead th.Color {
-  width: 15%
+    width: 15%
 }
