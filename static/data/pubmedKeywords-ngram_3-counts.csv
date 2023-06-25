@@ -118,7 +118,7 @@ date,topic,count
 2019/1/1,bayesian hierarchical model,3
 2020/1/1,bayesian hierarchical model,0
 2021/1/1,bayesian hierarchical model,0
-2022/1/1,bayesian hierarchical model,4
+2022/1/1,bayesian hierarchical model,0
 2013/1/1,chain monte carlo,2
 2014/1/1,chain monte carlo,0
 2015/1/1,chain monte carlo,2
@@ -298,7 +298,7 @@ date,topic,count
 2019/1/1,emerging infectious disease,5
 2020/1/1,emerging infectious disease,12
 2021/1/1,emerging infectious disease,5
-2022/1/1,emerging infectious disease,4
+2022/1/1,emerging infectious disease,0
 2013/1/1,epidemic compartmental model,0
 2014/1/1,epidemic compartmental model,0
 2015/1/1,epidemic compartmental model,0
@@ -508,7 +508,7 @@ date,topic,count
 2019/1/1,infectious disease transmission,0
 2020/1/1,infectious disease transmission,0
 2021/1/1,infectious disease transmission,0
-2022/1/1,infectious disease transmission,0
+2022/1/1,infectious disease transmission,4
 2013/1/1,infectious disease west,0
 2014/1/1,infectious disease west,2
 2015/1/1,infectious disease west,0
@@ -1109,6 +1109,16 @@ date,topic,count
 2020/1/1,sarscov2 nonpharmaceutical interventions,5
 2021/1/1,sarscov2 nonpharmaceutical interventions,6
 2022/1/1,sarscov2 nonpharmaceutical interventions,4
+2013/1/1,sarscov2 variants concern,0
+2014/1/1,sarscov2 variants concern,0
+2015/1/1,sarscov2 variants concern,0
+2016/1/1,sarscov2 variants concern,0
+2017/1/1,sarscov2 variants concern,0
+2018/1/1,sarscov2 variants concern,0
+2019/1/1,sarscov2 variants concern,0
+2020/1/1,sarscov2 variants concern,0
+2021/1/1,sarscov2 variants concern,0
+2022/1/1,sarscov2 variants concern,4
 2013/1/1,seed dispersal effects,0
 2014/1/1,seed dispersal effects,0
 2015/1/1,seed dispersal effects,0
