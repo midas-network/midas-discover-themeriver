@@ -7,25 +7,29 @@
     <script src="./js/d3.min.js"></script>
     <script src="./js/jquery.min.js"></script>
     <script src="./js/riverStats.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <script src="./js/colors.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
 </head>
 <body>
-<div class="container">
+<div class="container g-0">
     <div id="header-row" class="row">
         <div id="title">Top 20 Most Frequently Occurring <span id="pubmed-datasource-in-title"></span> <i><span
                 id="ngram-size-in-title"></span></i> in Infections Disease Modeling Papers Written by
             MIDAS Members
         </div>
-        <div id="subtitle">By Year, 2010-2022</div>
+        <div id="subtitle">By Year, 2013-2022</div>
     </div>
     <div id="chart-row" class="row">
         <div id="wrapper" class="col-md-12">
-            <svg id="main-svg" class="svgs" style="background-color: #ffffff;" preserveAspectRatio="none" height="100%" width="100%"></svg>
+            <svg id="main-svg" class="svgs" style="background-color: #ffffff;" preserveAspectRatio="none" height="100%"
+                 width="100%"></svg>
 
         </div>
     </div>
-    <div id="info-row" class="row">
+    <div id="info-row" class="row g-0">
         <div class="col-md-3 ">
             <div id="options">
                 <div class="options-header center-options" id="pubmed-rb-line">PubMed Field for Topics:</div>
@@ -66,17 +70,30 @@
                         <div class="control_indicator"></div>
                     </label>
                 </div>
+                <div id="tension-line" class="center-options options-header">Curve Style:</div>
                 <div class="slidecontainer">
+                    <svg height="30" fill-opacity="0%" viewBox="0 0 1487.18 321" width="50px"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <path d="m0 0h1487.18v321h-1487.18z" fill="#fff"/>
+                        <path d="m304.441 162.751s28.496-144.514 73.275-143.497c44.779-1.017 73.275 143.497 73.275 143.497s28.496 144.514 73.275 143.496c44.779 1.018 73.274-143.496 73.274-143.496s28.496-144.514 73.275-143.497c44.779-1.017 73.275 143.497 73.275 143.497s28.496 144.514 73.275 143.496c44.779 1.018 73.275-143.496 73.275-143.496s28.495-144.514 73.275-143.497c44.779-1.017 73.274 143.497 73.274 143.497s28.496 144.514 73.275 143.496c44.779 1.018 73.275-143.496 73.275-143.496"
+                              fill="#fff" stroke="#fff" stroke-width="10%"/>
+                    </svg>
+
                     <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
-                  </div>
+
+                    <svg height="30" viewBox="0 0 632.83 239" fill-opacity="0%" width="50px"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <path d="m0 0h632.83v239h-632.83z" fill="#fff"/>
+                        <path d="m81.051 160.5 79.529-81 78.44 81 77.35-81 80.619 81 78.44-81 77.351 81" fill="#fff"
+                              stroke="#fff" stroke-width="10%"/>
+                    </svg>
+
+                </div>
 
             </div>
         </div>
 
-        <div class="term-display col-md-2 ">
-            <label for="year-picker">Year: </label><select name="year-picker" id="year-list"></select>
-            <div id="term-list" class="side-panel"></div>
-        </div>
+
 
         <div class="paper-display col-md-7 ">
             <div id="topic-line">Showing <span id="current-topic-count"></span> papers with topic "<span
@@ -85,16 +102,21 @@
             <div id="instruction-line">Click the graph to display list of papers for year and topic.</div>
             <div id="paper-list" class="side-panel"></div>
         </div>
+            <div class="term-display col-md-2 ">
+             <div id="topic-line2">Top terms in <span id="current-year2"></span>:</div>
+<!--           <label for="year-picker">Year: </label><select name="year-picker" id="year-list"></select>-->
+            <div id="term-list" class="side-panel"></div>
+        </div>
     </div>
     <div class="tooltip" id="word-box">
         <div id="tooltip-arrow" class="left">
             <div id="tooltip-inner">
 
-            <div id="theme-color"><span id="river-word"></span></div>
-            <div id="word-label-row"><span></span><span id="word-label"></span></div>
-            <div id="freq-count"></div>
-                </div>
-       <i></i>
+                <div id="theme-color"><span id="river-word"></span></div>
+                <div id="word-label-row"><span></span><span id="word-label"></span></div>
+                <div id="freq-count"></div>
+            </div>
+            <i></i>
 
 
         </div>
