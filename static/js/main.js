@@ -50,9 +50,30 @@ const showPapers = (that) => {
         paper_elem[0].scrollTop = 0;
 
         $("#instruction-line").hide()
-        $("#topic-line, #topic-line2, #term-list").show()
+        $("#topic-line,#topic-line2, #term-list").show()
 
         fillTopics(year, topic)
+        $(".paper").on("mouseenter", function (event) {
+
+            $("#hover-paper-title").text( $(event.currentTarget).children("a").text())
+            $("#hover-paper-abstract").text( $(event.currentTarget).children("span").text())
+
+            if (window.innerHeight - event.pageY < 500) {
+                $('#abstract-hover').css('top', event.pageY - $("#abstract-hover").height());
+            } else {
+                $('#abstract-hover').css('top', event.pageY);
+            }
+            $('#abstract-hover').css('left', event.pageX+14);      // <<< use pageX and pageY
+
+            $('#abstract-hover').css('width', 'calc(vw - ' + event.pageX + 'px)');
+            $('#abstract-hover').css('max-height', 'calc(vh - ' + event.pageY + 'px)');
+            $("#abstract-hover").show()
+
+
+        }).on("mouseleave", function (event) {
+            console.log(event.relatedTarget)
+            $("#abstract-hover").hide()
+        });
     }
 
     function flash(topic, n) {
@@ -111,9 +132,11 @@ const showPapers = (that) => {
         .then(papers => {
                 let paper_list = "<ul>"
                 for (let article of papers[year][topic]) {
-                    paper_list += "<li><a title=\"This is some text I want to display.\" href='" + article['uri'] + "' target='_blank'>" + article['title'] + "</a></li>"
+                    paper_list += "<li class='paper'><a href='" + article['uri'] + "' target='_blank'>" + article['title'] + "</a>" +
+                        "<span>" + article['abstract'] + "</span></li>"
                 }
                 paper_list += "</ul>"
+
 
                 updateInfoPanel(year, topic, paper_list, papers[year][topic].length)
             }
@@ -149,7 +172,7 @@ function fillTopics(year, selected_topic) {
         d = new Object()
         d.key = topic
 
-        topic_list += "<td style='opacity: "+base_opacity+"; background:" + next_bar_color(d) + "'></td>"
+        topic_list += "<td style='opacity: " + base_opacity + "; background:" + next_bar_color(d) + "'></td>"
         topic_list += "</tr>"
     })
     topic_list += "</table>"
