@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <title>Midas River</title>
     <link rel="stylesheet" href="./css/themeriver.css">
@@ -7,127 +7,310 @@
     <script src="./js/d3.min.js"></script>
     <script src="./js/jquery.min.js"></script>
     <script src="./js/riverStats.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-          integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
-          crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <script src="./js/colors.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
-<div class="container g-0">
-    <div id="header-row" class="row">
-        <div id="title">Top 20 Most Frequently Occurring <span id="pubmed-datasource-in-title"></span> <i><span
-                id="ngram-size-in-title"></span></i> in Infections Disease Modeling Papers Written by
-            MIDAS Members
-        </div>
-        <div id="subtitle">By Year, 2013-2022</div>
-    </div>
-    <div id="chart-row" class="row">
-        <div id="wrapper" class="col-md-12">
-            <svg id="main-svg" class="svgs" style="background-color: #ffffff;" preserveAspectRatio="none" height="100%"
-                 width="100%"></svg>
 
-        </div>
-    </div>
-    <div id="info-row" class="row g-0">
-        <div class="col-md-3 ">
-            <div id="options">
-                <div class="options-header center-options" id="pubmed-rb-line">PubMed Field for Topics:</div>
-                <div class="center-options control-group-pubmed-source">
-                    <label class="control control-radio">
-                        MeSH Terms
-                        <input type="radio" name="pubmed-source-radio" value="meshTerms" checked="checked"/>
-                        <div class="control_indicator"></div>
-                    </label>
-                    <label class="control control-radio">
-                        PubMed Keywords
-                        <input type="radio" name="pubmed-source-radio" value="pubmedKeywords"/>
-                        <div class="control_indicator"></div>
-                    </label>
-                    <label class="control control-radio">
-                        Title + Abstracts
-                        <input type="radio" name="pubmed-source-radio" value="paperAbstract"/>
-                        <div class="control_indicator"></div>
-                    </label>
+<div id="main-container">
+    <ul class="nav nav-tabs" id="myTab">
+        <li class="nav-item">
+            <a href="#home" class="nav-link active" data-bs-toggle="tab">Introduction</a>
+        </li>
+        <li class="nav-item">
+            <a href="#viz" class="nav-link" data-bs-toggle="tab">Visualization</a>
+        </li>
 
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="home">
+
+            <div id="instruction-row" class="row">
+                <div class="h3 instruction-header mt-2">What is a Theme River?</div>
+                <div id="instructions">
+                    <div class="text-instructions">
+                        <p>A Theme River is a visualization of thematic variations over time in a set of documents.
+                            Documents are grouped into <i>themes</i> based on the terms they contain.
+                        </p>
+
+                        <p>
+                            In a Theme River visualization, themes are represented as colored ribbons that flow from
+                            left
+                            to right.
+
+                            The x-axis represents time, and the y-axis represents the proportion of documents that
+                            contain a
+                            given theme at a given time.
+
+                            When individual themes are stacked on top of each other, the visualization resembles a
+                            river, hence the
+                            name.
+                        </p>
+                    </div>
+                    <div class="caption-div">
+                        <div class="caption">Figure 1. An example Theme River showing twenty themes staring in the
+                            year 2013.
+                        </div>
+                        <img width=500px class="figure" src="./img/fig1.png" alt="river" class="img-fluid">
+                    </div>
                 </div>
-                <div class="center-options options-header" id="ngram-line">N-gram Size:</div>
-                <div class="control-group-ngram">
 
-                    <label class="control control-radio">
-                        1
-                        <input type="radio" name="ngram-radio" value="1" checked="checked"/>
-                        <div class="control_indicator"></div>
-                    </label>
-                    <label class="control control-radio">
-                        2
-                        <input type="radio" name="ngram-radio" value="2"/>
-                        <div class="control_indicator"></div>
-                    </label>
-                    <label class="control control-radio">
-                        3
-                        <input type="radio" name="ngram-radio" value="3"/>
-                        <div class="control_indicator"></div>
-                    </label>
-                </div>
-                <div id="tension-line" class="center-options options-header">Curve Style:</div>
-                <div class="slidecontainer">
-                    <svg height="30" fill-opacity="0%" viewBox="0 0 1487.18 321" width="50px"
-                         xmlns="http://www.w3.org/2000/svg">
-                        <path d="m0 0h1487.18v321h-1487.18z" fill="#fff"/>
-                        <path d="m304.441 162.751s28.496-144.514 73.275-143.497c44.779-1.017 73.275 143.497 73.275 143.497s28.496 144.514 73.275 143.496c44.779 1.018 73.274-143.496 73.274-143.496s28.496-144.514 73.275-143.497c44.779-1.017 73.275 143.497 73.275 143.497s28.496 144.514 73.275 143.496c44.779 1.018 73.275-143.496 73.275-143.496s28.495-144.514 73.275-143.497c44.779-1.017 73.274 143.497 73.274 143.497s28.496 144.514 73.275 143.496c44.779 1.018 73.275-143.496 73.275-143.496"
-                              fill="#fff" stroke="#fff" stroke-width="10%"/>
-                    </svg>
+                <div>
+                    <div class="h3 instruction-header">The MIDAS Theme River Visualization</div>
+                    <div>
 
-                    <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+                        <div class="h5">Visualization</div>
+                        <div>
+                            <p>The MIDAS Theme River is an interactive display that allows users to explore the
+                                themes of MIDAS papers over time. Specifically, the display shows the top 20 most
+                                frequently occurring topics in
+                                infectious disease papers authored by MIDAS members from 2013 to 2022.</></p>
+                            <img width="50%" class="figure" src="./img/midas_river.png" alt="river" class="img-fluid">
 
-                    <svg height="30" viewBox="0 0 632.83 239" fill-opacity="0%" width="50px"
-                         xmlns="http://www.w3.org/2000/svg">
-                        <path d="m0 0h632.83v239h-632.83z" fill="#fff"/>
-                        <path d="m81.051 160.5 79.529-81 78.44 81 77.35-81 80.619 81 78.44-81 77.351 81" fill="#fff"
-                              stroke="#fff" stroke-width="10%"/>
-                    </svg>
+                            <p>The display is composed of four parts:
+                            <div class="h6">The visualization itself, which is a Theme River.</div>
+                            <img width=500px class="figure" src="./img/river.png" alt="river" class="img-fluid">
+                            <ul>
+                                <li>
 
+                                    Hovering over a theme displays
+                                    the theme name and the number of papers that contain the theme in the year.
+
+                                </li>
+                                <li>
+                                    Clicking on a theme displays a list of papers that contain the theme in the year.
+                                </li>
+
+                            </ul>
+
+
+                            <div class="h6">Options for Theme selection</div>
+                            <img width=200px class="figure" src="./img/options.png" alt="river" class="img-fluid">
+                            <ul>
+                                <li>
+                                    <b>Field</b> - The field to use for theme extraction. Options are MeSH Terms,
+                                    Keywords, and Title and Abstract.
+                                </li>
+                                <li>
+                                    <b>N-gram Size</b> - The size of the n-grams to use for theme extraction. Options
+                                    are 1, 2, and 3.
+                                </li>
+                            </ul>
+
+                            <div class="h6">A listing of papers for a selected theme and year.</div>
+                            <img width=500px class="figure" src="./img/papers.png" alt="river" class="img-fluid">
+                            <ul>
+                                <li>
+
+                                    Hovering over a paper displays
+                                    the paper title and abstract.
+
+                                </li>
+                                <li>
+                                    Clicking a paper takes you to the paper on midasnetwork.us.
+                                </li>
+
+                            </ul>
+
+
+                            <div class="h6"> A listing of the top 20 themes for the selected year.</div>
+                            <img width=200px class="figure" src="./img/terms.png" alt="river" class="img-fluid">
+                            <ul>
+                                <li>
+                                    Clicking on a Theme will highlight the Theme in the Theme River and load
+                                    the papers for that Theme in the Papers section.
+                                </li>
+
+
+                            </ul>
+                            </p>
+                        </div>
+
+
+                        <div class="h5">Theme Extraction</div>
+                        <div class="h6">Data Source</div>
+
+                        <p> The MIDAS Coordination Center, through the use of the PubMed API, maintains a curated
+                            database
+                            of
+                            the metadata from infectious-disease related papers published by MIDAS members.
+
+                            Themes are extracted from papers using either the</p>
+                        <ul>
+                            <li>MeSH Terms (a list of curated terms from a controlled vocabulary, assigned by PubMed)
+                            </li>
+                            <li>Keywords (an author-provided list of search terms applicable to the paper)</li>
+                            <li>Paper Title and Abstract</li>
+                        </ul>
+
+                        <div class="h6">Metadata Processing</div>
+                        <div><p>
+                            Terms are extracted from the metadata using a custom NLP pipeline. The pipeline, and the
+                            script that runs it, are available here: <a href="">Not yet available, placeholder</a>.
+
+
+                            The pipeline performs the following steps:
+                            <ul>
+                                <li>
+                                    Stemming - the pipeline reduces words to their root form (e.g. "infectious" becomes
+                                    infecti")
+                                </li>
+                                <li>
+                                    Tokenization - the pipeline splits the text into n-grams (word phrases, where n is
+                                    the size of the
+                                    phrase specified by the user) and removes punctuation and common words that don't
+                                    apply to
+                                    the domain of infectious disease. These n-grams are the themes that are visualized
+                                    in the
+                                    river.
+
+                                </li>
+                                <li>
+                                    Theme Frequency Calculation - the pipeline counts the number of times each theme
+                                    occurs in each
+                                    paper per year.
+                                </li>
+                            </ul>
+
+
+                            </p>
+                        </div>
+                    </div>
                 </div>
 
             </div>
         </div>
+        <div class="tab-pane fade" id="viz">
+
+            <div class="container g-0">
+
+                <div id="header-row" class="row">
+                    <div id="title">Top 20 Most Frequently Occurring <span id="pubmed-datasource-in-title"></span>
+                        <i><span
+                                id="ngram-size-in-title"></span></i> in Disease Modeling Papers Authored
+                        by
+                        MIDAS Members
+                    </div>
+                    <div id="subtitle">By Year, 2013-2022</div>
+                </div>
+                <div id="chart-row" class="row">
+                    <div id="wrapper" class="col-md-12">
+                        <svg id="main-svg" class="svgs" style="background-color: #ffffff;"
+                             preserveAspectRatio="none"
+                             height="100%"
+                             width="100%"></svg>
+
+                    </div>
+                </div>
+                <div id="info-row" class="row g-0">
+                    <div class="col-md-3 ">
+                        <div id="options">
+                            <div class="options-header center-options" id="pubmed-rb-line">PubMed Field for Topics:
+                            </div>
+                            <div class="center-options control-group-pubmed-source">
+                                <label class="control control-radio">
+                                    MeSH Terms
+                                    <input type="radio" name="pubmed-source-radio" value="meshTerms"
+                                           checked="checked"/>
+                                    <div class="control_indicator"></div>
+                                </label>
+                                <label class="control control-radio">
+                                    PubMed Keywords
+                                    <input type="radio" name="pubmed-source-radio" value="pubmedKeywords"/>
+                                    <div class="control_indicator"></div>
+                                </label>
+                                <label class="control control-radio">
+                                    Title + Abstracts
+                                    <input type="radio" name="pubmed-source-radio" value="paperAbstract"/>
+                                    <div class="control_indicator"></div>
+                                </label>
+
+                            </div>
+                            <div class="center-options options-header" id="ngram-line">N-gram Size:</div>
+                            <div class="control-group-ngram">
+
+                                <label class="control control-radio">
+                                    1
+                                    <input type="radio" name="ngram-radio" value="1" checked="checked"/>
+                                    <div class="control_indicator"></div>
+                                </label>
+                                <label class="control control-radio">
+                                    2
+                                    <input type="radio" name="ngram-radio" value="2"/>
+                                    <div class="control_indicator"></div>
+                                </label>
+                                <label class="control control-radio">
+                                    3
+                                    <input type="radio" name="ngram-radio" value="3"/>
+                                    <div class="control_indicator"></div>
+                                </label>
+                            </div>
+                            <!--                            <div id="tension-line" class="center-options options-header">Curve Style:</div>-->
+                            <!--                            <div class="slidecontainer">-->
+                            <!--                                <svg height="30" fill-opacity="0%" viewBox="0 0 1487.18 321" width="50px"-->
+                            <!--                                     xmlns="http://www.w3.org/2000/svg">-->
+                            <!--                                    <path d="m0 0h1487.18v321h-1487.18z" fill="#fff"/>-->
+                            <!--                                    <path d="m304.441 162.751s28.496-144.514 73.275-143.497c44.779-1.017 73.275 143.497 73.275 143.497s28.496 144.514 73.275 143.496c44.779 1.018 73.274-143.496 73.274-143.496s28.496-144.514 73.275-143.497c44.779-1.017 73.275 143.497 73.275 143.497s28.496 144.514 73.275 143.496c44.779 1.018 73.275-143.496 73.275-143.496s28.495-144.514 73.275-143.497c44.779-1.017 73.274 143.497 73.274 143.497s28.496 144.514 73.275 143.496c44.779 1.018 73.275-143.496 73.275-143.496"-->
+                            <!--                                          fill="#fff" stroke="#fff" stroke-width="10%"/>-->
+                            <!--                                </svg>-->
+
+                            <!--                                <input type="range" min="1" max="100" value="50" class="slider" id="myRange">-->
+
+                            <!--                                <svg height="30" viewBox="0 0 632.83 239" fill-opacity="0%" width="50px"-->
+                            <!--                                     xmlns="http://www.w3.org/2000/svg">-->
+                            <!--                                    <path d="m0 0h632.83v239h-632.83z" fill="#fff"/>-->
+                            <!--                                    <path d="m81.051 160.5 79.529-81 78.44 81 77.35-81 80.619 81 78.44-81 77.351 81"-->
+                            <!--                                          fill="#fff"-->
+                            <!--                                          stroke="#fff" stroke-width="10%"/>-->
+                            <!--                                </svg>-->
+
+                            <!--                            </div>-->
+
+                        </div>
+                    </div>
 
 
-        <div class="paper-display col-md-7 ">
-            <div id="topic-line">Showing <span id="current-topic-count"></span> papers with topic "<span
-                    id="current-topic"></span>" in <span id="current-year"></span>:
+                    <div class="paper-display col-md-7 ">
+                        <div id="topic-line">Showing <span id="current-topic-count"></span> papers with topic "<span
+                                id="current-topic"></span>" in <span id="current-year"></span>:
+                        </div>
+                        <div id="instruction-line">Click the graph to display list of papers for year and topic.
+                        </div>
+                        <div id="paper-list" class="side-panel"></div>
+                    </div>
+                    <div class="term-display col-md-2 ">
+                        <div id="topic-line2">Top terms in <span id="current-year2"></span>:</div>
+                        <!--           <label for="year-picker">Year: </label><select name="year-picker" id="year-list"></select>-->
+                        <div id="term-list" class="side-panel"></div>
+                    </div>
+                </div>
+                <div class="tooltip" id="word-box">
+                    <div id="tooltip-arrow" class="left">
+                        <div id="tooltip-inner">
+
+                            <div id="theme-color"><span id="river-word"></span></div>
+                            <div id="word-label-row"><span></span><span id="word-label"></span></div>
+                            <div id="freq-count"></div>
+                        </div>
+                        <i></i>
+
+
+                    </div>
+                </div>
             </div>
-            <div id="instruction-line">Click the graph to display list of papers for year and topic.</div>
-            <div id="paper-list" class="side-panel"></div>
-        </div>
-        <div class="term-display col-md-2 ">
-            <div id="topic-line2">Top terms in <span id="current-year2"></span>:</div>
-            <!--           <label for="year-picker">Year: </label><select name="year-picker" id="year-list"></select>-->
-            <div id="term-list" class="side-panel"></div>
-        </div>
-    </div>
-    <div class="tooltip" id="word-box">
-        <div id="tooltip-arrow" class="left">
-            <div id="tooltip-inner">
-
-                <div id="theme-color"><span id="river-word"></span></div>
-                <div id="word-label-row"><span></span><span id="word-label"></span></div>
-                <div id="freq-count"></div>
+            <div id="abstract-hover">
+                <b>Paper:</b>
+                <span id="hover-paper-title"></span>
+                <br>
+                <b>Absract:</b>
+                <span id="hover-paper-abstract"></span>
             </div>
-            <i></i>
-
-
         </div>
     </div>
 </div>
-<div id="abstract-hover">
-    <b>Paper:</b>
-    <span id="hover-paper-title"></span>
-    <br>
-    <b>Absract:</b>
-    <span id="hover-paper-abstract"></span>
-</div>
+
+
 </body>
 <script src="./js/main.js"></script>
 </html>

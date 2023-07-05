@@ -1,7 +1,3 @@
-const riverStats = {
-    largest_count: 0,
-    byYearCount: []
-}
 
 const getFilteredSet = (dataset) => {
     rollup = d3.nest()
@@ -37,7 +33,7 @@ const rebalanceSet = (dataset, sorting_set, up_max) => {
                 term['adjusted_percent'] = ((term['raw_percent']*(total/up_max) || 0) * 100);
             add_up += term['adjusted_percent']    
         }
-        console.log('year: ' + year[0]['date'] + ' total: ' + add_up)
+        //console.log('year: ' + year[0]['date'] + ' total: ' + add_up)
     }
 
 
