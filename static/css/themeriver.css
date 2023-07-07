@@ -637,31 +637,49 @@ body {
     border: 1px solid #ddd;
     display:flex;
     flex-direction: column;
-    width: 515px;
+
     flex: 1 1 50%;
 
 }
 
 .caption {
-    flex: 1 1 auto;
+    flex: 0 1 auto;
     padding: 5px;
     margin: 5px;
     border: 1px solid #ddd;
     border-radius: 5px;
     background-color: #eee;
     text-align: center;
-    font-size: 12px;
+    font-size: 16px;
     font-weight: 700;
     color: #252969;
 }
 
 .figure {
-    flex: 1 1 auto;
+
     padding: 5px;
-    margin: 5px;
+
+    width: 100%;
 
 }
 
+#fullfigure {
+    width:75%;
+    margin-left : auto;
+    margin-right: auto;
+}
+
+#optionfigure {
+
+}
+
+#papersfigure {
+
+}
+
+#termsfigure {
+
+}
 .instruction-header {
 
 }
@@ -669,10 +687,88 @@ body {
 #instructions {
      display: flex;
     flex-direction: row;
+    max-width:1080px;
 }
 
 .text-instructions {
     flex: 1 1 50%;
     margin-left: 0px;
-    margin-right:20px;
+    margin-right:75px;
+}
+
+#row-of-figures {
+    display:flex;
+    flex-direction: row;
+    column-gap: 20px;
+}
+
+#fullfigurediv {
+
+}
+
+#fulltermdiv {
+flex: 1 1 20%
+}
+
+#fullpaperdiv {
+flex: 1 1 60%
+}
+
+#fulloptiondiv {
+flex: 1 1 20%
+}
+
+#home li {
+    background-color: #f4f8ff;
+    font-size: 14px;
+    padding: 5px;
+    margin: 5px;
+}
+
+ul {
+
+
+
+}
+#yaxis {
+    display: none;
+}
+
+ul.list-style-none li {
+
+}
+
+ul.list-style-none li a {
+    color: #673AB7;
+    padding: 8px 0px;
+    display: block;
+    text-decoration: none;
+}
+
+#main-middle-div {
+    padding:10px;
+}
+
+#example-river {
+    flex: 1 1 30% !important;
+    height: fit-content;
+
+}
+
+#example-river img {
+    max-height:250px;
+}
+
+#viz-explain li {
+    padding: 0px !important;
+margin: 0px !important;
+    margin-bottom:20px !important;
+}
+
+.hide {
+    display: none;
+}
+
+.active {
+    display: block;
 }
