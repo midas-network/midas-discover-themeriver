@@ -159,7 +159,6 @@ text {
 }
 
 
-
 #word-box {
     position: absolute;
     /*background-color: #eaa3c4;*/
@@ -187,15 +186,14 @@ text {
     /*border: 1px solid #414141;*/
 }
 
-
-#title {
+.title {
 
     text-align: center;
     font-size: 20px;
 }
 
 
-#subtitle {
+.subtitle {
 
     text-align: center;
     font-size: 14px;
@@ -209,19 +207,26 @@ text {
 
 #chart-row {
     flex: 1 1 auto;
+    opacity: 0;
+
+}
+
+#wrapper {
+    height: 100%;
 }
 
 #info-row {
-    flex: 0 1 275px;
+    flex: 0 1 100%;
     background-color: #252969;
+    row-gap: 20px;
 
+    height:100%;
 
-    align-items: center;
 }
 
 
 #paper-list {
-height:260px;
+    height: 250px;
     overflow: scroll;
     margin-bottom: 25px;
     background-color: #ffffff;
@@ -249,13 +254,13 @@ height:260px;
 
 #term-list {
     overflow: auto;
-    height: 260px;
+    height: 250px;
     margin-bottom: 25px;
     background-color: #ffffff;
     font-size: 14px;
 
 
-    display: none;
+
 
 
 }
@@ -272,6 +277,7 @@ height:260px;
 .term-display label {
     color: white;
     font-size: 18px;
+
 }
 
 .side-panel {
@@ -280,8 +286,8 @@ height:260px;
     padding: 5px 5px 5px 5px;
 }
 
-#topic-line, #topic-line2 {
-    display: none;
+.hide-on-start {
+    visibility: hidden;
 }
 
 #instruction-line, #topic-line, #topic-line2, #current-topic-count, #pubmed-rb-line {
@@ -290,6 +296,13 @@ height:260px;
 
 }
 
+#instruction-line {
+
+}
+
+.hide-on-selection {
+    visibility: visible;
+}
 .options-header {
     color: white;
 }
@@ -302,12 +315,19 @@ height:260px;
     color: white;
 }
 
+.paper-instructions {
+color: white;
+    font-size: 60px;
+    margin-left: 100px;
+    margin-top: 50px !important;
+   opacity: 0;
+}
 
 #options {
 
     min-width: 200px;
     max-width: 300px;
-    margin-top: auto;
+    margin-top: 30px;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: auto;
@@ -358,6 +378,14 @@ height:260px;
 
 .paper-display {
     padding-right: 45px;
+    height:250px;
+    display:none;
+    opacity: 0;
+}
+.term-display {
+    display: none;
+    opacity: 0;
+     height:250px;
 }
 
 .tooltip {
@@ -597,11 +625,13 @@ height:260px;
 
     color: #252969;
     margin-left: 5%;
-    margin-right:5%;
+    margin-right: 5%;
 }
+
 .instruction-header {
-   font-weight: 700;
+    font-weight: 700;
 }
+
 .paper span {
     display: none;
 
@@ -610,11 +640,13 @@ height:260px;
 .paper:hover span {
     transition-delay: 1s;
 }
+
 .tab-pane, .tab-content {
     height: 100%
 }
+
 body {
-    height:100vh;
+    height: 100vh;
 }
 
 #main-container {
@@ -635,7 +667,7 @@ body {
 
 .caption-div {
     border: 1px solid #ddd;
-    display:flex;
+    display: flex;
     flex-direction: column;
 
     flex: 1 1 50%;
@@ -664,8 +696,8 @@ body {
 }
 
 #fullfigure {
-    width:75%;
-    margin-left : auto;
+    width: 75%;
+    margin-left: auto;
     margin-right: auto;
 }
 
@@ -680,24 +712,25 @@ body {
 #termsfigure {
 
 }
+
 .instruction-header {
 
 }
 
 #instructions {
-     display: flex;
+    display: flex;
     flex-direction: row;
-    max-width:1080px;
+
 }
 
 .text-instructions {
     flex: 1 1 50%;
     margin-left: 0px;
-    margin-right:75px;
+    margin-right: 75px;
 }
 
 #row-of-figures {
-    display:flex;
+    display: flex;
     flex-direction: row;
     column-gap: 20px;
 }
@@ -707,29 +740,33 @@ body {
 }
 
 #fulltermdiv {
-flex: 1 1 20%
+    flex: 1 1 20%
 }
 
 #fullpaperdiv {
-flex: 1 1 60%
+    flex: 1 1 60%
 }
 
 #fulloptiondiv {
-flex: 1 1 20%
+    flex: 1 1 20%
 }
 
 #home li {
-    background-color: #f4f8ff;
+
     font-size: 14px;
-    padding: 5px;
-    margin: 5px;
+    padding: 1px;
+    margin: 1px;
 }
 
 ul {
 
 
-
 }
+
+#docTab {
+    margin-bottom: 10px;
+}
+
 #yaxis {
     display: none;
 }
@@ -746,23 +783,23 @@ ul.list-style-none li a {
 }
 
 #main-middle-div {
-    padding:10px;
+    padding: 10px;
 }
 
 #example-river {
-    flex: 1 1 30% !important;
+    flex: 1 1 50% !important;
     height: fit-content;
 
 }
 
 #example-river img {
-    max-height:250px;
+    max-height: 600px;
 }
 
 #viz-explain li {
     padding: 0px !important;
-margin: 0px !important;
-    margin-bottom:20px !important;
+    margin: 0px !important;
+    margin-bottom: 4px !important;
 }
 
 .hide {
@@ -771,4 +808,15 @@ margin: 0px !important;
 
 .active {
     display: block;
+}
+
+.hide-until-selection {
+   visibility: hidden;
+}
+
+#please-header {
+    position:absolute;
+    top:10%;
+    color: #252969;
+    font-size: 24px;
 }

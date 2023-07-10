@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/html">
 <head><title>Midas River</title>
-    <link href="./css/themeriver.css" rel="stylesheet">
+    <link href="./css/themeriver.min.css" rel="stylesheet">
     <link href="./css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <script src="./js/d3.min.js"></script>
     <script src="./js/jquery.min.js"></script>
     <script src="./js/riverStats.js"></script>
     <script src="./js/colors.js"></script>
-    <script src="./js/d3-array@3"></script>
+    <script src="js/d3-array@3.js"></script>
     <script src="./js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
@@ -29,17 +29,19 @@
                                 documents that contain a given theme at a given time. When individual themes are stacked
                                 on top of each other, the visualization resembles a river, hence the name.</p></div>
                         <div class="caption-div" id="example-river">
-                            <div class="caption">Example Theme River showing twenty themes staring in the year 2013.
+                            <div class="caption">Example Theme River showing twenty themes starting in the year 2013.
                             </div>
-                            <img alt="river" class="figure" class="img-fluid" src="./img/fig1.png"></div>
+                            <img alt="river" class="figure" class="img-fluid" src="./img/example_river.png"></div>
                     </div>
                     <div id="viz-explain">
                         <div class="h3 instruction-header">The MIDAS Theme River Visualization</div>
+                        <p>To view the visualization, click on the Visualization tab above.
+
                         <div>
                             <ul class="nav nav-pills" id="docTab">
                                 <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab"
                                                         href="#viz-tab-explain">Visualization Overview</a></li>
-                                <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#term-tab-explain">Term
+                                <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#term-tab-explain">Theme
                                     Extraction Process</a></li>
                             </ul>
                         </div>
@@ -124,7 +126,7 @@
                             </ul>
                             </p>
                             <div class="h6">Metadata Processing</div>
-                            <div><p>Terms are extracted from the metadata using a custom NLP pipeline. The pipeline is
+                            <div><p>Themes are extracted from the metadata using a custom NLP pipeline. The pipeline is
                                 not yet available for public use, but will be in the future. The pipeline performs the
                                 following steps:
                                 <ul>
@@ -166,11 +168,15 @@
             <div class="tab-pane fade" id="viz">
                 <div class="container g-0">
                     <div class="row" id="header-row">
-                        <div id="title">Top 20 Most Frequently Occurring <span
+                        <div class="title" id="please-header">
+
+                            Please select a PubMed field for theme extraction.
+                        </div>
+                        <div class="title hide-on-start" id="title">Top 20 Most Frequently Occurring <span
                                 id="pubmed-datasource-in-title"></span><i><span id="ngram-size-in-title"></span></i> in
                             Disease Modeling Papers Authored by MIDAS Members
                         </div>
-                        <div id="subtitle">By Year, 2013-2022</div>
+                        <div class="subtitle hide-on-start" id="subtitle">By Year, 2013-2022</div>
                     </div>
                     <div class="row" id="chart-row">
                         <div class="col-md-12" id="wrapper">
@@ -180,12 +186,14 @@
                     </div>
                     <div class="row g-0" id="info-row">
                         <div class="col-md-3 ">
+
                             <div id="options">
+
                                 <div class="options-header center-options" id="pubmed-rb-line">PubMed Field for
-                                    Topics:
+                                    Theme Extraction:
                                 </div>
                                 <div class="center-options control-group-pubmed-source"><label
-                                        class="control control-radio">MeSH Terms<input checked="checked"
+                                        class="control control-radio">MeSH Terms<input
                                                                                        name="pubmed-source-radio"
                                                                                        type="radio" value="meshTerms"/>
                                     <div class="control_indicator"></div>
@@ -198,7 +206,7 @@
                                 </label></div>
                                 <div class="center-options options-header" id="ngram-line">N-gram Size:</div>
                                 <div class="control-group-ngram"><label class="control control-radio">1<input
-                                        checked="checked" name="ngram-radio" type="radio" value="1"/>
+                                       name="ngram-radio" type="radio" value="1"/>
                                     <div class="control_indicator"></div>
                                 </label><label class="control control-radio">2<input name="ngram-radio" type="radio"
                                                                                      value="2"/>
@@ -225,16 +233,19 @@
                                 <!--                                </svg>--><!--                            </div>-->
                             </div>
                         </div>
-                        <div class="paper-display col-md-7 ">
-                            <div id="topic-line">Showing <span id="current-topic-count"></span> papers with topic "<span
+                          <div class="paper-instructions hide-on-selection  col-md-7 ">
+                              Click on a theme to see the paper titles for that year (indicated by the x-axis).
+                          </div>
+                        <div class="paper-display hide-until-selection col-md-7 ">
+                            <div id="topic-line">Showing <span id="current-topic-count"></span> papers with theme "<span
                                     id="current-topic"></span>" in <span id="current-year"></span>:
                             </div>
-                            <div id="instruction-line">Click the graph to display list of papers for year and topic.
+                            <div id="instruction-line">Click the graph to display list of papers for year and theme.
                             </div>
                             <div class="side-panel" id="paper-list"></div>
                         </div>
-                        <div class="term-display col-md-2 ">
-                            <div id="topic-line2">Top terms in <span id="current-year2"></span>:</div>
+                        <div class="term-display  hide-until-selection col-md-2 ">
+                            <div id="topic-line2">Top themes in <span id="current-year2"></span>:</div>
                             <div class="side-panel" id="term-list"></div>
                         </div>
                     </div>
