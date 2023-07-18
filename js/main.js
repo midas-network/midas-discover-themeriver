@@ -39,7 +39,36 @@ const ngramSizeLookup = {
     '3': 'Trigrams'
 }
 
+    function setPaperAndTop20Showing(b) {
+        let hideOnSelection, paperInstructions, paperDisplay, hideuntilSelection, termDisplay, paperDisplayOpacity;
+
+        if (!b) {
+            hideOnSelection = "hidden";
+            paperInstructions = "none";
+            paperDisplay = "block";
+            hideuntilSelection = "visible";
+            termDisplay = "block";
+            paperDisplayOpacity = 1
+
+
+        } else {
+                hideOnSelection = "visible";
+                paperInstructions = "block";
+                paperDisplay = "none";
+                hideuntilSelection = "hidden";
+                termDisplay = "none";
+                paperDisplayOpacity = 0
+        }
+           $(".hide-on-selection").css("visibility", hideOnSelection);
+            $(".paper-instructions").css("display", paperInstructions);
+            $(".hide-until-selection").css("visibility", hideuntilSelection);
+            $(".paper-display, .term-display").css({'display': paperDisplay});
+            $(".paper-display, .term-display").css({'opacity': paperDisplayOpacity, 'transition': '2s'});
+    }
+
 const showPapers = (that) => {
+
+
     const updateInfoPanel = (year, topic, paper_list, count) => {
 
         const paper_elem = $('#paper-list')
@@ -119,13 +148,10 @@ const showPapers = (that) => {
     resetPaths()
     flash(topic, 10)
 
-    $(".hide-on-selection").css("visibility", "hidden");
 
-    $(".paper-instructions").css("display", "none");
-        $(".hide-until-selection").css("visibility", "visible")
-    $(".paper-display, .term-display").css({'display': 'block'});
 
-    $(".paper-display, .term-display").css({'opacity': '1', 'transition': '2s'});
+    setPaperAndTop20Showing(false)
+
     $($("[class='" + topic + "']")[0]).css("filter", "brightness(100%)");
     console.log(papersJsonFilename2)
     fetch(papersJsonFilename2)
@@ -504,6 +530,8 @@ $(document).ready(function () {
                     $(".control-group-ngram .control input").prop("disabled", isMeshTerms)
                 }
 
+                    setPaperAndTop20Showing(true)
+
                 const isMeshTerms = $('.control-group-pubmed-source input[type=radio]:checked').val() === 'meshTerms';
 
                 const tension = 0 //$("#myRange").val() / 100
@@ -558,7 +586,7 @@ $(document).ready(function () {
             $(window).on("resize", function () {
                 updateOptions()
             })
-            // updateOptions();
+            updateOptions();
 
         }
     });

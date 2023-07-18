@@ -10,6 +10,7 @@
 }
 
 .control input {
+
     position: absolute;
     z-index: -1;
     opacity: 0;
@@ -216,7 +217,7 @@ text {
 }
 
 #info-row {
-    flex: 0 1 100%;
+   flex: 0 1 275px;
     background-color: #252969;
     row-gap: 20px;
 
@@ -305,6 +306,7 @@ text {
 }
 .options-header {
     color: white;
+    text-align: center;
 }
 
 #current-topic-count, #current-topic-count2, #current-topic, #current-year {
@@ -317,9 +319,9 @@ text {
 
 .paper-instructions {
 color: white;
-    font-size: 60px;
+    font-size: 24px;
     margin-left: 100px;
-    margin-top: 50px !important;
+    margin-top: 100px !important;
    opacity: 0;
 }
 
@@ -727,6 +729,7 @@ body {
     flex: 1 1 50%;
     margin-left: 0px;
     margin-right: 75px;
+    margin-bottom:20px;
 }
 
 #row-of-figures {

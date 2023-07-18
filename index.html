@@ -28,17 +28,14 @@
                                 left to right. The x-axis represents time, and the y-axis represents the proportion of
                                 documents that contain a given theme at a given time. When individual themes are stacked
                                 on top of each other, the visualization resembles a river, hence the name.</p></div>
-                        <div class="caption-div" id="example-river">
-                            <div class="caption">Example Theme River showing twenty themes starting in the year 2013.
-                            </div>
-                            <img alt="river" class="figure" class="img-fluid" src="./img/example_river.png"></div>
+
                     </div>
                     <div id="viz-explain">
                         <div class="h3 instruction-header">The MIDAS Theme River Visualization</div>
                         <p>To view the visualization, click on the Visualization tab above.
 
                         <div>
-                            <ul class="nav nav-pills" id="docTab">
+                            <ul class="nav nav-tabs" id="docTab">
                                 <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab"
                                                         href="#viz-tab-explain">Visualization Overview</a></li>
                                 <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#term-tab-explain">Theme
@@ -49,7 +46,7 @@
                             <div class="h5">Visualization</div>
                             <p>The MIDAS Theme River is an interactive display that allows users to explore the themes
                                 of MIDAS papers over time. Specifically, the display shows the 20 most frequently
-                                occurring topics in infectious disease papers authored by MIDAS members from 2013 to
+                                occurring themes in infectious disease papers authored by MIDAS members from 2013 to
                                 2022.
                             <div class="caption-div" id="main-middle-div" width="75%"><p class="h6">The display is
                                 composed of four parts:</p>
@@ -136,7 +133,7 @@
                                     <li>Lowercasing - the pipeline converts all words to lowercase</li>
                                     <li>Tokenization - the pipeline splits the text into n-grams (word phrases, where n
                                         is the size of the phrase specified by the user) and removes punctuation
-                                    <li>
+
                                     <li>Stop Word & Other Common Word Removal - the pipeline removes stop words (words
                                         that are common in the English language, but don't add meaning to the text, such
                                         as "the" and "and"). Additionally, other commonly used words that occur in MIDAS
@@ -173,7 +170,7 @@
                             Please select a PubMed field for theme extraction.
                         </div>
                         <div class="title hide-on-start" id="title">Top 20 Most Frequently Occurring <span
-                                id="pubmed-datasource-in-title"></span><i><span id="ngram-size-in-title"></span></i> in
+                                id="pubmed-datasource-in-title"> </span><i> <span id="ngram-size-in-title"> </span></i> in
                             Disease Modeling Papers Authored by MIDAS Members
                         </div>
                         <div class="subtitle hide-on-start" id="subtitle">By Year, 2013-2022</div>
@@ -201,7 +198,7 @@
                                         name="pubmed-source-radio" type="radio" value="pubmedKeywords"/>
                                     <div class="control_indicator"></div>
                                 </label><label class="control control-radio">Title + Abstracts<input
-                                        name="pubmed-source-radio" type="radio" value="paperAbstract"/>
+                                        name="pubmed-source-radio" type="radio" value="paperAbstract" checked="true"/>
                                     <div class="control_indicator"></div>
                                 </label></div>
                                 <div class="center-options options-header" id="ngram-line">N-gram Size:</div>
@@ -209,7 +206,7 @@
                                        name="ngram-radio" type="radio" value="1"/>
                                     <div class="control_indicator"></div>
                                 </label><label class="control control-radio">2<input name="ngram-radio" type="radio"
-                                                                                     value="2"/>
+                                                                                     value="2" checked="true"/>
                                     <div class="control_indicator"></div>
                                 </label><label class="control control-radio">3<input name="ngram-radio" type="radio"
                                                                                      value="3"/>
