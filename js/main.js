@@ -39,32 +39,32 @@ const ngramSizeLookup = {
     '3': 'Trigrams'
 }
 
-    function setPaperAndTop20Showing(b) {
-        let hideOnSelection, paperInstructions, paperDisplay, hideuntilSelection, termDisplay, paperDisplayOpacity;
+function setPaperAndTop20Showing(b) {
+    let hideOnSelection, paperInstructions, paperDisplay, hideuntilSelection, termDisplay, paperDisplayOpacity;
 
-        if (!b) {
-            hideOnSelection = "hidden";
-            paperInstructions = "none";
-            paperDisplay = "block";
-            hideuntilSelection = "visible";
-            termDisplay = "block";
-            paperDisplayOpacity = 1
+    if (b) {
+        hideOnSelection = "hidden";
+        paperInstructions = "none";
+        paperDisplay = "block";
+        hideuntilSelection = "visible";
+        termDisplay = "block";
+        paperDisplayOpacity = 1
 
 
-        } else {
-                hideOnSelection = "visible";
-                paperInstructions = "block";
-                paperDisplay = "none";
-                hideuntilSelection = "hidden";
-                termDisplay = "none";
-                paperDisplayOpacity = 0
-        }
-           $(".hide-on-selection").css("visibility", hideOnSelection);
-            $(".paper-instructions").css("display", paperInstructions);
-            $(".hide-until-selection").css("visibility", hideuntilSelection);
-            $(".paper-display, .term-display").css({'display': paperDisplay});
-            $(".paper-display, .term-display").css({'opacity': paperDisplayOpacity, 'transition': '2s'});
+    } else {
+        hideOnSelection = "visible";
+        paperInstructions = "block";
+        paperDisplay = "none";
+        hideuntilSelection = "hidden";
+        termDisplay = "none";
+        paperDisplayOpacity = 0
     }
+    $(".hide-on-selection").css("visibility", hideOnSelection);
+    $(".paper-instructions").css("display", paperInstructions);
+    $(".hide-until-selection").css("visibility", hideuntilSelection);
+    $(".paper-display, .term-display").css({'display': paperDisplay});
+    $(".paper-display, .term-display").css({'opacity': paperDisplayOpacity, 'transition': '2s'});
+}
 
 const showPapers = (that) => {
 
@@ -116,6 +116,7 @@ const showPapers = (that) => {
     }
 
     function flash(topic, n) {
+
         if (n > 0) {
             $($("[class='" + topic + "']")[0]).css("filter", "brightness(0%)");
             flashTimer = setTimeout(function () {
@@ -147,10 +148,7 @@ const showPapers = (that) => {
     const year = dates[date_index].substr(0, 4)
     resetPaths()
     flash(topic, 10)
-
-
-
-    setPaperAndTop20Showing(false)
+  setPaperAndTop20Showing(true)
 
     $($("[class='" + topic + "']")[0]).css("filter", "brightness(100%)");
     console.log(papersJsonFilename2)
@@ -208,6 +206,7 @@ $(document).ready(function () {
 
     $('.nav-tabs a').on('shown.bs.tab', function (event) {
         var x = $(event.target).text();
+        let stateObj;
         if (x == "Visualization") {
             const drawRiver = (countsCsvFilename, papersJsonFilename, tension) => {
                 papersJsonFilename2 = papersJsonFilename
@@ -297,7 +296,7 @@ $(document).ready(function () {
                         .append('rect')
                         .attr('class', 'rect-clip')
                         .attr('width', 0)
-                        .attr('height', $("#main-svg")[0].getBoundingClientRect().height + 100)
+                        .attr('height', $("#main-svg")[0].getBoundingClientRect().height + 1000)
                     // .attr('height', height)
 
                     g.selectAll('path')
@@ -499,7 +498,7 @@ $(document).ready(function () {
                 });
             }
 
-            function updateOptions() {
+            function updateOptions(stateObj) {
                 function getBaseFilename() {
                     //get the values of the radio buttons
                     const pubmedSourceValue = $('.control-group-pubmed-source input[type=radio]:checked').val();
@@ -530,7 +529,7 @@ $(document).ready(function () {
                     $(".control-group-ngram .control input").prop("disabled", isMeshTerms)
                 }
 
-                    setPaperAndTop20Showing(true)
+                setPaperAndTop20Showing(!stateObj.initialDrawing && !stateObj.extractionMethodChanged);
 
                 const isMeshTerms = $('.control-group-pubmed-source input[type=radio]:checked').val() === 'meshTerms';
 
@@ -575,18 +574,25 @@ $(document).ready(function () {
                 }
             }
 
+            let stateObj = new Object()
+            stateObj.resizing = false
+            stateObj.extractionMethodChanged = false
+            stateObj.initialDrawing = false
             $('.control-group-ngram input[type=radio], .control-group-pubmed-source input[type=radio]').change(() => {
-                updateOptions()
+                stateObj.extractionMethodChanged = true;
+
+                updateOptions(stateObj)
             })
 
-            $("#myRange").on("input", function () {
-                updateOptions()
-            })
+            // $("#myRange").on("input", function () {
+            //     updateOptions(false)
+            // })
 
             $(window).on("resize", function () {
-                updateOptions()
+                updateOptions(stateObj)
             })
-            updateOptions();
+            stateObj.initialDrawing = true
+            updateOptions(stateObj);
 
         }
     });
