@@ -15,6 +15,7 @@ let papersJsonFilename2;
 let flashTimer, flashTimer2, hoverTimer;
 let started = false;
 let alreadyAnimatedResize = false;
+let papersShowing = false;
 const base_opacity = 0.7;
 
 
@@ -64,6 +65,7 @@ function setPaperAndTop20Showing(b) {
     $(".hide-until-selection").css("visibility", hideuntilSelection);
     $(".paper-display, .term-display").css({'display': paperDisplay});
     $(".paper-display, .term-display").css({'opacity': paperDisplayOpacity, 'transition': '2s'});
+    papersShowing = b;
 }
 
 const showPapers = (that) => {
@@ -148,7 +150,7 @@ const showPapers = (that) => {
     const year = dates[date_index].substr(0, 4)
     resetPaths()
     flash(topic, 10)
-  setPaperAndTop20Showing(true)
+    setPaperAndTop20Showing(true)
 
     $($("[class='" + topic + "']")[0]).css("filter", "brightness(100%)");
     console.log(papersJsonFilename2)
@@ -528,8 +530,8 @@ $(document).ready(function () {
                     $(".control-group-ngram label").css("color", color)
                     $(".control-group-ngram .control input").prop("disabled", isMeshTerms)
                 }
-
-                setPaperAndTop20Showing(!stateObj.initialDrawing && !stateObj.extractionMethodChanged);
+                debugger;
+                setPaperAndTop20Showing((!stateObj.initialDrawing && !stateObj.extractionMethodChanged && !stateObj.resizing) || (stateObj.resizing && papersShowing));
 
                 const isMeshTerms = $('.control-group-pubmed-source input[type=radio]:checked').val() === 'meshTerms';
 
@@ -577,10 +579,11 @@ $(document).ready(function () {
             let stateObj = new Object()
             stateObj.resizing = false
             stateObj.extractionMethodChanged = false
-            stateObj.initialDrawing = false
+            stateObj.initialDrawing = !alreadyAnimatedResize
             $('.control-group-ngram input[type=radio], .control-group-pubmed-source input[type=radio]').change(() => {
                 stateObj.extractionMethodChanged = true;
-
+                stateObj.initialDrawing = false
+                      stateObj.resizing = false
                 updateOptions(stateObj)
             })
 
@@ -589,9 +592,12 @@ $(document).ready(function () {
             // })
 
             $(window).on("resize", function () {
+                stateObj.resizing = true
+                      stateObj.extractionMethodChanged = false;
+
                 updateOptions(stateObj)
             })
-            stateObj.initialDrawing = true
+
             updateOptions(stateObj);
 
         }

@@ -30,7 +30,7 @@ const rebalanceSet = (dataset, sorting_set, up_max) => {
                 term['adjusted_percent'] = 0
             else
                 // term['adjusted_percent'] = Math.max(.000001, Math.round((term['raw_percent']*(total/up_max) || 0) * 100));
-                term['adjusted_percent'] = ((term['raw_percent']*(total/up_max) || 0) * 100);
+                term['adjusted_percent'] = ((term['raw_percent']*(total/up_max) || 0) * 95);
             add_up += term['adjusted_percent']    
         }
         //console.log('year: ' + year[0]['date'] + ' total: ' + add_up)
