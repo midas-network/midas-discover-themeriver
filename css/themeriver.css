@@ -23,7 +23,7 @@
     height: 20px;
     width: 20px;
     background: #e6e6e6;
-    border: 0 solid #000000;
+    border: 0 solid rgba(8, 8, 14, 0.9);
     border-radius: 0px;
 }
 
@@ -33,7 +33,7 @@
 }
 
 .control input:checked ~ .control_indicator {
-    background: #2aa1c0;
+    background: darkred;
 }
 
 .control:hover input:not([disabled]):checked ~ .control_indicator,
@@ -218,7 +218,7 @@ text {
 
 #info-row {
    flex: 0 1 275px;
-    background-color: #252969;
+    background-color: rgba(8, 8, 14, 0.9);
     row-gap: 20px;
 
     height:100%;
@@ -282,7 +282,7 @@ text {
 }
 
 .side-panel {
-    border: 2px solid #1C6EA4;
+    border: 2px solid rgba(0, 0, 0, 0.7) !important;;
     border-radius: 5px;
     padding: 5px 5px 5px 5px;
 }
@@ -323,6 +323,15 @@ color: white;
     margin-left: 100px;
     margin-top: 100px !important;
    opacity: 0;
+}
+
+.app-title {
+font-size: 24px;
+    margin-left: auto;
+    padding-right: 50px;
+    background: rgba(8, 8, 14, 0.9) !important;
+    color: white;
+    padding-left: 50px;
 }
 
 #options {
@@ -380,14 +389,16 @@ color: white;
 
 .paper-display {
     padding-right: 45px;
-    height:250px;
+    height:225px;
     display:none;
     opacity: 0;
+    overflow: revert;
 }
 .term-display {
     display: none;
     opacity: 0;
-     height:250px;
+     height:225px;
+    overflow: revert;
 }
 
 .tooltip {
@@ -491,7 +502,7 @@ color: white;
 
 #theme-color {
 
-    color: black;
+    color: rgba(8, 8, 14, 0.9) !important;
     text-align: center;
 }
 
@@ -606,7 +617,7 @@ color: white;
 }
 
 #abstract-hover {
-    background: #252969;
+    background: rgba(0, 0, 0, 0.9) !important;;
     position: absolute;
     display: none;
 
@@ -625,7 +636,7 @@ color: white;
     margin-top: 10px;
     margin-bottom: 10px;
 
-    color: #252969;
+    color: rgba(8, 8, 14, 0.9);
     margin-left: 5%;
     margin-right: 5%;
 }
@@ -657,9 +668,36 @@ body {
     height: 100vh;
 
 }
+#mainTab, #docTab  {
+    color: white;
+    --bs-nav-tabs-border-color: rgba(8, 8, 14, 0.9) !important;
 
+    --bs-nav-tabs-link-active-border-color: rgba(8, 8, 14, 0.9) rgba(8, 8, 14, 0.9) #fff !important;
+    --bs-nav-tabs-link-active-bg: rgba(8, 8, 14, 0.9) !important;
+--bs-nav-tabs-link-active-color: white !important;
+    --bs-nav-link-color: rgba(0, 0, 0, 0.7) !important;
+    --bs-nav-link-hover-color: rgba(8, 8, 14, 0.9) !important;
+
+}
+#mainTab .nav-link {
+      --bs-nav-link-padding-y: 0.2rem;
+}
+
+#mainTab .nav-link, #docTab .nav-link {
+    border: 1px solid rgba(8, 8, 14, 0.9);
+    margin-top: 5px;
+    height: 35px;
+
+}
+
+
+
+.nav-item:nth-child(1) {
+    margin-left:25px;
+}
 .nav-tabs {
     flex: 0 1 auto;
+    --bs-nav-tabs-border-width: 4px !important;
 }
 
 .tab-content {
@@ -686,7 +724,7 @@ body {
     text-align: center;
     font-size: 16px;
     font-weight: 700;
-    color: #252969;
+    color: rgba(0,0,0,.7);
 }
 
 .figure {
