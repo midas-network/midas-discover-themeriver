@@ -233,7 +233,7 @@ $(document).ready(function () {
                     // Linear Scale: Data Space -> Screen Space
                     xScale = d3.scaleLinear()
                         .domain([0, dates.length - 1])
-                        .range([$("#main-svg")[0].getBoundingClientRect().x + 50, $("#main-svg")[0].getBoundingClientRect().width - 50]);
+                        .range([50, $("#main-svg")[0].getBoundingClientRect().width - 50]);
 
                     // Introducing y-Scale
                     yScale = d3.scaleLinear()
@@ -266,7 +266,8 @@ $(document).ready(function () {
 
 
                     const xAxis = d3.axisBottom(xScale)
-                        .tickFormat((d, i) => dates[i].substring(0, 4))
+                        .tickValues(d3.range(dates.length))
+                        .tickFormat(d => dates[d].substring(0, 4))
 
 
                     let yAxisGroup = gForXAxis.append('g').call(yAxis).attr('id', 'yaxis')
@@ -429,11 +430,14 @@ $(document).ready(function () {
                     // remove duplicated items
                     let alldates = Array.from(new Set(limited_dataset.map(datum => datum['date'])));
 
-                    // make sure dates are listed according to real time order
-                    alldates = alldates.sort(function (a, b) {
-                        return new Date(b.date) - new Date(a.date);
-                    });
+                    // sort ascending so oldest year is at the left of the x-axis
+                    alldates = alldates.sort((a, b) => new Date(a) - new Date(b));
                     dates = alldates;
+
+                    // update subtitle with actual year range derived from data
+                    const minYear = new Date(dates[0]).getFullYear();
+                    const maxYear = new Date(dates[dates.length - 1]).getFullYear();
+                    $('#subtitle').text(`By Year, ${minYear}–${maxYear}`);
 
                     // generate sequential data
                     let sequential = [];
@@ -501,13 +505,37 @@ $(document).ready(function () {
                         .y1(d => getYScale(d[1]))
                     render(prestack, keys, area);
 
+                    let fixTranslateOffset = 0;
                     function fixTranslate() {
-                        const maingroupHeight = $('g#maingroup').get(0).getBoundingClientRect().top
-                        const svgHeight = $('#main-svg #rectClip').get(0).getBoundingClientRect().top
-                        $("#maingroup").attr("transform", 'translate(0,' + (svgHeight - maingroupHeight) + ')')
+                        const MARGIN = 10;
+                        const maingroupTop = $('g#maingroup').get(0).getBoundingClientRect().top;
+                        const svgTop = $('#main-svg').get(0).getBoundingClientRect().top;
+                        fixTranslateOffset = (svgTop - maingroupTop) + MARGIN;
+                        $("#maingroup").attr("transform", 'translate(0,' + fixTranslateOffset + ')');
                     }
 
-                    fixTranslate()
+                    fixTranslate();
+
+                    const zoom = d3.zoom()
+                        .scaleExtent([1, 8])
+                        .filter(function() {
+                            return d3.event.type !== 'mousedown' || d3.event.target.tagName !== 'path';
+                        })
+                        .on('zoom', function() {
+                            const t = d3.event.transform;
+                            d3.select('#maingroup').attr('transform',
+                                `translate(${t.x},${t.y + fixTranslateOffset}) scale(${t.k},1)`);
+                            d3.select('#xaxisgroup').attr('transform',
+                                `translate(${t.x},0) scale(${t.k},1)`);
+                        });
+
+                    svg.call(zoom)
+                        .on('dblclick.zoom', null)
+                        .on('dblclick', function() {
+                            if (d3.event.target.tagName !== 'path') {
+                                svg.transition().duration(300).call(zoom.transform, d3.zoomIdentity);
+                            }
+                        });
                 }).catch(err => {
                     console.error('Failed to load visualization data:', err);
                 });
