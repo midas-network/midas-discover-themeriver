@@ -18,6 +18,15 @@ let alreadyAnimatedResize = false;
 let papersShowing = false;
 const base_opacity = 0.7;
 
+function escapeHtml(str) {
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
 
 const xValue = (datum) => {
     return dates.indexOf(datum['date']);
@@ -139,7 +148,7 @@ const showPapers = (that) => {
 
     $(".hide-on-start").css("visibility", "visible")
     let date_index, topic;
-    if (d3.event == null) {
+    if (d3.event === null) {
         let s_date = $('#current-year').text() + '/1/1'
         date_index = dates.findIndex(x => x == s_date);
         topic = event.target.textContent
@@ -153,7 +162,6 @@ const showPapers = (that) => {
     setPaperAndTop20Showing(true)
 
     $($("[class='" + topic + "']")[0]).css("filter", "brightness(100%)");
-    console.log(papersJsonFilename2)
     fetch(papersJsonFilename2)
         .then(response => {
             return response.json()
@@ -161,13 +169,16 @@ const showPapers = (that) => {
         .then(papers => {
                 let paper_list = "<ul>"
                 for (let article of papers[year][topic]) {
-                    paper_list += "<li class='paper'><a href='" + article['uri'] + "' target='_blank'>" + article['title'] + "</a>" +
-                        "<span>" + article['abstract'] + "</span></li>"
+                    paper_list += "<li class='paper'><a href='" + escapeHtml(article['uri']) + "' target='_blank'>" + escapeHtml(article['title']) + "</a>" +
+                        "<span>" + escapeHtml(article['abstract']) + "</span></li>"
                 }
                 paper_list += "</ul>"
                 updateInfoPanel(year, topic, paper_list, papers[year][topic].length)
             }
         )
+        .catch(() => {
+            updateInfoPanel(year, topic, '<p>Failed to load papers.</p>', 0);
+        })
 }
 
 function fillTopics(year, selected_topic) {
@@ -192,8 +203,8 @@ function fillTopics(year, selected_topic) {
             background = "background-color: #4fc02a52;"
             line = i;
         }
-        topic_list += "<td " + id + " style='" + background + "'>" + topic + "</td>"
-        d = {}
+        topic_list += "<td " + id + " style='" + background + "'>" + escapeHtml(topic) + "</td>"
+        const d = {}
         d.key = topic
         topic_list += "<td style='opacity: " + base_opacity + "; background:" + next_bar_color(d) + "'></td>"
         topic_list += "</tr>"
@@ -356,7 +367,7 @@ $(document).ready(function () {
                             }
                         }
                         $('#river-word').html(this.classList['value']);
-                        if (topic_count == 0) {
+                        if (topic_count === 0) {
                             $('#word-label').html("Not in top 20 in " + dates[date_index].substr(0, 4));
                         } else {
                             $('#word-label').html(topic_count + " papers in " + dates[date_index].substr(0, 4));
@@ -497,6 +508,8 @@ $(document).ready(function () {
                     }
 
                     fixTranslate()
+                }).catch(err => {
+                    console.error('Failed to load visualization data:', err);
                 });
             }
 
@@ -506,11 +519,11 @@ $(document).ready(function () {
                     const pubmedSourceValue = $('.control-group-pubmed-source input[type=radio]:checked').val();
                     let ngramValue = $('.control-group-ngram input[type=radio]:checked').val();
 
-                    if (pubmedSourceValue == 'meshTerms') {
+                    if (pubmedSourceValue === 'meshTerms') {
                         ngramValue = '1'
                         $("#options > div.control-group-ngram > label:nth-child(1) > input[type=radio]").prop('checked', true);
                     }
-                    if (pubmedSourceValue == undefined || ngramValue == undefined) {
+                    if (pubmedSourceValue === undefined || ngramValue === undefined) {
                         return "not-ready";
                     }
                     $("#pubmed-datasource-in-title").text(pubmedDatasourceLookup[pubmedSourceValue]);
@@ -530,7 +543,6 @@ $(document).ready(function () {
                     $(".control-group-ngram label").css("color", color)
                     $(".control-group-ngram .control input").prop("disabled", isMeshTerms)
                 }
-                debugger;
                 setPaperAndTop20Showing((!stateObj.initialDrawing && !stateObj.extractionMethodChanged && !stateObj.resizing) || (stateObj.resizing && papersShowing));
 
                 const isMeshTerms = $('.control-group-pubmed-source input[type=radio]:checked').val() === 'meshTerms';
@@ -554,23 +566,9 @@ $(document).ready(function () {
                     $("#info-row").css({'position': 'unset', 'flex': '0 1 275px', 'transition': '2s'})
                     $("#chart-row").css({'opacity': '1', 'align-items': 'center', 'transition': '2s'})
                     $(".paper-instructions").css({'opacity': '1', 'transition': '2s'})
-                    $("#options").css({'margin-top': '40px', 'transition margin': '2s'})
+                    $("#options").css({'margin-top': '40px', 'transition': '2s'})
 
-                    if (!alreadyAnimatedResize) {
-                        const interval = 50
-                        const duration = 2000
-                        let i = 0
-                        const intervalId = setInterval(function () {
-                                drawRiver("./data/" + countsCsvFilename, "./data/" + papersJsonFilename, tension);
-                                i++
-                                if (i >= (duration / interval)) {
-                                    clearInterval(intervalId)
-                                }
-                            }
-                            , interval);
-                        alreadyAnimatedResize = true
-                    }
-
+                    alreadyAnimatedResize = true;
 
                     drawRiver("./data/" + countsCsvFilename, "./data/" + papersJsonFilename, tension);
                 }

@@ -38,7 +38,7 @@
 
 .control:hover input:not([disabled]):checked ~ .control_indicator,
 .control input:checked:focus ~ .control_indicator {
-    background: #0e6647d;
+    background: #0e6647;
 }
 
 .control input:disabled ~ .control_indicator {
@@ -741,21 +741,6 @@ body {
     margin-right: auto;
 }
 
-#optionfigure {
-
-}
-
-#papersfigure {
-
-}
-
-#termsfigure {
-
-}
-
-.instruction-header {
-
-}
 
 #instructions {
     display: flex;
@@ -776,9 +761,6 @@ body {
     column-gap: 20px;
 }
 
-#fullfigurediv {
-
-}
 
 #fulltermdiv {
     flex: 1 1 20%
@@ -799,10 +781,6 @@ body {
     margin: 1px;
 }
 
-ul {
-
-
-}
 
 #docTab {
     margin-bottom: 10px;
@@ -810,10 +788,6 @@ ul {
 
 #yaxis {
     display: none;
-}
-
-ul.list-style-none li {
-
 }
 
 ul.list-style-none li a {
