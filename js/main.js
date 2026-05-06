@@ -1,6 +1,4 @@
 const svg = d3.select('#main-svg');
-const width = +svg.attr('width');
-const height = +svg.attr('height');
 
 let up_max = 5000;
 let yScale;
@@ -8,6 +6,15 @@ let maxX, maxY;
 let dates;
 let currentColor = 0;
 let xScale, limited_dataset;
+let currentZoomTransform = d3.zoomIdentity;
+
+const chartMargins = {
+    top: 20,
+    right: 50,
+    bottom: 45,
+    left: 50
+};
+const zoomScaleExtent = [1, 8];
 
 let mouseOutTimeout;
 let fadeInDuration = 750;
@@ -17,6 +24,24 @@ let started = false;
 let alreadyAnimatedResize = false;
 let papersShowing = false;
 const base_opacity = 0.7;
+
+function getSvgBounds() {
+    const rect = $("#main-svg")[0].getBoundingClientRect();
+    return {
+        width: rect.width,
+        height: rect.height
+    };
+}
+
+function clampDateIndex(index) {
+    return Math.max(0, Math.min(index, dates.length - 1));
+}
+
+function getDateIndexFromTarget(target) {
+    const localX = d3.mouse(target)[0];
+    const unscaledX = currentZoomTransform.invertX(localX);
+    return clampDateIndex(Math.round(xScale.invert(unscaledX)));
+}
 
 function escapeHtml(str) {
     return String(str)
@@ -153,7 +178,7 @@ const showPapers = (that) => {
         date_index = dates.findIndex(x => x == s_date);
         topic = event.target.textContent
     } else {
-        date_index = Math.round(xScale.invert(d3.mouse(that)[0]));
+        date_index = getDateIndexFromTarget(that);
         topic = d3.event.target.classList.toString()
     }
     const year = dates[date_index].substr(0, 4)
@@ -224,118 +249,101 @@ $(document).ready(function () {
             const drawRiver = (countsCsvFilename, papersJsonFilename, tension) => {
                 papersJsonFilename2 = papersJsonFilename
 
-
-                const renderInit = function (data) {
-
-                    const graphHeight = $("#wrapper")[0].offsetHeight;
-                    const graphWidth = $("#wrapper")[0].offsetWidth;
-                    const heightOfXAxis = 30;
-                    // Linear Scale: Data Space -> Screen Space
-                    xScale = d3.scaleLinear()
-                        .domain([0, dates.length - 1])
-                        .range([50, $("#main-svg")[0].getBoundingClientRect().width - 50]);
-
-                    // Introducing y-Scale
-                    yScale = d3.scaleLinear()
-                        .domain([0, 100])
-                        .range([$("#main-svg")[0].getBoundingClientRect().height - 50, 0]) // height 107 -> figure out height of x-axis
-                    //  .nice();
-
-                    // generate maxX and maxY
-                    maxX = xScale(d3.max(data, xValue));
-                    maxY = yScale(d3.max(data, yValue));
-
-                    const gForXAxis = svg.append('g')
-                        .attr('transform', `translate(0,0)`)
-                        //.attr('transform', `translate(${graphWidth * .3}, ${graphHeight * .1})`)
-                        .attr('id', 'xaxisgroup')
-
-                    const g = svg.append('g')
-                        .attr('transform', 'translate(0,0)')
-                        //.attr('transform', `translate(${graphWidth * .3}, ${graphHeight * .1})`)
-                        .attr('id', 'maingroup')
-
-
-                    // Adding axes
-
-                    const yAxis = d3.axisLeft(yScale)
-
-                        .tickSize(0)
-                    // .tickFormat("ASD")
-                    // .tickPadding(1);
-
-
-                    const xAxis = d3.axisBottom(xScale)
-                        .tickValues(d3.range(dates.length))
-                        .tickFormat(d => dates[d].substring(0, 4))
-
-
-                    let yAxisGroup = gForXAxis.append('g').call(yAxis).attr('id', 'yaxis')
-                    // d3.selectAll('#yaxis .tick text').attr('transform', `translate(${0}, ${-3})`); // transform shifts the labels on y axis toward the left
-                    // yAxisGroup.append('text')
-                    //     .attr('transform', 'rotate(-90)')
-                    //     .attr('x', -graphHeight / 2)
-                    //     .attr('y', -80)
-                    //     .attr('fill', 'black')
-                    //     .text(yAxisLabel)
-                    //     .attr('text-anchor', 'middle'); // Make label at the middle of the axis (seemingly in conjunction with the x attribute)
-                    //yAxisGroup.selectAll('.domain').remove(); // [Not sure what this is doing] We can select multiple tags using comma to seperate them and we can use space to signify nesting
-                    gForXAxis.append('g').call(xAxis).attr('transform', `translate(0, ${$("#main-svg")[0].getBoundingClientRect().height - heightOfXAxis})`).attr('id', 'xaxis');
-
-                    //let xAxisGroup =
-
-                    // let xAxisGroup = g.append('g').call(xAxis).attr('transform', `translate(0,0)`).attr('id', 'xaxis');
-                    //  d3.selectAll('#xaxis .tick text').attr('transform', `translate(${0}, ${5})`);
-                    // xAxisGroup.append('text')
-                    //     .attr('y', 60)
-                    //     .attr('x', $("svg")[0].getBoundingClientRect().width / 2)
-                    //     .attr('fill', 'black')
-                    //     .text(xAxisLabel)
-                    // xAxisGroup.selectAll('.domain').remove();
-
-                };
-
-                const render = function (dataset, keys, area) {
-
-                    let g = d3.select('#maingroup');
-
+                const render = function (dataset, keys) {
                     let layers = d3.stack()
                         .keys(keys)
                         .offset(d3.stackOffsetWiggle)
                         .order(d3.stackOrderAscending)
                         (dataset);
 
-                    const clippedrect = g.append("clipPath")
-                        .attr('id', 'rectClip')
-                        .append('rect')
-                        .attr('class', 'rect-clip')
-                        .attr('width', 0)
-                        .attr('height', $("#main-svg")[0].getBoundingClientRect().height + 1000)
-                    // .attr('height', height)
+                    svg.selectAll("*").remove();
+                    currentZoomTransform = d3.zoomIdentity;
+
+                    const svgBounds = getSvgBounds();
+                    const svgWidth = Math.max(1, svgBounds.width);
+                    const svgHeight = Math.max(1, svgBounds.height);
+                    const xMin = chartMargins.left;
+                    const xMax = svgWidth - chartMargins.right;
+                    const yMinPixel = chartMargins.top;
+                    const yMaxPixel = svgHeight - chartMargins.bottom;
+
+                    xScale = d3.scaleLinear()
+                        .domain([0, dates.length - 1])
+                        .range([xMin, xMax]);
+
+                    const stackedMin = d3.min(layers, (layer) => d3.min(layer, (point) => point[0]));
+                    const stackedMax = d3.max(layers, (layer) => d3.max(layer, (point) => point[1]));
+                    const span = Math.max(1, (stackedMax - stackedMin));
+                    const verticalPadding = span * 0.03;
+                    const yDomain = [stackedMin - verticalPadding, stackedMax + verticalPadding];
+
+                    yScale = d3.scaleLinear()
+                        .domain(yDomain)
+                        .range([yMaxPixel, yMinPixel]);
+
+                    maxX = xScale(d3.max(dataset, xValue));
+                    maxY = yScale(d3.max(dataset, yValue));
+
+                    const area = d3.area()
+                        .curve(d3.curveCardinal.tension(tension))
+                        .x(d => xScale(xValue(d.data)))
+                        .y0(d => yScale(d[0]))
+                        .y1(d => yScale(d[1]));
+
+                    const defs = svg.append("defs");
+                    defs.append("clipPath")
+                        .attr("id", "rectClip")
+                        .append("rect")
+                        .attr("class", "rect-clip")
+                        .attr("x", xMin)
+                        .attr("y", yMinPixel)
+                        .attr("width", Math.max(1, xMax - xMin))
+                        .attr("height", Math.max(1, yMaxPixel - yMinPixel));
+
+                    const gForXAxis = svg.append('g')
+                        .attr('transform', `translate(0,0)`)
+                        .attr('id', 'xaxisgroup');
+
+                    const xAxis = d3.axisBottom(xScale)
+                        .tickValues(d3.range(dates.length))
+                        .tickFormat((d) => dates[d] ? dates[d].substring(0, 4) : '');
+
+                    const yAxis = d3.axisLeft(yScale)
+                        .tickSize(0);
+
+                    gForXAxis.append('g')
+                        .attr('id', 'yaxis')
+                        .attr('transform', `translate(${xMin},0)`)
+                        .call(yAxis);
+
+                    const xAxisGroup = gForXAxis.append('g')
+                        .attr('id', 'xaxis')
+                        .attr('transform', `translate(0, ${yMaxPixel})`)
+                        .call(xAxis);
+
+                    const g = svg.append('g')
+                        .attr('transform', 'translate(0,0)')
+                        .attr('id', 'maingroup')
+                        .attr('clip-path', 'url(#rectClip)');
 
                     g.selectAll('path')
                         .data(layers)
                         .join('path')
                         .attr('opacity', base_opacity)
-                        .attr('d', function (d, i) {
-                            // if(d.key=='Epidemics')
-                            //     { debugger;}
+                        .attr('d', function (d) {
                             return area(d);
                         })
-                        .attr('clip-path', 'url(#rectClip)')
                         .attr('fill', function (d, i) {
                             return next_bar_color(d, i);
                         })
-                        .attr('class', function (d, i) {
+                        .attr('class', function (d) {
                             return d['key']
                         })
                         .on("mousemove", onMouseMove)
                         .on("mouseout", onMouseOut)
                         .on("click", onMouseClick);
 
-                    // Add the X Axis
-                    // Show label on hover
-                    function onMouseOut(e) {
+                    function onMouseOut() {
                         const elem = $('#word-box')
                         mouseOutTimeout = setTimeout(() => {
                             elem.fadeTo(750, 0);
@@ -343,7 +351,7 @@ $(document).ready(function () {
                         }, 250);
                     }
 
-                    function onMouseMove(e) {
+                    function onMouseMove() {
                         clearTimeout(mouseOutTimeout)
                         const elem = $('#word-box')
                         const X = d3.event.pageX;
@@ -360,11 +368,16 @@ $(document).ready(function () {
                         elem.css('backgroundColor', 'transparent');
                         $('#tooltip-inner').css('border-color', d3.event.currentTarget.getAttribute('fill'));
                         $('#word-label').css('border-color', d3.event.currentTarget.getAttribute('fill'));
-                        let date_index = Math.round(xScale.invert(d3.mouse(this)[0])),
-                            topic_count = this.__data__[date_index]['data'][this.classList[0]];
+
+                        const date_index = getDateIndexFromTarget(this);
+                        let topic_count = 0;
+                        if (this.__data__[date_index] && this.__data__[date_index]['data']) {
+                            topic_count = this.__data__[date_index]['data'][this.classList[0]] || 0;
+                        }
                         for (let i = 0; i < limited_dataset.length; i++) {
                             if (limited_dataset[i]['date'] === dates[date_index] && limited_dataset[i]['topic'] === this.classList['value']) {
                                 topic_count = limited_dataset[i]['count'];
+                                break;
                             }
                         }
                         $('#river-word').html(this.classList['value']);
@@ -377,12 +390,23 @@ $(document).ready(function () {
                         fadeInDuration = 0
                     }
 
-                    function onMouseClick(e) {
+                    function onMouseClick() {
                         showPapers(this)
-
                     }
 
-                    clippedrect.transition().ease(d3.easeLinear).duration(0).attr("width", $("#main-svg")[0].getBoundingClientRect().width);
+                    const zoomBehavior = d3.zoom()
+                        .scaleExtent(zoomScaleExtent)
+                        .extent([[xMin, yMinPixel], [xMax, yMaxPixel]])
+                        .translateExtent([[xMin, yMinPixel], [xMax, yMaxPixel]])
+                        .on("zoom", function () {
+                            const transform = d3.event.transform;
+                            currentZoomTransform = transform;
+                            g.attr("transform", transform.toString());
+                            xAxisGroup.call(xAxis.scale(transform.rescaleX(xScale)));
+                        });
+
+                    svg.call(zoomBehavior)
+                        .on("dblclick.zoom", null);
                 };
 
                 const seqgen = function (data) {
@@ -430,14 +454,11 @@ $(document).ready(function () {
                     // remove duplicated items
                     let alldates = Array.from(new Set(limited_dataset.map(datum => datum['date'])));
 
-                    // sort ascending so oldest year is at the left of the x-axis
-                    alldates = alldates.sort((a, b) => new Date(a) - new Date(b));
+                    // make sure dates are listed according to real time order
+                    alldates = alldates.sort(function (a, b) {
+                        return new Date(b.date) - new Date(a.date);
+                    });
                     dates = alldates;
-
-                    // update subtitle with actual year range derived from data
-                    const minYear = new Date(dates[0]).getFullYear();
-                    const maxYear = new Date(dates[dates.length - 1]).getFullYear();
-                    $('#subtitle').text(`By Year, ${minYear}–${maxYear}`);
 
                     // generate sequential data
                     let sequential = [];
@@ -472,70 +493,7 @@ $(document).ready(function () {
                     // stack data
                     let prestack = seqgen(limited_dataset);
                     let keys = sorting_set;
-                    svg.selectAll("*").remove()
-                    renderInit(limited_dataset);
-
-                    let top_side = 0
-                    let bot_side = 0
-                    for (const x of Array(sequential[up_max_index].length).keys()) {
-                        if (x % 2 === 1) {
-                            bot_side += yRaw(sequential[up_max_index][x])
-                        } else {
-                            top_side += yRaw(sequential[up_max_index][x])
-                        }
-                    }
-
-                    let offset = (top_side / ((top_side + bot_side) / 2))
-                    const getYScale = (yScaleVal) => {
-                        const height_of_screen = window.innerHeight
-                        const height_of_info_row = $("#info-row").get(0).getBoundingClientRect().height
-                        const height_of_xaxis = $("g#xaxis").get(0).getBoundingClientRect().height + 25
-                        const height_of_svg_wrapper = $("#wrapper").get(0).getBoundingClientRect().height
-
-                        const yHalfOfTheScreen = (height_of_svg_wrapper - height_of_xaxis) * (height_of_info_row / height_of_screen); // height of wrapper-height of x-axis times height of info box/height of screen
-                        const heightOffset = 100
-                        const yScreenPercentage = 1
-                        return ((yScale(yScaleVal) - (yHalfOfTheScreen)) + heightOffset) * yScreenPercentage
-                        // return ((yScale(yScaleVal) + heightOffset) * yScreenPercentage)
-                    }
-                    const area = d3.area()
-                        .curve(d3.curveCardinal.tension(tension)) // default is d3.curveLinear, d3.curveBundle.beta(1.0)
-                        .x(d => xScale(xValue(d.data)))
-                        .y0(d => getYScale(d[0]))
-                        .y1(d => getYScale(d[1]))
-                    render(prestack, keys, area);
-
-                    let fixTranslateOffset = 0;
-                    function fixTranslate() {
-                        const MARGIN = 10;
-                        const maingroupTop = $('g#maingroup').get(0).getBoundingClientRect().top;
-                        const svgTop = $('#main-svg').get(0).getBoundingClientRect().top;
-                        fixTranslateOffset = (svgTop - maingroupTop) + MARGIN;
-                        $("#maingroup").attr("transform", 'translate(0,' + fixTranslateOffset + ')');
-                    }
-
-                    fixTranslate();
-
-                    const zoom = d3.zoom()
-                        .scaleExtent([1, 8])
-                        .filter(function() {
-                            return d3.event.type !== 'mousedown' || d3.event.target.tagName !== 'path';
-                        })
-                        .on('zoom', function() {
-                            const t = d3.event.transform;
-                            d3.select('#maingroup').attr('transform',
-                                `translate(${t.x},${t.y + fixTranslateOffset}) scale(${t.k},1)`);
-                            d3.select('#xaxisgroup').attr('transform',
-                                `translate(${t.x},0) scale(${t.k},1)`);
-                        });
-
-                    svg.call(zoom)
-                        .on('dblclick.zoom', null)
-                        .on('dblclick', function() {
-                            if (d3.event.target.tagName !== 'path') {
-                                svg.transition().duration(300).call(zoom.transform, d3.zoomIdentity);
-                            }
-                        });
+                    render(prestack, keys);
                 }).catch(err => {
                     console.error('Failed to load visualization data:', err);
                 });

@@ -568,6 +568,15 @@ font-size: 24px;
 
 }
 
+#main-svg {
+    cursor: grab;
+    touch-action: none;
+}
+
+#main-svg:active {
+    cursor: grabbing;
+}
+
 
 #topic-list {
     width: 100%;
