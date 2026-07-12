@@ -2,4 +2,8 @@
 ./static/data/wordtree.json
 /__pycache__
 .idea
+node_modules/
+
+# Generated artifacts (produced from index.template.html and data/ at build time)
 index.html
+data/manifest.json
