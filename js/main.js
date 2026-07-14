@@ -62,16 +62,126 @@ const yValue = (datum) => {
 const yRaw = (datum) => {
     return datum['count']
 };
-const pubmedDatasourceLookup = {
+// Dataset metadata. These defaults let the app work even if the manifest fails
+// to load (e.g. an older static deploy); applyManifest() overrides them from
+// data/manifest.json so the controls are driven entirely by the data on disk.
+let pubmedDatasourceLookup = {
     'meshTerms': 'MeSH Terms',
-    'pubmedKeywords': 'Pubmed Keyword',
+    'pubmedKeywords': 'PubMed Keywords',
     'paperAbstract': 'Title + Abstracts'
-}
-const ngramSizeLookup = {
-
+};
+let ngramSizeLookup = {
     '1': 'Unigrams',
     '2': 'Bigrams',
     '3': 'Trigrams'
+};
+// id -> { label, ngrams:[…], supportsNgrams:bool, default:bool }
+let SOURCE_META = {
+    'meshTerms':      {label: 'MeSH Terms',        ngrams: [1],       supportsNgrams: false, default: false},
+    'pubmedKeywords': {label: 'PubMed Keywords',   ngrams: [1, 2, 3], supportsNgrams: true,  default: false},
+    'paperAbstract':  {label: 'Title + Abstracts', ngrams: [1, 2, 3], supportsNgrams: true,  default: true}
+};
+
+// The most recently applied manifest (for provenance / download metadata).
+let MANIFEST = null;
+
+// Fetch the build-time manifest (a static file, served by nginx in prod).
+// Returns null if it is missing or malformed, in which case the defaults stand.
+async function loadManifest() {
+    try {
+        const res = await fetch('./data/manifest.json', {cache: 'no-store'});
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return await res.json();
+    } catch (err) {
+        console.warn('ThemeRiver: manifest unavailable, using built-in defaults:', err.message);
+        return null;
+    }
+}
+
+// Refresh lookups/metadata from a manifest, then (re)build the option controls.
+function applyManifest(manifest) {
+    MANIFEST = manifest;
+    if (manifest && Array.isArray(manifest.datasets) && manifest.datasets.length) {
+        pubmedDatasourceLookup = {};
+        SOURCE_META = {};
+        for (const d of manifest.datasets) {
+            pubmedDatasourceLookup[d.id] = d.label;
+            SOURCE_META[d.id] = {
+                label: d.label,
+                ngrams: (d.ngrams && d.ngrams.length) ? d.ngrams : [1],
+                supportsNgrams: !!d.supportsNgrams,
+                default: !!d.default
+            };
+        }
+        if (manifest.ngramLabels) ngramSizeLookup = manifest.ngramLabels;
+    }
+    buildOptionControls();
+    updateProvenance();
+}
+
+// Show the data build date + licensing in the data bar (FAIR provenance).
+function updateProvenance() {
+    const el = document.getElementById('data-provenance');
+    if (!el) return;
+    if (MANIFEST && MANIFEST.generatedAt) {
+        const d = new Date(MANIFEST.generatedAt);
+        const when = isNaN(d) ? MANIFEST.generatedAt : d.toISOString().slice(0, 10);
+        const lic = MANIFEST.dataLicense || 'CC-BY-4.0';
+        el.textContent = `Data generated ${when} · Licensed ${lic}`;
+    } else {
+        el.textContent = '';
+    }
+}
+
+// Point the download links at the files behind the current selection.
+function updateDownloadLinks(baseFilename) {
+    const counts = document.getElementById('download-counts');
+    const papers = document.getElementById('download-papers');
+    if (counts) counts.href = './data/' + baseFilename + 'counts.csv';
+    if (papers) papers.href = './data/' + baseFilename + 'papers.json';
+}
+
+// Non-blocking error banner over the chart (e.g. a dataset file is missing).
+function showVizError(message) {
+    const el = document.getElementById('viz-error');
+    if (!el) return;
+    el.textContent = message;
+    el.hidden = false;
+}
+
+function hideVizError() {
+    const el = document.getElementById('viz-error');
+    if (el) el.hidden = true;
+}
+
+// Generate the source + n-gram radio controls from SOURCE_META so that adding a
+// dataset never requires editing this markup — it appears automatically.
+function buildOptionControls() {
+    const ids = Object.keys(SOURCE_META);
+    if (!ids.length) return;
+    const defaultId = ids.find(id => SOURCE_META[id].default) || ids[0];
+
+    const sourceHtml = ids.map(id => {
+        const checked = id === defaultId ? ' checked' : '';
+        return `<label class="seg"><input type="radio" name="pubmed-source-radio" value="${id}"${checked}>` +
+            `<span class="seg__label">${escapeHtml(SOURCE_META[id].label)}</span></label>`;
+    }).join('');
+    $('.control-group-pubmed-source').html(sourceHtml);
+
+    // Union of n-gram sizes across all datasets, ascending.
+    const ngramSet = new Set();
+    ids.forEach(id => (SOURCE_META[id].ngrams || []).forEach(n => ngramSet.add(n)));
+    const ngrams = [...ngramSet].sort((a, b) => a - b);
+    const defaultNgrams = SOURCE_META[defaultId].ngrams;
+    const defaultNgram = defaultNgrams.includes(2) ? 2 : defaultNgrams[0];
+
+    const ngramHtml = ngrams.map(n => {
+        const checked = n === defaultNgram ? ' checked' : '';
+        const aria = ngramSizeLookup[n] ? ` aria-label="${escapeHtml(ngramSizeLookup[n])}"` : '';
+        return `<label class="seg"><input type="radio" name="ngram-radio" value="${n}"${checked}${aria}>` +
+            `<span class="seg__label">${n}</span></label>`;
+    }).join('');
+    $('.control-group-ngram').html(ngramHtml);
 }
 
 function setPaperAndTop20Showing(b) {
@@ -240,7 +350,10 @@ function fillTopics(year, selected_topic) {
     elem.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
 }
 
-$(document).ready(function () {
+$(document).ready(async function () {
+
+    // Build the option controls from the data manifest before wiring up the viz.
+    applyManifest(await loadManifest());
 
     $('.nav-tabs a').on('shown.bs.tab', function (event) {
         var x = $(event.target).text();
@@ -496,6 +609,7 @@ $(document).ready(function () {
                     render(prestack, keys);
                 }).catch(err => {
                     console.error('Failed to load visualization data:', err);
+                    showVizError('Could not load data for this selection. The dataset files may be missing.');
                 });
             }
 
@@ -505,37 +619,41 @@ $(document).ready(function () {
                     const pubmedSourceValue = $('.control-group-pubmed-source input[type=radio]:checked').val();
                     let ngramValue = $('.control-group-ngram input[type=radio]:checked').val();
 
-                    if (pubmedSourceValue === 'meshTerms') {
-                        ngramValue = '1'
-                        $("#options > div.control-group-ngram > label:nth-child(1) > input[type=radio]").prop('checked', true);
+                    const meta = SOURCE_META[pubmedSourceValue];
+                    const supportsNgrams = meta ? meta.supportsNgrams : true;
+
+                    // Datasets with a single n-gram size always use their only size.
+                    if (meta && !supportsNgrams) {
+                        ngramValue = String(meta.ngrams[0]);
+                        $(`.control-group-ngram input[value="${ngramValue}"]`).prop('checked', true);
                     }
                     if (pubmedSourceValue === undefined || ngramValue === undefined) {
                         return "not-ready";
                     }
                     $("#pubmed-datasource-in-title").text(pubmedDatasourceLookup[pubmedSourceValue]);
-                    let ngramText
-                    if (pubmedDatasourceLookup[pubmedSourceValue] == 'MeSH Terms') {
-                        ngramText = ""
-                    } else {
-                        ngramText = ngramSizeLookup[ngramValue]
-                    }
-                    $("#ngram-size-in-title").text(ngramText);
+                    $("#ngram-size-in-title").text(supportsNgrams ? ngramSizeLookup[ngramValue] : "");
                     return `${pubmedSourceValue}-ngram_${ngramValue}-`;
                 }
 
+                const selectedSourceId = $('.control-group-pubmed-source input[type=radio]:checked').val();
+                const selectedMeta = SOURCE_META[selectedSourceId];
+                const supportsNgrams = selectedMeta ? selectedMeta.supportsNgrams : true;
+
                 const updateNgramControl = (enable) => {
-                    const color = enable ? "white" : "lightgray"
-                    $("#ngram-line").css("color", color)
-                    $(".control-group-ngram label").css("color", color)
-                    $(".control-group-ngram .control input").prop("disabled", isMeshTerms)
+                    // Dim/disable the n-gram control for single-size datasets, and
+                    // disable any individual size the selected dataset lacks.
+                    $("#ngram-line").toggleClass("is-disabled", !enable);
+                    $(".control-group-ngram").toggleClass("is-disabled", !enable);
+                    $(".control-group-ngram input[type=radio]").each(function () {
+                        const available = !selectedMeta || selectedMeta.ngrams.includes(parseInt(this.value, 10));
+                        this.disabled = !enable || !available;
+                    });
                 }
                 setPaperAndTop20Showing((!stateObj.initialDrawing && !stateObj.extractionMethodChanged && !stateObj.resizing) || (stateObj.resizing && papersShowing));
 
-                const isMeshTerms = $('.control-group-pubmed-source input[type=radio]:checked').val() === 'meshTerms';
-
                 const tension = 0 //$("#myRange").val() / 100
 
-                updateNgramControl(!isMeshTerms);
+                updateNgramControl(supportsNgrams);
 
                 const baseFilename = getBaseFilename()
                 started = baseFilename != "not-ready"
@@ -543,6 +661,8 @@ $(document).ready(function () {
 
                     const countsCsvFilename = `${baseFilename}counts.csv`;
                     const papersJsonFilename = `${baseFilename}papers.json`;
+                    updateDownloadLinks(baseFilename);
+                    hideVizError();
                     $(".hide-on-start").css("visibility", "visible");
 
 
@@ -552,7 +672,6 @@ $(document).ready(function () {
                     $("#info-row").css({'position': 'unset', 'flex': '0 1 275px', 'transition': '2s'})
                     $("#chart-row").css({'opacity': '1', 'align-items': 'center', 'transition': '2s'})
                     $(".paper-instructions").css({'opacity': '1', 'transition': '2s'})
-                    $("#options").css({'margin-top': '40px', 'transition': '2s'})
 
                     alreadyAnimatedResize = true;
 

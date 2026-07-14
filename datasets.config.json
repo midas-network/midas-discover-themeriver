@@ -1,0 +1,20 @@
+{
+  "_comment": "Optional presentation + citation config for the ThemeRiver app. The build step (scripts/build-manifest.js) scans data/*-counts.csv to discover which datasets exist; this file only controls labels, ordering, the default selection, and the metadata copied into data/manifest.json. Adding a new dataset requires nothing here — it appears with a prettified label — but you may add an entry to give it a nicer name or ordering.",
+  "meta": {
+    "title": "MIDAS ThemeRiver",
+    "description": "Research themes in infectious-disease modeling papers by MIDAS Network members over time, extracted from PubMed metadata.",
+    "homepage": "https://midasnetwork.us",
+    "license": "MIT",
+    "dataLicense": "CC-BY-4.0"
+  },
+  "sources": {
+    "meshTerms":      { "label": "MeSH Terms",        "order": 1 },
+    "pubmedKeywords": { "label": "PubMed Keywords",   "order": 2 },
+    "paperAbstract":  { "label": "Title + Abstracts", "order": 3, "default": true }
+  },
+  "ngramLabels": {
+    "1": "Unigrams",
+    "2": "Bigrams",
+    "3": "Trigrams"
+  }
+}

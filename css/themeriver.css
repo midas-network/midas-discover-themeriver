@@ -932,3 +932,533 @@ ul.list-style-none li a {
     0% { opacity: 0; }
     100%  { opacity: 100%; }
 }
+
+/* ==========================================================================
+   Modern redesign — light theme + MIDAS crimson accent
+   Appended so these rules override the legacy styles above.
+   ========================================================================== */
+
+:root {
+    --bg: #eef1f5;
+    --surface: #ffffff;
+    --surface-2: #f6f8fa;
+    --border: #e4e7ec;
+    --border-strong: #d0d5dd;
+    --ink: #1a1d26;
+    --muted: #5b6472;
+    --muted-2: #8b93a1;
+    --navy: #0d1b2a;
+    --accent: #a11b2e;          /* MIDAS crimson */
+    --accent-strong: #7d1424;
+    --accent-weak: #fbe9ec;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --shadow-sm: 0 1px 2px rgba(16, 24, 40, .06), 0 1px 3px rgba(16, 24, 40, .08);
+    --shadow-md: 0 6px 18px rgba(16, 24, 40, .10);
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font);
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ---- Top app bar / tabs ---------------------------------------------------- */
+#mainTab,
+#docTab {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    align-items: stretch;
+    padding: 0 8px;
+    --bs-nav-tabs-border-width: 0 !important;
+    --bs-nav-tabs-border-color: transparent !important;
+    --bs-nav-tabs-link-active-bg: transparent !important;
+    --bs-nav-tabs-link-active-border-color: transparent !important;
+    --bs-nav-tabs-link-active-color: var(--accent) !important;
+    --bs-nav-link-color: var(--muted) !important;
+    --bs-nav-link-hover-color: var(--ink) !important;
+}
+
+#docTab {
+    background: transparent;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 14px;
+}
+
+#mainTab .nav-link,
+#docTab .nav-link {
+    border: 0 !important;
+    border-bottom: 2px solid transparent !important;
+    border-radius: 0;
+    height: auto;
+    margin-top: 0;
+    padding: 13px 18px;
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 14px;
+    transition: color .15s ease, border-color .15s ease;
+}
+
+#mainTab .nav-link:hover,
+#docTab .nav-link:hover {
+    color: var(--ink);
+}
+
+#mainTab .nav-link.active,
+#docTab .nav-link.active {
+    color: var(--accent);
+    background: transparent !important;
+    border-bottom-color: var(--accent) !important;
+}
+
+.nav-item:nth-child(1) {
+    margin-left: 8px;
+}
+
+.app-title {
+    background: transparent !important;
+    color: var(--navy);
+    font-weight: 800;
+    font-size: 16px;
+    letter-spacing: .2px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-left: auto;
+    padding-right: 22px;
+    padding-left: 22px;
+}
+
+.app-title::before {
+    content: "";
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    background: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-weak);
+}
+
+/* ---- Header / titles ------------------------------------------------------- */
+#header-row {
+    padding: 20px 24px 8px;
+}
+
+#title,
+.title {
+    text-align: center;
+    font-size: clamp(15px, 2vw, 21px);
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.35;
+}
+
+.subtitle {
+    text-align: center;
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 4px;
+}
+
+#pubmed-datasource-in-title,
+#ngram-size-in-title {
+    color: var(--accent);
+    font-weight: 700;
+}
+
+#please-header {
+    color: var(--muted);
+    font-size: 18px;
+}
+
+/* ---- Options toolbar ------------------------------------------------------- */
+#options-bar {
+    display: flex;
+    justify-content: center;
+    padding: 2px 20px 12px;
+}
+
+#options {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 26px;
+    min-width: 0;
+    max-width: none;
+    margin: 0;
+    padding: 12px 22px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+}
+
+.option-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+}
+
+.options-header,
+#pubmed-rb-line,
+#ngram-line {
+    margin: 0;
+    color: var(--muted) !important;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .6px;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+#ngram-line.is-disabled {
+    opacity: .45;
+}
+
+/* ---- Segmented controls ---------------------------------------------------- */
+.seg-group,
+.control-group-ngram {
+    display: inline-flex !important;
+    justify-content: center;
+    gap: 2px;
+    padding: 3px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+}
+
+.control-group-ngram.is-disabled {
+    opacity: .5;
+    pointer-events: none;
+}
+
+.seg {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+    display: inline-flex;
+}
+
+.seg input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+}
+
+.seg__label {
+    display: block;
+    padding: 7px 15px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    white-space: nowrap;
+    user-select: none;
+    transition: background .15s ease, color .15s ease, box-shadow .15s ease;
+}
+
+.seg:hover .seg__label {
+    color: var(--ink);
+    background: rgba(16, 24, 40, .04);
+}
+
+.seg input:checked + .seg__label {
+    background: var(--accent);
+    color: #fff;
+    box-shadow: var(--shadow-sm);
+}
+
+.seg input:focus-visible + .seg__label {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+.seg input:disabled + .seg__label {
+    opacity: .4;
+    cursor: not-allowed;
+}
+
+/* ---- Chart area ------------------------------------------------------------ */
+#chart-row {
+    align-items: center;
+}
+
+.tick text {
+    fill: var(--muted) !important;
+}
+
+.tick line {
+    stroke: var(--border);
+}
+
+/* ---- Info row / result cards ---------------------------------------------- */
+#info-row {
+    background: transparent;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 16px;
+    padding: 8px 24px 18px;
+    row-gap: 0;
+}
+
+.paper-instructions {
+    color: var(--muted) !important;
+    font-size: 15px !important;
+    margin: 0 !important;
+    padding: 34px 20px !important;
+    text-align: center;
+    width: 100%;
+}
+
+.panel-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    padding: 14px 16px;
+    height: auto;
+    overflow: hidden;
+}
+
+.paper-display.panel-card {
+    flex: 1 1 66%;
+    padding-right: 16px;
+}
+
+.term-display.panel-card {
+    flex: 1 1 32%;
+}
+
+#topic-line,
+#topic-line2 {
+    color: var(--ink);
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+#instruction-line,
+#current-topic-count,
+#current-topic,
+#current-year,
+#current-year2 {
+    color: var(--ink);
+}
+
+.term-display label {
+    color: var(--ink);
+}
+
+.side-panel {
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius-sm);
+    padding: 8px 10px;
+    background: var(--surface-2);
+}
+
+#paper-list,
+#term-list {
+    height: 190px;
+    background: var(--surface-2);
+    font-size: 13px;
+    margin-bottom: 0;
+    overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-strong) transparent;
+}
+
+#paper-list::-webkit-scrollbar,
+#term-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+#paper-list::-webkit-scrollbar-thumb,
+#term-list::-webkit-scrollbar-thumb {
+    background: var(--border-strong);
+    border-radius: 8px;
+}
+
+#paper-list a {
+    color: var(--accent);
+    text-decoration: none;
+}
+
+#paper-list a:hover {
+    text-decoration: underline;
+}
+
+.selected {
+    background: var(--accent-weak);
+}
+
+/* ---- Tooltip --------------------------------------------------------------- */
+#tooltip-inner {
+    border-radius: 8px;
+    box-shadow: var(--shadow-md);
+}
+
+/* ---- Intro tab polish ------------------------------------------------------ */
+#instruction-row {
+    color: var(--ink);
+}
+
+.instruction-header,
+.h3.instruction-header {
+    color: var(--ink);
+}
+
+.caption {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--ink);
+}
+
+.caption-div {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+}
+
+/* ---- Data access + provenance bar ----------------------------------------- */
+#data-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 18px;
+    padding: 10px 24px 0;
+    font-size: 12px;
+    color: var(--muted);
+}
+
+#data-provenance {
+    color: var(--muted-2);
+}
+
+.data-bar-links {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+}
+
+.data-bar-label {
+    color: var(--muted-2);
+}
+
+#data-bar a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+#data-bar a:hover,
+#data-bar a:focus-visible {
+    text-decoration: underline;
+}
+
+/* ---- Error banner ---------------------------------------------------------- */
+#viz-error {
+    margin: 4px 24px 10px;
+    padding: 10px 14px;
+    background: var(--accent-weak);
+    border: 1px solid #f0c4ca;
+    border-radius: var(--radius-sm);
+    color: var(--accent-strong);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+#viz-error[hidden] {
+    display: none;
+}
+
+/* ---- Responsive / small screens ------------------------------------------- */
+@media (max-width: 760px) {
+    .app-title {
+        font-size: 12px;
+        letter-spacing: 0;
+        padding-left: 12px;
+        padding-right: 12px;
+        text-align: right;
+    }
+
+    #mainTab .nav-link,
+    #docTab .nav-link {
+        padding: 11px 12px;
+    }
+
+    #header-row {
+        padding: 14px 14px 6px;
+    }
+
+    #options-bar {
+        padding: 2px 12px 10px;
+    }
+
+    #options {
+        gap: 12px 20px;
+        padding: 12px 14px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .option-block {
+        width: 100%;
+    }
+
+    /* Let the segmented pills wrap instead of overflowing the viewport. */
+    .seg-group {
+        flex-wrap: wrap;
+        max-width: 100%;
+    }
+
+    .control-group-pubmed-source .seg {
+        flex: 1 1 auto;
+    }
+
+    .control-group-pubmed-source .seg__label {
+        width: 100%;
+        text-align: center;
+    }
+
+    /* Ease axis-label crowding on narrow screens. */
+    .tick text {
+        font-size: 1.1em;
+    }
+
+    #data-bar {
+        justify-content: flex-start;
+        padding: 10px 14px 0;
+    }
+
+    #info-row {
+        flex-wrap: wrap;
+        flex: none !important;
+        height: auto !important;
+        padding: 8px 14px 14px;
+    }
+
+    .paper-display.panel-card,
+    .term-display.panel-card {
+        flex: 1 1 100%;
+    }
+
+    #instructions {
+        flex-direction: column;
+    }
+
+    .text-instructions {
+        margin-right: 0;
+    }
+
+    #row-of-figures {
+        flex-direction: column;
+    }
+}

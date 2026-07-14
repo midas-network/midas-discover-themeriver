@@ -3,7 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Midas River</title>
+    <title>MIDAS ThemeRiver — Research themes in infectious-disease modeling over time</title>
+    <meta name="description"
+          content="Interactive ThemeRiver visualization of research themes in infectious-disease modeling papers by MIDAS Network members, extracted from PubMed metadata (2013–END_YEAR).">
+    <meta name="theme-color" content="#a11b2e">
+    <meta property="og:title" content="MIDAS ThemeRiver">
+    <meta property="og:description" content="How research themes in MIDAS infectious-disease modeling papers shift over time.">
+    <meta property="og:type" content="website">
     <link href="./css/themeriver.css" rel="stylesheet">
     <link href="./css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <script src="./js/d3.min.js"></script>
@@ -15,13 +21,13 @@
 </head>
 <body>
     <div id="main-container">
-        <ul class="nav nav-tabs" id="mainTab">
-            <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#home">Introduction</a></li>
-            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#viz">Visualization</a></li>
+        <ul class="nav nav-tabs" id="mainTab" role="tablist" aria-label="Main sections">
+            <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#home" role="tab">Introduction</a></li>
+            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#viz" role="tab">Visualization</a></li>
             <li class="app-title">MIDAS ThemeRiver Visualization</li>
         </ul>
 
-        <div class="tab-content">
+        <div class="tab-content" role="main">
             <div class="tab-pane fade show active" id="home">
                 <div class="row" id="instruction-row">
                     <div id="instructions">
@@ -56,7 +62,8 @@
                             <div class="caption-div" id="main-middle-div" width="75%"><p class="h6">The display is
                                 composed of four parts:</p>
                                 <div class="caption">1. The ThemeRiver</div>
-                                <img alt="river" class="figure img-fluid" id="" src="./img/river.png">
+                                <img alt="Screenshot of the ThemeRiver showing stacked theme ribbons flowing across years"
+                                     class="figure img-fluid" src="./img/river.png">
                                 <div class="usage-div">
                                     <ul>
                                         <li><b>Hovering over a theme</b> shows a tooltip with the theme name and the
@@ -71,8 +78,8 @@
                                 <div id="row-of-figures">
                                     <div class="caption-div" id="fulloptiondiv">
                                         <div class="caption">2. Options</div>
-                                        <img alt="river" class="figure" class="img-fluid" src="./img/options.png"
-                                             width="200px">
+                                        <img alt="The Options panel with PubMed field and n-gram size controls"
+                                             class="figure img-fluid" src="./img/options.png" width="200px">
                                         <ul>
                                             <li><b>Field</b> - The PubMed metadata field to use for theme extraction.
                                             </li>
@@ -84,8 +91,8 @@
                                     </div>
                                     <div class="caption-div" id="fullpaperdiv">
                                         <div class="caption">3. Paper Listing</div>
-                                        <img alt="river" class="figure" class="img-fluid" src="./img/papers.png"
-                                             width="500px">
+                                        <img alt="The paper listing panel showing titles for a selected theme and year"
+                                             class="figure img-fluid" src="./img/papers.png" width="500px">
                                         <ul>
                                             <li><b>Hovering over a paper</b> displays the paper title and abstract.</li>
                                             <li><b>Clicking a paper</b> takes you to the paper on midasnetwork.us.</li>
@@ -93,8 +100,8 @@
                                     </div>
                                     <div class="caption-div" id="fulltermdiv">
                                         <div class="caption">4. Theme Listing</div>
-                                        <img alt="river" class="figure" class="img-fluid" src="img/terms.png"
-                                             width="200px">
+                                        <img alt="The theme listing panel ranking the top themes for a year"
+                                             class="figure img-fluid" src="img/terms.png" width="200px">
                                         <ul>
                                             <li>Clicking on a theme name will flash the theme in the visualization for a
                                                 few seconds, and load the papers for that theme in the Papers section.
@@ -179,67 +186,53 @@
                                 id="pubmed-datasource-in-title"> </span><i> <span id="ngram-size-in-title"> </span></i> in
                             Disease Modeling Papers Authored by MIDAS Members
                         </div>
-                        <div class="subtitle hide-on-start" id="subtitle">By Year, 2013-END_YEAR</div>
+                        <div class="subtitle hide-on-start" id="subtitle">By Year, 2013–END_YEAR</div>
                     </div>
+
+                    <!-- Options toolbar. Controls are generated from data/manifest.json by main.js. -->
+                    <div id="options-bar">
+                        <div id="options">
+                            <div class="option-block">
+                                <div class="options-header" id="pubmed-rb-line">PubMed Field</div>
+                                <div class="seg-group control-group-pubmed-source" role="radiogroup"
+                                     aria-labelledby="pubmed-rb-line"></div>
+                            </div>
+                            <div class="option-block" id="ngram-block">
+                                <div class="options-header" id="ngram-line">N-gram Size</div>
+                                <div class="seg-group control-group-ngram" role="radiogroup"
+                                     aria-labelledby="ngram-line"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="viz-error" role="alert" hidden></div>
+
                     <div class="row" id="chart-row">
                         <div class="col-md-12" id="wrapper">
                             <svg class="svgs" height="100%" id="main-svg" preserveAspectRatio="none"
-                                 style="background-color: #ffffff;" width="100%"></svg>
+                                 style="background-color: #ffffff;" width="100%"
+                                 role="img" aria-labelledby="main-svg-title">
+                                <title id="main-svg-title">ThemeRiver of the top themes over time for the selected dataset</title>
+                            </svg>
                         </div>
                     </div>
+
+                    <!-- Data access + provenance. Download links + timestamp are set by main.js. -->
+                    <div id="data-bar">
+                        <span id="data-provenance"></span>
+                        <span class="data-bar-links">
+                            <span class="data-bar-label">Download this view:</span>
+                            <a id="download-counts" href="#" download>counts (CSV)</a>
+                            <a id="download-papers" href="#" download>papers (JSON)</a>
+                            <a id="data-about" href="#term-tab-explain">About the data</a>
+                        </span>
+                    </div>
+
                     <div class="row g-0" id="info-row">
-                        <div class="col-md-3 ">
-
-                            <div id="options">
-
-                                <div class="options-header center-options" id="pubmed-rb-line">PubMed Field for
-                                    Theme Extraction:
-                                </div>
-                                <div class="center-options control-group-pubmed-source"><label
-                                        class="control control-radio">MeSH Terms<input
-                                                                                       name="pubmed-source-radio"
-                                                                                       type="radio" value="meshTerms"/>
-                                    <div class="control_indicator"></div>
-                                </label><label class="control control-radio">PubMed Keywords<input
-                                        name="pubmed-source-radio" type="radio" value="pubmedKeywords"/>
-                                    <div class="control_indicator"></div>
-                                </label><label class="control control-radio">Title + Abstracts<input
-                                        name="pubmed-source-radio" type="radio" value="paperAbstract" checked="true"/>
-                                    <div class="control_indicator"></div>
-                                </label></div>
-                                <div class="center-options options-header" id="ngram-line">N-gram Size:</div>
-                                <div class="control-group-ngram"><label class="control control-radio">1<input
-                                       name="ngram-radio" type="radio" value="1"/>
-                                    <div class="control_indicator"></div>
-                                </label><label class="control control-radio">2<input name="ngram-radio" type="radio"
-                                                                                     value="2" checked="true"/>
-                                    <div class="control_indicator"></div>
-                                </label><label class="control control-radio">3<input name="ngram-radio" type="radio"
-                                                                                     value="3"/>
-                                    <div class="control_indicator"></div>
-                                </label></div>
-                                <!--                            <div id="tension-line" class="center-options options-header">Curve Style:</div>-->
-                                <!--                            <div class="slidecontainer">-->
-                                <!--                                <svg height="30" fill-opacity="0%" viewBox="0 0 1487.18 321" width="50px"-->
-                                <!--                                     xmlns="http://www.w3.org/2000/svg">-->
-                                <!--                                    <path d="m0 0h1487.18v321h-1487.18z" fill="#fff"/>-->
-                                <!--                                    <path d="m304.441 162.751s28.496-144.514 73.275-143.497c44.779-1.017 73.275 143.497 73.275 143.497s28.496 144.514 73.275 143.496c44.779 1.018 73.274-143.496 73.274-143.496s28.496-144.514 73.275-143.497c44.779-1.017 73.275 143.497 73.275 143.497s28.496 144.514 73.275 143.496c44.779 1.018 73.275-143.496 73.275-143.496s28.495-144.514 73.275-143.497c44.779-1.017 73.274 143.497 73.274 143.497s28.496 144.514 73.275 143.496c44.779 1.018 73.275-143.496 73.275-143.496"-->
-                                <!--                                          fill="#fff" stroke="#fff" stroke-width="10%"/>-->
-                                <!--                                </svg>-->
-                                <!--                                <input type="range" min="1" max="100" value="50" class="slider" id="myRange">-->
-                                <!--                                <svg height="30" viewBox="0 0 632.83 239" fill-opacity="0%" width="50px"-->
-                                <!--                                     xmlns="http://www.w3.org/2000/svg">-->
-                                <!--                                    <path d="m0 0h632.83v239h-632.83z" fill="#fff"/>-->
-                                <!--                                    <path d="m81.051 160.5 79.529-81 78.44 81 77.35-81 80.619 81 78.44-81 77.351 81"-->
-                                <!--                                          fill="#fff"-->
-                                <!--                                          stroke="#fff" stroke-width="10%"/>-->
-                                <!--                                </svg>--><!--                            </div>-->
-                            </div>
+                        <div class="paper-instructions hide-on-selection">
+                            Click on a theme to see the paper titles for that year (indicated by the x-axis).
                         </div>
-                          <div class="paper-instructions hide-on-selection  col-md-7 ">
-                              Click on a theme to see the paper titles for that year (indicated by the x-axis).
-                          </div>
-                        <div class="paper-display hide-until-selection col-md-7 ">
+                        <div class="panel-card paper-display hide-until-selection">
                             <div id="topic-line">Showing <span id="current-topic-count"></span> papers with theme "<span
                                     id="current-topic"></span>" in <span id="current-year"></span>:
                             </div>
@@ -247,7 +240,7 @@
                             </div>
                             <div class="side-panel" id="paper-list"></div>
                         </div>
-                        <div class="term-display  hide-until-selection col-md-2 ">
+                        <div class="panel-card term-display hide-until-selection">
                             <div id="topic-line2">Top themes in <span id="current-year2"></span>:</div>
                             <div class="side-panel" id="term-list"></div>
                         </div>
@@ -262,7 +255,7 @@
                             <i></i></div>
                     </div>
                 </div>
-                <div id="abstract-hover"><b>Paper:</b><span id="hover-paper-title"></span><br><b>Absract:</b><span
+                <div id="abstract-hover"><b>Paper:</b><span id="hover-paper-title"></span><br><b>Abstract:</b><span
                         id="hover-paper-abstract"></span></div>
             </div>
         </div>

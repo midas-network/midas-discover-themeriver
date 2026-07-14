@@ -1,13 +1,32 @@
 {
   "name": "midas-river",
   "version": "1.0.0",
-  "private": true,
   "description": "MIDAS ThemeRiver Visualization",
+  "keywords": [
+    "visualization",
+    "themeriver",
+    "infectious-disease",
+    "epidemiology",
+    "d3",
+    "midas"
+  ],
+  "homepage": "https://github.com/midas-network/midas-discover-themeriver#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/midas-network/midas-discover-themeriver.git"
+  },
+  "bugs": {
+    "url": "https://github.com/midas-network/midas-discover-themeriver/issues",
+    "email": "questions@midasnetwork.us"
+  },
+  "author": "MIDAS Coordination Center (https://midasnetwork.us)",
+  "license": "MIT",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "build:manifest": "node scripts/build-manifest.js data"
   },
   "dependencies": {
-    "express": "^4.19.2"
+    "express": "^4.22.2"
   }
 }

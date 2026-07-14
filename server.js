@@ -1,10 +1,21 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const { writeManifest } = require('./scripts/build-manifest');
 
 const app = express();
 const PORT = process.env.PORT || 8001;
 const DATA_DIR = path.join(__dirname, 'data');
+
+// Regenerate data/manifest.json from whatever files are currently in data/ so
+// local dev always reflects the datasets on disk. In production the manifest is
+// generated at build time (see scripts/build-manifest.js) and served statically.
+try {
+  const { outPath, manifest } = writeManifest(DATA_DIR);
+  console.log(`Manifest: ${manifest.datasets.length} dataset(s) → ${path.basename(outPath)}`);
+} catch (err) {
+  console.error('Failed to generate manifest:', err.message);
+}
 
 // Derive the year range by scanning all counts CSVs in the data directory.
 // Returns { minYear, maxYear } based on the union of all dates found.
