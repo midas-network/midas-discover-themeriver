@@ -2,6 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const { writeManifest } = require('./scripts/build-manifest');
+const { stampThemeriverYear } = require('./scripts/stamp-themeriver-year');
 
 const app = express();
 const PORT = process.env.PORT || 8001;
@@ -15,6 +16,15 @@ try {
   console.log(`Manifest: ${manifest.datasets.length} dataset(s) → ${path.basename(outPath)}`);
 } catch (err) {
   console.error('Failed to generate manifest:', err.message);
+}
+
+// Regenerate index.html from the template so local dev and static deploys do not
+// serve literal END_YEAR placeholders.
+try {
+  const { outPath, year } = stampThemeriverYear({ appRoot: __dirname, dataDir: DATA_DIR });
+  console.log(`Index: ${path.basename(outPath)} stamped with ${year}`);
+} catch (err) {
+  console.error('Failed to stamp index.html:', err.message);
 }
 
 // Derive the year range by scanning all counts CSVs in the data directory.

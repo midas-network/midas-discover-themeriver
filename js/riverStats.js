@@ -1,13 +1,12 @@
 
-const getFilteredSet = (dataset) => {
-    rollup = d3.nest()
+const getFilteredSet = (dataset, limit) => {
+    const rollup = d3.nest()
                .key((d) => {return d.topic;})
                .rollup(v => d3.sum(v,d => d.count), d => d.topic)
                .entries(dataset)
                .sort((a,b) => {return d3.descending(a.value, b.value)})
 
-    // return rollup.filter((d, i) => {return i < 20})
-    return rollup
+    return Number.isFinite(limit) ? rollup.filter((d, i) => i < limit) : rollup
 }
 
 const rebalanceSet = (dataset, sorting_set, up_max) => {

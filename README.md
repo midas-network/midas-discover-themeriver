@@ -32,7 +32,7 @@ The app loads CSV/JSON from `data/` at runtime, so it must be served over HTTP
 
 ### Option 1 — Node dev server (recommended)
 
-Includes automatic manifest regeneration on start.
+Includes automatic manifest and `index.html` regeneration on start.
 
 ```bash
 npm install
@@ -42,19 +42,17 @@ npm start          # serves http://localhost:8001
 ### Option 2 — any static server
 
 ```bash
-node scripts/build-manifest.js data   # generate data/manifest.json once
-python3 -m http.server 8000           # serves http://localhost:8000
+npm run build                 # generate data/manifest.json and index.html once
+python3 -m http.server 8000   # serves http://localhost:8000
 ```
 
 ### Option 3 — Docker (production image)
 
-```bash
-docker build -f ../docker/midas-discover-themeriver/Dockerfile -t midas-themeriver ..
-docker run -p 8080:8080 midas-themeriver
-```
-
-> `index.html` is generated from `index.template.html` by stamping the latest
-> data year; in deployment this is handled by `scripts/stamp-themeriver-year.sh`.
+If a production image is built outside this repo, run `npm run build` before
+serving the static files so `data/manifest.json` and `index.html` exist.
+Parent deploy repos that consume this project as a submodule should run that
+command inside the submodule, or an equivalent deploy-level stamp/build step,
+after updating it.
 
 ## Adding a dataset
 
@@ -68,8 +66,8 @@ not edit any HTML or JavaScript.
 2. (Optional) Give it a nice label, order, or make it the default in
    [`datasets.config.json`](datasets.config.json). Without an entry it still
    appears, with a label derived from the id.
-3. Regenerate the manifest: `node scripts/build-manifest.js data`
-   (or just restart `npm start`).
+3. Regenerate the static artifacts: `npm run build` (or just restart
+   `npm start`).
 
 That's it — the new source appears as a control automatically. A source with a
 single n-gram size (e.g. only `-ngram_1-`) automatically disables the N-gram

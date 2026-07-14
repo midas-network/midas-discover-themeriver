@@ -10,6 +10,7 @@
     <meta property="og:title" content="MIDAS ThemeRiver">
     <meta property="og:description" content="How research themes in MIDAS infectious-disease modeling papers shift over time.">
     <meta property="og:type" content="website">
+    <link rel="icon" href="data:,">
     <link href="./css/themeriver.css" rel="stylesheet">
     <link href="./css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <script src="./js/d3.min.js"></script>
@@ -21,19 +22,27 @@
 </head>
 <body>
     <div id="main-container">
-        <ul class="nav nav-tabs" id="mainTab" role="tablist" aria-label="Main sections">
-            <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#home" role="tab">Introduction</a></li>
-            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#viz" role="tab">Visualization</a></li>
-            <li class="app-title">MIDAS ThemeRiver Visualization</li>
-        </ul>
+        <div id="top-nav">
+            <ul class="nav nav-tabs" id="mainTab" role="tablist" aria-label="Main sections">
+                <li class="nav-item" role="presentation"><a class="nav-link active" id="main-tab-intro"
+                                                            data-bs-toggle="tab" href="#home" role="tab"
+                                                            aria-controls="home" aria-selected="true">Introduction</a></li>
+                <li class="nav-item" role="presentation"><a class="nav-link" id="main-tab-viz"
+                                                            data-bs-toggle="tab" href="#viz" role="tab"
+                                                            aria-controls="viz" aria-selected="false">Visualization</a></li>
+            </ul>
+            <div class="app-title">MIDAS ThemeRiver Visualization</div>
+        </div>
 
         <div class="tab-content" role="main">
-            <div class="tab-pane fade show active" id="home">
+            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="main-tab-intro"
+                 tabindex="0">
                 <div class="row" id="instruction-row">
                     <div id="instructions">
                         <div class="text-instructions">
-                            <div class="h3 instruction-header mt-2">What is a ThemeRiver?</div>
-                            <p>A <a href="https://ieeexplore.ieee.org/abstract/document/885098/" target="_blank">ThemeRiver</a> is a visualization of thematic variations over time in a set of documents.
+                            <h1 class="h3 instruction-header mt-2">What is a ThemeRiver?</h1>
+                            <p>A <a href="https://ieeexplore.ieee.org/abstract/document/885098/" target="_blank"
+                                    rel="noopener noreferrer">ThemeRiver<span class="sr-only"> (opens in a new tab)</span></a> is a visualization of thematic variations over time in a set of documents.
                                 Documents are grouped into <i>themes</i> based on the terms they contain.</p>
                             <p>In a ThemeRiver visualization, themes are represented as colored ribbons that flow from
                                 left to right. The x-axis represents time, and the y-axis represents the proportion of
@@ -42,26 +51,34 @@
 
                     </div>
                     <div id="viz-explain">
-                        <div class="h3 instruction-header">The MIDAS ThemeRiver Visualization</div>
-                        <p>To view the visualization, click on the Visualization tab above.
+                        <h2 class="h3 instruction-header">The MIDAS ThemeRiver Visualization</h2>
+                        <p>To view the visualization, click on the Visualization tab above.</p>
 
                         <div>
-                            <ul class="nav nav-tabs" id="docTab">
-                                <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab"
-                                                        href="#viz-tab-explain">Visualization Overview</a></li>
-                                <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#term-tab-explain">Theme
+                            <ul class="nav nav-tabs" id="docTab" role="tablist" aria-label="Documentation sections">
+                                <li class="nav-item" role="presentation"><a class="nav-link active" id="doc-tab-viz"
+                                                                            data-bs-toggle="tab"
+                                                                            href="#viz-tab-explain" role="tab"
+                                                                            aria-controls="viz-tab-explain"
+                                                                            aria-selected="true">Visualization Overview</a></li>
+                                <li class="nav-item" role="presentation"><a class="nav-link" id="doc-tab-terms"
+                                                                            data-bs-toggle="tab" href="#term-tab-explain"
+                                                                            role="tab" aria-controls="term-tab-explain"
+                                                                            aria-selected="false">Theme
                                     Extraction Process</a></li>
                             </ul>
                         </div>
-                        <div class="hide active" id="viz-tab-explain">
-                            <div class="h5">Visualization</div>
-                            <p>The MIDAS ThemeRiver is an interactive display that allows users to explore the themes
-                                of MIDAS papers over time. Specifically, the display shows the 20 most frequently
-                                occurring themes in infectious disease papers authored by MIDAS members from 2013 to
-                                END_YEAR.
-                            <div class="caption-div" id="main-middle-div" width="75%"><p class="h6">The display is
-                                composed of four parts:</p>
-                                <div class="caption">1. The ThemeRiver</div>
+                        <div class="tab-content" id="docTabContent">
+                            <section class="tab-pane fade show active" id="viz-tab-explain" role="tabpanel"
+                                     aria-labelledby="doc-tab-viz" tabindex="0">
+                                <h3 class="h5" id="visualization-overview-heading">Visualization</h3>
+                                <p>The MIDAS ThemeRiver is an interactive display that allows users to explore the themes
+                                    of MIDAS papers over time. Specifically, the display shows the 20 most frequently
+                                    occurring themes in infectious disease papers authored by MIDAS members from 2013 to
+                                    END_YEAR.</p>
+                                <div class="caption-div" id="main-middle-div" width="75%"><h4 class="h6">The display is
+                                    composed of four parts:</h4>
+                                <h5 class="caption">1. The ThemeRiver</h5>
                                 <img alt="Screenshot of the ThemeRiver showing stacked theme ribbons flowing across years"
                                      class="figure img-fluid" src="./img/river.png">
                                 <div class="usage-div">
@@ -77,7 +94,7 @@
                                 </div>
                                 <div id="row-of-figures">
                                     <div class="caption-div" id="fulloptiondiv">
-                                        <div class="caption">2. Options</div>
+                                        <h5 class="caption">2. Options</h5>
                                         <img alt="The Options panel with PubMed field and n-gram size controls"
                                              class="figure img-fluid" src="./img/options.png" width="200px">
                                         <ul>
@@ -90,7 +107,7 @@
                                         </ul>
                                     </div>
                                     <div class="caption-div" id="fullpaperdiv">
-                                        <div class="caption">3. Paper Listing</div>
+                                        <h5 class="caption">3. Paper Listing</h5>
                                         <img alt="The paper listing panel showing titles for a selected theme and year"
                                              class="figure img-fluid" src="./img/papers.png" width="500px">
                                         <ul>
@@ -99,45 +116,45 @@
                                         </ul>
                                     </div>
                                     <div class="caption-div" id="fulltermdiv">
-                                        <div class="caption">4. Theme Listing</div>
+                                        <h5 class="caption">4. Theme Listing</h5>
                                         <img alt="The theme listing panel ranking the top themes for a year"
                                              class="figure img-fluid" src="img/terms.png" width="200px">
                                         <ul>
-                                            <li>Clicking on a theme name will flash the theme in the visualization for a
-                                                few seconds, and load the papers for that theme in the Papers section.
+                                            <li>Clicking on a theme name will highlight the theme in the visualization
+                                                and load the papers for that theme in the Papers section.
                                             </li>
                                         </ul>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class=" hide fade" id="term-tab-explain">
-                            <div class="h5">Theme Extraction</div>
-                            <div class="h6">Data Source</div>
-                            <p>The MIDAS Members Database (MMD) is the data source for this visualization. The MMD is a
-                                publicly available curated database of academic information about each MIDAS member. The
-                                academic information includes metadata for publications and grants, areas of interest,
-                                associated institutions, and other information. The database is maintained by the MIDAS
-                                Coordination Center. For more information on the database, see the <a
-                                        >MIDAS Members Database</a> page (coming soon).
-                            </p><p> The metadata for publications is extracted from PubMed using the Entrez API. A
-                            description of the API can be found <a href="https://www.ncbi.nlm.nih.gov/books/NBK25501/">here</a>.
-                            The API returns a JSON object containing metadata for each paper. Of the metadata returned,
-                            only a subset is used for theme extraction.</p>
-                            <p>The following metadata fields are used for theme extraction:
-                            <ul>
-                                <li>Publication Date</li>
-                                <li>MeSH Terms (a list of curated terms from a controlled vocabulary, assigned by
-                                    PubMed)
-                                </li>
-                                <li>Keywords (an author-provided list of search terms applicable to the paper)</li>
-                                <li>Paper Title and Abstract</li>
-                            </ul>
-                            </p>
-                            <div class="h6">Metadata Processing</div>
-                            <div><p>Themes are extracted from the metadata using a custom NLP pipeline. The pipeline is
-                                not yet available for public use, but will be in the future. The pipeline performs the
-                                following steps:
+                                </div>
+                            </section>
+                            <section class="tab-pane fade" id="term-tab-explain" role="tabpanel"
+                                     aria-labelledby="doc-tab-terms" tabindex="0">
+                                <h3 class="h5" id="term-extraction-heading" tabindex="-1">Theme Extraction</h3>
+                                <h4 class="h6">Data Source</h4>
+                                <p>The MIDAS Members Database (MMD) is the data source for this visualization. The MMD is a
+                                    publicly available curated database of academic information about each MIDAS member. The
+                                    academic information includes metadata for publications and grants, areas of interest,
+                                    associated institutions, and other information. The database is maintained by the MIDAS
+                                    Coordination Center. More information on the MIDAS Members Database is coming soon.
+                                </p>
+                                <p>The metadata for publications is extracted from PubMed using the Entrez API. A
+                                    description of the API can be found <a href="https://www.ncbi.nlm.nih.gov/books/NBK25501/">here</a>.
+                                    The API returns a JSON object containing metadata for each paper. Of the metadata returned,
+                                    only a subset is used for theme extraction.</p>
+                                <p>The following metadata fields are used for theme extraction:</p>
+                                <ul>
+                                    <li>Publication Date</li>
+                                    <li>MeSH Terms (a list of curated terms from a controlled vocabulary, assigned by
+                                        PubMed)
+                                    </li>
+                                    <li>Keywords (an author-provided list of search terms applicable to the paper)</li>
+                                    <li>Paper Title and Abstract</li>
+                                </ul>
+                                <h4 class="h6">Metadata Processing</h4>
+                                <div><p>Themes are extracted from the metadata using a custom NLP pipeline. The pipeline is
+                                    not yet available for public use, but will be in the future. The pipeline performs the
+                                    following steps:</p>
                                 <ul>
                                     <li>Stemming - the pipeline reduces words to their root form (e.g. "infectious"
                                         becomes infecti")
@@ -145,6 +162,7 @@
                                     <li>Lowercasing - the pipeline converts all words to lowercase</li>
                                     <li>Tokenization - the pipeline splits the text into n-grams (word phrases, where n
                                         is the size of the phrase specified by the user) and removes punctuation
+                                    </li>
 
                                     <li>Stop Word & Other Common Word Removal - the pipeline removes stop words (words
                                         that are common in the English language, but don't add meaning to the text, such
@@ -158,7 +176,7 @@
                                         occurs in each paper per year.
                                     </li>
                                 </ul>
-                                <p>The pipeline is under active development. The planned future improvements are:
+                                <p>The pipeline is under active development. The planned future improvements are:</p>
                                 <ul>
                                     <li>Adding a Paraphrasing step - the pipeline will use a paraphrasing model to
                                         replace words with their synonyms. This will allow the pipeline to capture
@@ -167,26 +185,27 @@
                                         the same theme.
                                     </li>
                                 </ul>
-                                Ideas for improvement are welcome. Please email <a
+                                <p>Ideas for improvement are welcome. Please email <a
                                         href="mailto:questions@midasnetwork.us">questions@midasnetwork.us</a> with any
-                                suggestions.</p></div>
+                                    suggestions.</p></div>
+                            </section>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="tab-pane fade" id="viz">
+            <div class="tab-pane fade" id="viz" role="tabpanel" aria-labelledby="main-tab-viz" tabindex="0">
                 <div class="container g-0">
-                    <div class="help-tip"><p>Here's the instructions.</p></div>
+                    <div class="help-tip"><p>Hover a band for yearly counts; click it or a theme in the list to see papers.</p></div>
                     <div class="row" id="header-row">
-                        <div class="title" id="please-header">
+                        <p class="title" id="please-header">
 
                             Please select a PubMed field for theme extraction.
-                        </div>
-                        <div class="title hide-on-start" id="title">Top 20 Most Frequently Occurring <span
+                        </p>
+                        <h1 class="title hide-on-start" id="title">Top <span id="topic-limit-in-title">20</span> Most Frequently Occurring <span
                                 id="pubmed-datasource-in-title"> </span><i> <span id="ngram-size-in-title"> </span></i> in
                             Disease Modeling Papers Authored by MIDAS Members
-                        </div>
-                        <div class="subtitle hide-on-start" id="subtitle">By Year, 2013–END_YEAR</div>
+                        </h1>
+                        <p class="subtitle hide-on-start" id="subtitle">By Year, 2013–END_YEAR</p>
                     </div>
 
                     <!-- Options toolbar. Controls are generated from data/manifest.json by main.js. -->
@@ -201,19 +220,56 @@
                                 <div class="options-header" id="ngram-line">N-gram Size</div>
                                 <div class="seg-group control-group-ngram" role="radiogroup"
                                      aria-labelledby="ngram-line"></div>
+                                <p class="control-hint" id="ngram-hint" hidden>Single MeSH concepts do not use phrase length.</p>
+                            </div>
+                            <div class="option-block" id="year-block">
+                                <label class="options-header" id="year-select-label" for="year-select">Year</label>
+                                <select id="year-select" class="year-select"></select>
+                            </div>
+                            <div class="option-block" id="topic-limit-block">
+                                <div class="options-header" id="topic-limit-line">Bands</div>
+                                <div class="seg-group control-group-topic-limit" role="radiogroup"
+                                     aria-labelledby="topic-limit-line">
+                                    <label class="seg"><input type="radio" name="topic-limit-radio" value="10">
+                                        <span class="seg__label">10</span></label>
+                                    <label class="seg"><input type="radio" name="topic-limit-radio" value="15">
+                                        <span class="seg__label">15</span></label>
+                                    <label class="seg"><input type="radio" name="topic-limit-radio" value="20" checked>
+                                        <span class="seg__label">20</span></label>
+                                </div>
+                            </div>
+                            <div class="option-block" id="layout-block">
+                                <div class="options-header" id="layout-line">Layout</div>
+                                <div class="seg-group control-group-layout" role="radiogroup"
+                                     aria-labelledby="layout-line">
+                                    <label class="seg"><input type="radio" name="layout-radio" value="stream" checked>
+                                        <span class="seg__label">Stream</span></label>
+                                    <label class="seg"><input type="radio" name="layout-radio" value="stacked">
+                                        <span class="seg__label">Stacked</span></label>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <div id="viz-error" role="alert" hidden></div>
+                    <div id="viz-loading" role="status" aria-live="polite" hidden>Loading visualization...</div>
+                    <div id="selection-chip" hidden>
+                        <span id="selection-chip-text"></span>
+                        <button type="button" id="clear-selection" aria-label="Clear selected theme">&times;</button>
+                    </div>
 
                     <div class="row" id="chart-row">
                         <div class="col-md-12" id="wrapper">
-                            <svg class="svgs" height="100%" id="main-svg" preserveAspectRatio="none"
+                            <svg class="svgs" height="100%" id="main-svg" preserveAspectRatio="xMidYMid meet"
                                  style="background-color: #ffffff;" width="100%"
-                                 role="img" aria-labelledby="main-svg-title">
+                                 role="img" aria-labelledby="main-svg-title" aria-describedby="chart-summary">
                                 <title id="main-svg-title">ThemeRiver of the top themes over time for the selected dataset</title>
                             </svg>
+                            <p id="chart-summary" class="sr-only">Stacked area chart of the top themes over time. Full data is available in the table below.</p>
+                            <div id="chart-data-region" class="sr-only" role="region" aria-labelledby="chart-data-heading">
+                                <h2 id="chart-data-heading">ThemeRiver data table</h2>
+                                <div id="chart-data-table"></div>
+                            </div>
                         </div>
                     </div>
 
@@ -230,7 +286,7 @@
 
                     <div class="row g-0" id="info-row">
                         <div class="paper-instructions hide-on-selection">
-                            Click on a theme to see the paper titles for that year (indicated by the x-axis).
+                            Choose a year, then select a theme to see matching paper titles.
                         </div>
                         <div class="panel-card paper-display hide-until-selection">
                             <div id="topic-line">Showing <span id="current-topic-count"></span> papers with theme "<span
@@ -255,7 +311,7 @@
                             <i></i></div>
                     </div>
                 </div>
-                <div id="abstract-hover"><b>Paper:</b><span id="hover-paper-title"></span><br><b>Abstract:</b><span
+                <div id="abstract-hover" role="tooltip"><b>Paper:</b><span id="hover-paper-title"></span><br><b>Abstract:</b><span
                         id="hover-paper-abstract"></span></div>
             </div>
         </div>

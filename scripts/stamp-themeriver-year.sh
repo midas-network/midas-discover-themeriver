@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+APP_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+DATA_DIR="${1:-${APP_ROOT}/data}"
+
+node "${SCRIPT_DIR}/stamp-themeriver-year.js" "${DATA_DIR}"

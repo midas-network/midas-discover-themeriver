@@ -4,8 +4,7 @@ let up_max = 5000;
 let yScale;
 let maxX, maxY;
 let dates;
-let currentColor = 0;
-let xScale, limited_dataset;
+let xScale, full_dataset, limited_dataset;
 let currentZoomTransform = d3.zoomIdentity;
 
 const chartMargins = {
@@ -19,11 +18,22 @@ const zoomScaleExtent = [1, 8];
 let mouseOutTimeout;
 let fadeInDuration = 750;
 let papersJsonFilename2;
-let flashTimer, flashTimer2, hoverTimer;
+let selectionCueTimer, hoverTimer, popupHideTimer, resizeTimer;
 let started = false;
 let alreadyAnimatedResize = false;
 let papersShowing = false;
+let selectedTopic = null;
+let selectedDateIndex = null;
+let rendered_topics = new Set();
 const base_opacity = 0.7;
+const active_opacity = 0.96;
+const inactive_opacity = 0.16;
+const TOP_TOPIC_COUNT = 20;
+const OTHER_TOPIC = "Other";
+
+function prefersReducedMotion() {
+    return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
 
 function getSvgBounds() {
     const rect = $("#main-svg")[0].getBoundingClientRect();
@@ -154,6 +164,16 @@ function hideVizError() {
     if (el) el.hidden = true;
 }
 
+function showVizLoading() {
+    const el = document.getElementById('viz-loading');
+    if (el) el.hidden = false;
+}
+
+function hideVizLoading() {
+    const el = document.getElementById('viz-loading');
+    if (el) el.hidden = true;
+}
+
 // Generate the source + n-gram radio controls from SOURCE_META so that adding a
 // dataset never requires editing this markup — it appears automatically.
 function buildOptionControls() {
@@ -184,15 +204,16 @@ function buildOptionControls() {
     $('.control-group-ngram').html(ngramHtml);
 }
 
-function setPaperAndTop20Showing(b) {
-    let hideOnSelection, paperInstructions, paperDisplay, hideuntilSelection, termDisplay, paperDisplayOpacity;
+function setPaperAndTop20Showing(showPapers, showTerms = true) {
+    let hideOnSelection, paperInstructions, paperDisplay, paperVisibility, termDisplay, termVisibility;
+    let paperDisplayOpacity, termDisplayOpacity;
+    const transitionDuration = prefersReducedMotion() ? '0s' : '2s';
 
-    if (b) {
+    if (showPapers) {
         hideOnSelection = "hidden";
         paperInstructions = "none";
         paperDisplay = "block";
-        hideuntilSelection = "visible";
-        termDisplay = "block";
+        paperVisibility = "visible";
         paperDisplayOpacity = 1
 
 
@@ -200,20 +221,415 @@ function setPaperAndTop20Showing(b) {
         hideOnSelection = "visible";
         paperInstructions = "block";
         paperDisplay = "none";
-        hideuntilSelection = "hidden";
-        termDisplay = "none";
+        paperVisibility = "hidden";
         paperDisplayOpacity = 0
     }
+    termDisplay = showTerms ? "block" : "none";
+    termVisibility = showTerms ? "visible" : "hidden";
+    termDisplayOpacity = showTerms ? 1 : 0;
     $(".hide-on-selection").css("visibility", hideOnSelection);
     $(".paper-instructions").css("display", paperInstructions);
-    $(".hide-until-selection").css("visibility", hideuntilSelection);
-    $(".paper-display, .term-display").css({'display': paperDisplay});
-    $(".paper-display, .term-display").css({'opacity': paperDisplayOpacity, 'transition': '2s'});
-    papersShowing = b;
+    $(".paper-display").css({'display': paperDisplay, 'visibility': paperVisibility});
+    $(".paper-display").css({'opacity': paperDisplayOpacity, 'transition': transitionDuration});
+    $(".term-display").css({'display': termDisplay, 'visibility': termVisibility});
+    $(".term-display").css({'opacity': termDisplayOpacity, 'transition': transitionDuration});
+    papersShowing = showPapers;
 }
 
-const showPapers = (that) => {
+function getThemePath(topic) {
+    return $('#maingroup path').filter(function () {
+        return this.dataset.topic === topic;
+    }).first();
+}
 
+function isOtherTopic(topic) {
+    return topic === OTHER_TOPIC;
+}
+
+function setRibbonHighlight(topic) {
+    const paths = $("#maingroup path");
+    if (!paths.length) return;
+
+    const activePath = topic ? getThemePath(topic) : $();
+    if (!topic || !activePath.length) {
+        paths.attr("opacity", base_opacity);
+        paths.removeClass("theme-ribbon-active theme-ribbon-muted");
+        return;
+    }
+
+    paths.each(function () {
+        const isActive = this.dataset.topic === topic;
+        $(this)
+            .attr("opacity", isActive ? active_opacity : inactive_opacity)
+            .toggleClass("theme-ribbon-active", isActive)
+            .toggleClass("theme-ribbon-muted", !isActive);
+    });
+}
+
+function setTermHighlight(topic) {
+    $('#term-list .term-btn').each(function () {
+        $(this).toggleClass('term-btn--highlighted', !!topic && this.dataset.topic === topic);
+    });
+}
+
+function restoreSelectedHighlight() {
+    setRibbonHighlight(selectedTopic);
+    setTermHighlight(selectedTopic);
+}
+
+function highlightTheme(topic) {
+    setRibbonHighlight(topic);
+    setTermHighlight(topic);
+}
+
+function resetPaths() {
+    clearTimeout(selectionCueTimer)
+    $("#maingroup path").attr("opacity", base_opacity);
+    $("#maingroup path").css("filter", "");
+    $("#maingroup path").removeClass("theme-ribbon-active theme-ribbon-muted theme-ribbon-selected-cue");
+    setTermHighlight(null);
+}
+
+function cueSelectedTheme(topic) {
+    clearTimeout(selectionCueTimer);
+    const path = getThemePath(topic);
+    if (!path.length || prefersReducedMotion()) return;
+
+    path.addClass("theme-ribbon-selected-cue");
+    selectionCueTimer = setTimeout(function () {
+        path.removeClass("theme-ribbon-selected-cue");
+    }, 900);
+}
+
+function getDateIndexForYear(year) {
+    if (!dates || !dates.length) return -1;
+    return dates.findIndex(d => d && d.startsWith(String(year)));
+}
+
+function getYearFromDate(dateString) {
+    return String(dateString || '').substr(0, 4);
+}
+
+function getAvailableYears() {
+    if (!dates || !dates.length) return [];
+    return dates.map(getYearFromDate);
+}
+
+function getLatestYear() {
+    const years = getAvailableYears();
+    if (!years.length) return '';
+    return years.reduce((latest, year) => Number(year) > Number(latest) ? year : latest, years[0]);
+}
+
+function getCurrentSelectionDateIndex() {
+    if (!dates || !dates.length) return -1;
+    const selectedYear = $('#year-select').val() || $('#current-year2').text() || $('#current-year').text();
+    const dateIndex = selectedYear ? getDateIndexForYear(selectedYear) : -1;
+    return dateIndex >= 0 ? dateIndex : dates.length - 1;
+}
+
+function populateYearSelect() {
+    const select = document.getElementById('year-select');
+    if (!select) return '';
+
+    const years = getAvailableYears();
+    const previousYear = select.value;
+    const latestYear = getLatestYear();
+    const selectedYear = years.includes(previousYear) ? previousYear : latestYear;
+
+    select.innerHTML = years.map(year => {
+        const selected = year === selectedYear ? ' selected' : '';
+        return `<option value="${escapeHtml(year)}"${selected}>${escapeHtml(year)}</option>`;
+    }).join('');
+
+    select.value = selectedYear;
+    return selectedYear;
+}
+
+function updateTermListForYear(year, selected_topic) {
+    dismissTransientPopups();
+    $('#current-year2').text(year);
+    fillTopics(year, selected_topic);
+    $("#topic-line2, #term-list").show()
+    setPaperAndTop20Showing(papersShowing, true);
+}
+
+function updateSelectionChip() {
+    const chip = document.getElementById('selection-chip');
+    const chipText = document.getElementById('selection-chip-text');
+    if (!chip || !chipText) return;
+
+    if (!selectedTopic || selectedDateIndex === null || selectedDateIndex < 0 || !dates[selectedDateIndex]) {
+        chip.hidden = true;
+        chipText.textContent = '';
+        return;
+    }
+
+    chipText.textContent = `${selectedTopic} - ${getYearFromDate(dates[selectedDateIndex])}`;
+    chip.hidden = false;
+}
+
+function resetPaperSelection() {
+    selectedTopic = null;
+    selectedDateIndex = null;
+    papersShowing = false;
+    $('#current-topic-count, #current-topic, #current-year').text('');
+    $('#paper-list').empty();
+    $("#instruction-line").show();
+    resetPaths();
+    updateSelectionChip();
+}
+
+function buildSortingSet(filtered_set, includeOther) {
+    let odds = [],
+        evens = []
+    let sorting_set = [];
+    for (const x of Array(filtered_set.length).keys()) {
+        if (x === 0) {
+
+        } else if (x % 2 === 1) {
+            odds.push(x)
+        } else {
+            evens.push(x)
+        }
+    }
+
+    evens.reverse().forEach((index) => {
+        sorting_set.push(filtered_set[index]['key'])
+    })
+    if (filtered_set[0]) {
+        sorting_set.push(filtered_set[0]['key'])
+    }
+    odds.forEach((index) => {
+        sorting_set.push(filtered_set[index]['key'])
+    })
+    if (includeOther) {
+        sorting_set.push(OTHER_TOPIC);
+    }
+    return sorting_set;
+}
+
+function buildChartDataset(dataset, topTopics, allDates) {
+    const topTopicSet = new Set(topTopics);
+    const chartDataset = dataset
+        .filter(d => topTopicSet.has(d.topic))
+        .map(d => Object.assign({}, d));
+    const hasOtherTopics = dataset.some(d => !topTopicSet.has(d.topic));
+
+    if (!hasOtherTopics) return chartDataset;
+
+    allDates.forEach(date => {
+        const otherCount = dataset.reduce((sum, datum) => {
+            return datum.date === date && !topTopicSet.has(datum.topic) ? sum + datum.count : sum;
+        }, 0);
+        chartDataset.push({
+            date: date,
+            topic: OTHER_TOPIC,
+            count: otherCount
+        });
+    });
+
+    return chartDataset;
+}
+
+function getChartViewLabel() {
+    const datasource = $('#pubmed-datasource-in-title').text().trim();
+    const ngram = $('#ngram-size-in-title').text().trim();
+    return [datasource, ngram].filter(Boolean).join(' ') || 'selected dataset';
+}
+
+function getChartLayout() {
+    return $('input[name="layout-radio"]:checked').val() === 'stacked' ? 'stacked' : 'stream';
+}
+
+function getTopicLimit() {
+    const selectedLimit = Number($('input[name="topic-limit-radio"]:checked').val());
+    return Number.isFinite(selectedLimit) && selectedLimit > 0 ? selectedLimit : TOP_TOPIC_COUNT;
+}
+
+function getChartLayoutLabel() {
+    return getChartLayout() === 'stacked' ? 'zero-baseline stacked area chart' : 'streamgraph';
+}
+
+function getYearRangeText() {
+    if (!dates || !dates.length) return '';
+    const years = getAvailableYears();
+    return `${years[0]} to ${years[years.length - 1]}`;
+}
+
+function ensureSvgTitle() {
+    if (!document.getElementById('main-svg-title')) {
+        svg.append("title").attr("id", "main-svg-title");
+    }
+}
+
+function updateChartAccessibleText(keys) {
+    ensureSvgTitle();
+
+    const viewLabel = getChartViewLabel();
+    const layoutLabel = getChartLayoutLabel();
+    const yearRange = getYearRangeText();
+    const renderedCount = keys.filter(key => !isOtherTopic(key)).length;
+    const hasOther = keys.some(isOtherTopic);
+    const otherText = hasOther ? " plus an Other band for remaining topics" : "";
+    const title = `ThemeRiver ${layoutLabel} of the top ${renderedCount} ${viewLabel} themes${otherText}, ${yearRange}`;
+    const summary = `ThemeRiver ${layoutLabel} of the top ${renderedCount} ${viewLabel} themes per year, ${yearRange}${otherText}. Full yearly counts for all themes are available in the data table.`;
+
+    $('#main-svg-title').text(title);
+    $('#chart-summary').text(summary);
+}
+
+function buildChartDataTable(dataset) {
+    const container = document.getElementById('chart-data-table');
+    if (!container || !dataset || !dataset.length || !dates || !dates.length) return;
+
+    const sortedTopics = getFilteredSet(dataset).map(d => d.key);
+    const countsByTopic = new Map();
+    dataset.forEach(datum => {
+        if (!countsByTopic.has(datum.topic)) {
+            countsByTopic.set(datum.topic, new Map());
+        }
+        countsByTopic.get(datum.topic).set(datum.date, datum.count);
+    });
+
+    const viewLabel = getChartViewLabel();
+    const yearRange = getYearRangeText();
+    let table = `<table><caption>Yearly paper counts for all ${escapeHtml(viewLabel)} themes, ${escapeHtml(yearRange)}.</caption>`;
+    table += '<thead><tr><th scope="col">Theme</th>';
+    dates.forEach(date => {
+        table += `<th scope="col">${escapeHtml(getYearFromDate(date))}</th>`;
+    });
+    table += '</tr></thead><tbody>';
+
+    sortedTopics.forEach(topic => {
+        table += `<tr><th scope="row">${escapeHtml(topic)}</th>`;
+        dates.forEach(date => {
+            const count = countsByTopic.get(topic)?.get(date) || 0;
+            table += `<td>${count}</td>`;
+        });
+        table += '</tr>';
+    });
+
+    table += '</tbody></table>';
+    container.innerHTML = table;
+}
+
+function showBootstrapTab(tabElement) {
+    if (!tabElement || !window.bootstrap || !bootstrap.Tab) return;
+    const tab = bootstrap.Tab.getOrCreateInstance
+        ? bootstrap.Tab.getOrCreateInstance(tabElement)
+        : new bootstrap.Tab(tabElement);
+    tab.show();
+}
+
+function focusThemeExtractionHeading() {
+    setTimeout(() => {
+        const heading = document.getElementById('term-extraction-heading');
+        if (!heading) return;
+        heading.focus({preventScroll: true});
+        heading.scrollIntoView({block: 'start'});
+    }, 0);
+}
+
+function showThemeExtractionDocs() {
+    const termTab = document.getElementById('doc-tab-terms');
+    const termPanel = document.getElementById('term-tab-explain');
+    if (!termTab || !termPanel) return;
+
+    if (termPanel.classList.contains('active')) {
+        focusThemeExtractionHeading();
+        return;
+    }
+
+    termTab.addEventListener('shown.bs.tab', focusThemeExtractionHeading, {once: true});
+    showBootstrapTab(termTab);
+}
+
+function showAboutData(event) {
+    event.preventDefault();
+
+    const introTab = document.getElementById('main-tab-intro');
+    const introPanel = document.getElementById('home');
+    if (!introTab || !introPanel) return;
+
+    if (introPanel.classList.contains('active')) {
+        showThemeExtractionDocs();
+        return;
+    }
+
+    introTab.addEventListener('shown.bs.tab', showThemeExtractionDocs, {once: true});
+    showBootstrapTab(introTab);
+}
+
+function positionPopup(elem, pageX, pageY) {
+    const safeX = Math.min(Math.max(0, pageX), Math.max(0, window.innerWidth - 320));
+    const top = window.innerHeight - pageY < 500 ? pageY - elem.outerHeight() : pageY;
+    const safeTop = Math.max(0, top);
+    elem.css({
+        'left': safeX + 14,
+        'top': safeTop,
+        'width': 'calc(100vw - ' + (safeX + 32) + 'px)',
+        'max-width': '560px',
+        'max-height': 'calc(100vh - ' + safeTop + 'px)'
+    });
+}
+
+function getFocusedPaperLink() {
+    const activeElement = document.activeElement;
+    return activeElement && activeElement.matches && activeElement.matches('#paper-list .paper a')
+        ? activeElement
+        : null;
+}
+
+function showPaperAbstract(paperItem, event, delay, source = 'hover') {
+    const item = $(paperItem);
+    const link = item.children("a");
+    const focusedPaperLink = getFocusedPaperLink();
+    if (source === 'hover' && focusedPaperLink && focusedPaperLink !== link[0]) return;
+
+    clearTimeout(hoverTimer);
+    clearTimeout(popupHideTimer);
+
+    const elem = $('#abstract-hover');
+    const offset = item.offset() || {left: 0, top: 0};
+    const pageX = event && event.pageX ? event.pageX : offset.left + item.outerWidth();
+    const pageY = event && event.pageY ? event.pageY : offset.top;
+
+    $("#paper-list a[aria-describedby='abstract-hover']").removeAttr('aria-describedby');
+    $("#hover-paper-title").text(link.attr('data-paper-title') || link.text())
+    $("#hover-paper-abstract").text(item.children("span").text())
+    link.attr('aria-describedby', 'abstract-hover');
+    positionPopup(elem, pageX, pageY);
+
+    hoverTimer = setTimeout(function () {
+        elem.show()
+    }, prefersReducedMotion() ? 0 : delay)
+}
+
+function scheduleHidePaperAbstract(options = {}) {
+    if (options.preserveFocused && getFocusedPaperLink()) return;
+    clearTimeout(hoverTimer)
+    clearTimeout(popupHideTimer)
+    popupHideTimer = setTimeout(function () {
+        if (options.preserveFocused && getFocusedPaperLink()) return;
+        $("#paper-list a[aria-describedby='abstract-hover']").removeAttr('aria-describedby');
+        $("#abstract-hover").hide()
+    }, prefersReducedMotion() ? 0 : 250)
+}
+
+function dismissTransientPopups() {
+    clearTimeout(hoverTimer)
+    clearTimeout(popupHideTimer)
+    clearTimeout(mouseOutTimeout)
+    $("#paper-list a[aria-describedby='abstract-hover']").removeAttr('aria-describedby');
+    $("#abstract-hover").hide()
+    $('#word-box').stop(true, true).fadeTo(0, 0);
+    fadeInDuration = prefersReducedMotion() ? 0 : 750
+}
+
+const showPapers = (topic, dateIndex, options = {}) => {
+    if (isOtherTopic(topic)) return;
+    dismissTransientPopups();
 
     const updateInfoPanel = (year, topic, paper_list, count) => {
 
@@ -231,84 +647,46 @@ const showPapers = (that) => {
         $("#topic-line,#topic-line2, #term-list").show()
 
         fillTopics(year, topic)
+        if (options.focusTermButton) {
+            document.querySelector('.term-btn[aria-current="true"]')?.focus({preventScroll: true});
+        }
         $(".paper").on("mouseenter", function (event) {
-            $("#hover-paper-title").text($(event.currentTarget).children("a").text())
-            $("#hover-paper-abstract").text($(event.currentTarget).children("span").text())
-            const elem = $('#abstract-hover');
-            if (window.innerHeight - event.pageY < 500) {
-                elem.css('top', event.pageY - elem.height());
-            } else {
-                elem.css('top', event.pageY);
-            }
-            // elem.css('left', event.pageX + 14);
-            // elem.css('width', 'calc(vw - ' + event.pageX + 'px)');
-            // elem.css('max-height', 'calc(vh - ' + event.pageY + 'px)');
-            //all css elements in one array
-            elem.css({
-                'left': event.pageX + 14,
-                'width': 'calc(vw - ' + event.pageX + 'px)',
-                'max-height': 'calc(vh - ' + event.pageY + 'px)'
-            });
-            hoverTimer = setTimeout(function () {
-                elem.show()
-            }, 1000)
-
-
-        }).on("mouseleave", function (event) {
-            clearTimeout(hoverTimer)
-
-            $("#abstract-hover").hide()
+            showPaperAbstract(event.currentTarget, event, 1000, 'hover')
+        }).on("mouseleave", function () {
+            scheduleHidePaperAbstract({preserveFocused: true});
         });
     }
 
-    function flash(topic, n) {
-
-        if (n > 0) {
-            $($("[class='" + topic + "']")[0]).css("filter", "brightness(0%)");
-            flashTimer = setTimeout(function () {
-                $($("[class='" + topic + "']")[0]).css("filter", "brightness(100%)");
-                flashTimer2 = setTimeout(function () {
-                    flash(topic, n - 1);
-                }, 250);
-            }, 250);
-        }
-    }
-
-    function resetPaths() {
-        clearTimeout(flashTimer)
-        clearTimeout(flashTimer2)
-        $("#main-svg path").attr("opacity", base_opacity);
-        $("#main-svg path").css("filter", "");
-    }
-
     $(".hide-on-start").css("visibility", "visible")
-    let date_index, topic;
-    if (d3.event === null) {
-        let s_date = $('#current-year').text() + '/1/1'
-        date_index = dates.findIndex(x => x == s_date);
-        topic = event.target.textContent
-    } else {
-        date_index = getDateIndexFromTarget(that);
-        topic = d3.event.target.classList.toString()
+    if (!topic || dateIndex < 0 || !dates[dateIndex]) {
+        updateInfoPanel('', topic || '', '<p>No papers found for this selection.</p>', 0);
+        return;
     }
-    const year = dates[date_index].substr(0, 4)
+    selectedTopic = topic;
+    selectedDateIndex = dateIndex;
+    updateSelectionChip();
+    const year = dates[dateIndex].substr(0, 4)
     resetPaths()
-    flash(topic, 10)
+    cueSelectedTheme(topic)
+    highlightTheme(topic)
     setPaperAndTop20Showing(true)
 
-    $($("[class='" + topic + "']")[0]).css("filter", "brightness(100%)");
     fetch(papersJsonFilename2)
         .then(response => {
             return response.json()
         })
         .then(papers => {
+                const articles = papers[year] && papers[year][topic] ? papers[year][topic] : [];
                 let paper_list = "<ul>"
-                for (let article of papers[year][topic]) {
-                    paper_list += "<li class='paper'><a href='" + escapeHtml(article['uri']) + "' target='_blank'>" + escapeHtml(article['title']) + "</a>" +
+                for (let article of articles) {
+                    const paperTitle = escapeHtml(article['title']);
+                    paper_list += "<li class='paper'><a href='" + escapeHtml(article['uri']) +
+                        "' target='_blank' rel='noopener noreferrer' data-paper-title='" + paperTitle + "'>" +
+                        paperTitle + "<span class='sr-only'> (opens in a new tab)</span></a>" +
                         "<span>" + escapeHtml(article['abstract']) + "</span></li>"
                 }
                 paper_list += "</ul>"
-                updateInfoPanel(year, topic, paper_list, papers[year][topic].length)
+                updateInfoPanel(year, topic, paper_list, articles.length)
             }
         )
         .catch(() => {
@@ -318,36 +696,44 @@ const showPapers = (that) => {
 
 function fillTopics(year, selected_topic) {
     let s_date = year + '/1/1'
-    let year_topics = limited_dataset.filter(d => d.date == s_date && d.count != 0)
+    let topicDataset = full_dataset || limited_dataset || [];
+    const yearTopicCounts = new Map();
+    topicDataset
+        .filter(d => d.date == s_date && !isOtherTopic(d.topic))
+        .forEach(d => {
+            yearTopicCounts.set(d.topic, d.count);
+        });
+
+    let year_topics = topicDataset.filter(d => d.date == s_date && d.count != 0)
+        .filter(d => !isOtherTopic(d.topic))
         .sort((a, b) => (a.count < b.count) ? 1 : ((b.count < a.count) ? -1 : 0))
         .map(function (d) {
             return d.topic
         })
-    let topic_list = "<table id='topic-list'>"
-    topic_list += "<col class='topic-rank'>"
-    topic_list += "<col class='topic-name'>"
-    topic_list += "<col class='topic-color'>"
-    let line = 0;
+    rendered_topics.forEach(topic => {
+        if (!year_topics.includes(topic)) year_topics.push(topic);
+    });
+    let topic_list = "<ul class='term-list-ul'>"
     year_topics.forEach((topic, i) => {
-        topic_list += "<tr onclick='showPapers(this)'>"
-        topic_list += "<td class='term-rank-number'>" + (i + 1) + ".</td>"
-        let background = ""
-        let id = ""
-        if (selected_topic == topic) {
-            id = "id=selected-topic"
-            background = "background-color: #4fc02a52;"
-            line = i;
-        }
-        topic_list += "<td " + id + " style='" + background + "'>" + escapeHtml(topic) + "</td>"
         const d = {}
         d.key = topic
-        topic_list += "<td style='opacity: " + base_opacity + "; background:" + next_bar_color(d) + "'></td>"
-        topic_list += "</tr>"
+        const topicCount = yearTopicCounts.get(topic) || 0;
+        const topicIsRendered = rendered_topics.has(topic);
+        const swatchClass = topicIsRendered ? "term-swatch" : "term-swatch term-swatch--muted";
+        const swatchStyle = topicIsRendered ? " style='background:" + next_bar_color(d) + "'" : "";
+        const isSelected = selected_topic == topic ? " aria-current='true'" : ""
+        topic_list += "<li>"
+        topic_list += "<button type='button' class='term-btn' data-topic='" + escapeHtml(topic) +
+            "' data-year-count='" + topicCount + "'" + isSelected + ">"
+        topic_list += "<span class='term-rank'>" + (i + 1) + ".</span>"
+        topic_list += "<span class='term-name'>" + escapeHtml(topic) + "</span>"
+        topic_list += "<span class='" + swatchClass + "'" + swatchStyle + " aria-hidden='true'></span>"
+        topic_list += "</button>"
+        topic_list += "</li>"
     })
-    topic_list += "</table>"
+    topic_list += "</ul>"
     $("#term-list")[0].innerHTML = topic_list
-    const elem = document.getElementById("selected-topic");
-    elem.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
+    document.querySelector('.term-btn[aria-current="true"]')?.scrollIntoView({block: "nearest", inline: "nearest"});
 }
 
 $(document).ready(async function () {
@@ -355,21 +741,90 @@ $(document).ready(async function () {
     // Build the option controls from the data manifest before wiring up the viz.
     applyManifest(await loadManifest());
 
+    $('#data-about').off('click').on('click', showAboutData);
+
+    $('#clear-selection').off('click').on('click', function () {
+        resetPaperSelection();
+        const year = $('#year-select').val() || getLatestYear();
+        if (year) updateTermListForYear(year);
+        document.getElementById('year-select')?.focus({preventScroll: true});
+    });
+
+    $(document).off('keydown.dismiss-popups').on('keydown.dismiss-popups', function (event) {
+        if (event.key === 'Escape') {
+            dismissTransientPopups();
+        }
+    });
+
+    $('#abstract-hover').off('mouseenter mouseleave')
+        .on('mouseenter', function () {
+            clearTimeout(popupHideTimer);
+        })
+        .on('mouseleave', function () {
+            scheduleHidePaperAbstract({preserveFocused: true});
+        });
+
+    $('#word-box').off('mouseenter mouseleave')
+        .on('mouseenter', function () {
+            clearTimeout(mouseOutTimeout);
+        })
+        .on('mouseleave', function () {
+            mouseOutTimeout = setTimeout(() => {
+                $('#word-box').fadeTo(prefersReducedMotion() ? 0 : 750, 0);
+                fadeInDuration = prefersReducedMotion() ? 0 : 750
+            }, 250);
+        });
+
+    $('#paper-list').off('focusin', '.paper a').on('focusin', '.paper a', function (event) {
+        showPaperAbstract($(event.currentTarget).closest('.paper')[0], event, 0, 'focus')
+    });
+
+    $('#paper-list').off('focusout', '.paper a').on('focusout', '.paper a', scheduleHidePaperAbstract);
+
+    $('#term-list').off('click', '.term-btn').on('click', '.term-btn', function () {
+        showPapers(this.dataset.topic, getCurrentSelectionDateIndex(), {focusTermButton: true});
+    });
+
+    $('#term-list').off('mouseenter focusin', '.term-btn').on('mouseenter focusin', '.term-btn', function () {
+        highlightTheme(this.dataset.topic);
+    });
+
+    $('#term-list').off('mouseleave focusout', '.term-btn').on('mouseleave focusout', '.term-btn', function () {
+        restoreSelectedHighlight();
+    });
+
+    $('#year-select').off('change').on('change', function () {
+        const dateIndex = getDateIndexForYear(this.value);
+        if (dateIndex < 0) return;
+
+        selectedDateIndex = dateIndex;
+        if (selectedTopic) {
+            showPapers(selectedTopic, dateIndex);
+        } else {
+            updateTermListForYear(this.value);
+            setPaperAndTop20Showing(false, true);
+        }
+    });
+
     $('.nav-tabs a').on('shown.bs.tab', function (event) {
         var x = $(event.target).text();
         let stateObj;
         if (x == "Visualization") {
-            const drawRiver = (countsCsvFilename, papersJsonFilename, tension) => {
+            const drawRiver = (countsCsvFilename, papersJsonFilename) => {
                 papersJsonFilename2 = papersJsonFilename
 
                 const render = function (dataset, keys) {
+                    const chartLayout = getChartLayout();
+                    const stackOffset = chartLayout === 'stacked' ? d3.stackOffsetNone : d3.stackOffsetWiggle;
                     let layers = d3.stack()
                         .keys(keys)
-                        .offset(d3.stackOffsetWiggle)
+                        .offset(stackOffset)
                         .order(d3.stackOrderAscending)
                         (dataset);
 
                     svg.selectAll("*").remove();
+                    ensureSvgTitle();
+                    svg.attr('data-layout', chartLayout);
                     currentZoomTransform = d3.zoomIdentity;
 
                     const svgBounds = getSvgBounds();
@@ -388,7 +843,9 @@ $(document).ready(async function () {
                     const stackedMax = d3.max(layers, (layer) => d3.max(layer, (point) => point[1]));
                     const span = Math.max(1, (stackedMax - stackedMin));
                     const verticalPadding = span * 0.03;
-                    const yDomain = [stackedMin - verticalPadding, stackedMax + verticalPadding];
+                    const yDomain = chartLayout === 'stacked'
+                        ? [0, stackedMax + verticalPadding]
+                        : [stackedMin - verticalPadding, stackedMax + verticalPadding];
 
                     yScale = d3.scaleLinear()
                         .domain(yDomain)
@@ -398,7 +855,7 @@ $(document).ready(async function () {
                     maxY = yScale(d3.max(dataset, yValue));
 
                     const area = d3.area()
-                        .curve(d3.curveCardinal.tension(tension))
+                        .curve(d3.curveMonotoneX)
                         .x(d => xScale(xValue(d.data)))
                         .y0(d => yScale(d[0]))
                         .y1(d => yScale(d[1]));
@@ -421,18 +878,49 @@ $(document).ready(async function () {
                         .tickValues(d3.range(dates.length))
                         .tickFormat((d) => dates[d] ? dates[d].substring(0, 4) : '');
 
-                    const yAxis = d3.axisLeft(yScale)
-                        .tickSize(0);
-
-                    gForXAxis.append('g')
-                        .attr('id', 'yaxis')
-                        .attr('transform', `translate(${xMin},0)`)
-                        .call(yAxis);
-
                     const xAxisGroup = gForXAxis.append('g')
                         .attr('id', 'xaxis')
                         .attr('transform', `translate(0, ${yMaxPixel})`)
                         .call(xAxis);
+
+                    xAxisGroup.append('text')
+                        .attr('class', 'axis-title')
+                        .attr('x', (xMin + xMax) / 2)
+                        .attr('y', 38)
+                        .text('Year');
+
+                    if (chartLayout === 'stacked') {
+                        const yAxis = d3.axisLeft(yScale)
+                            .ticks(5)
+                            .tickSize(0);
+
+                        gForXAxis.append('g')
+                            .attr('id', 'yaxis')
+                            .attr('transform', `translate(${xMin},0)`)
+                            .call(yAxis);
+
+                        gForXAxis.append('text')
+                            .attr('class', 'axis-title y-axis-title')
+                            .attr('transform', `translate(${xMin - 36}, ${(yMinPixel + yMaxPixel) / 2}) rotate(-90)`)
+                            .text('Papers');
+                    }
+
+                    const gridlineGroup = gForXAxis.append('g')
+                        .attr('id', 'year-gridlines')
+                        .attr('aria-hidden', 'true');
+
+                    const updateGridlines = function (scale) {
+                        gridlineGroup.selectAll('line')
+                            .data(d3.range(dates.length))
+                            .join('line')
+                            .attr('class', 'year-gridline')
+                            .attr('x1', d => scale(d))
+                            .attr('x2', d => scale(d))
+                            .attr('y1', yMinPixel)
+                            .attr('y2', yMaxPixel);
+                    };
+
+                    updateGridlines(xScale);
 
                     const g = svg.append('g')
                         .attr('transform', 'translate(0,0)')
@@ -449,18 +937,40 @@ $(document).ready(async function () {
                         .attr('fill', function (d, i) {
                             return next_bar_color(d, i);
                         })
-                        .attr('class', function (d) {
+                        .attr('data-topic', function (d) {
                             return d['key']
+                        })
+                        .attr('class', function (d) {
+                            return 'theme-ribbon'
                         })
                         .on("mousemove", onMouseMove)
                         .on("mouseout", onMouseOut)
                         .on("click", onMouseClick);
 
+                    const yearGuide = svg.append('line')
+                        .attr('id', 'hover-year-guide')
+                        .attr('aria-hidden', 'true')
+                        .attr('x1', xMin)
+                        .attr('x2', xMin)
+                        .attr('y1', yMinPixel)
+                        .attr('y2', yMaxPixel)
+                        .attr('hidden', true);
+
+                    function updateYearGuide(dateIndex) {
+                        const x = currentZoomTransform.applyX(xScale(dateIndex));
+                        yearGuide
+                            .attr('x1', x)
+                            .attr('x2', x)
+                            .attr('hidden', null);
+                    }
+
                     function onMouseOut() {
                         const elem = $('#word-box')
+                        yearGuide.attr('hidden', true);
+                        restoreSelectedHighlight();
                         mouseOutTimeout = setTimeout(() => {
-                            elem.fadeTo(750, 0);
-                            fadeInDuration = 750
+                            elem.fadeTo(prefersReducedMotion() ? 0 : 750, 0);
+                            fadeInDuration = prefersReducedMotion() ? 0 : 750
                         }, 250);
                     }
 
@@ -483,28 +993,34 @@ $(document).ready(async function () {
                         $('#word-label').css('border-color', d3.event.currentTarget.getAttribute('fill'));
 
                         const date_index = getDateIndexFromTarget(this);
+                        const topic = this.dataset.topic;
+                        updateYearGuide(date_index);
+                        highlightTheme(topic);
                         let topic_count = 0;
                         if (this.__data__[date_index] && this.__data__[date_index]['data']) {
-                            topic_count = this.__data__[date_index]['data'][this.classList[0]] || 0;
+                            topic_count = this.__data__[date_index]['data'][topic] || 0;
                         }
                         for (let i = 0; i < limited_dataset.length; i++) {
-                            if (limited_dataset[i]['date'] === dates[date_index] && limited_dataset[i]['topic'] === this.classList['value']) {
+                            if (limited_dataset[i]['date'] === dates[date_index] && limited_dataset[i]['topic'] === topic) {
                                 topic_count = limited_dataset[i]['count'];
                                 break;
                             }
                         }
-                        $('#river-word').html(this.classList['value']);
+                        $('#river-word').text(topic);
                         if (topic_count === 0) {
-                            $('#word-label').html("Not in top 20 in " + dates[date_index].substr(0, 4));
+                            $('#word-label').text("No papers in " + dates[date_index].substr(0, 4));
+                        } else if (isOtherTopic(topic)) {
+                            $('#word-label').text(topic_count + " papers outside the top " + getTopicLimit() + " in " + dates[date_index].substr(0, 4));
                         } else {
-                            $('#word-label').html(topic_count + " papers in " + dates[date_index].substr(0, 4));
+                            $('#word-label').text(topic_count + " papers in " + dates[date_index].substr(0, 4));
                         }
-                        $('#word-box').fadeTo(fadeInDuration, 1);
+                        $('#word-box').fadeTo(prefersReducedMotion() ? 0 : fadeInDuration, 1);
                         fadeInDuration = 0
                     }
 
                     function onMouseClick() {
-                        showPapers(this)
+                        if (isOtherTopic(this.dataset.topic)) return;
+                        showPapers(this.dataset.topic, getDateIndexFromTarget(this))
                     }
 
                     const zoomBehavior = d3.zoom()
@@ -515,63 +1031,55 @@ $(document).ready(async function () {
                             const transform = d3.event.transform;
                             currentZoomTransform = transform;
                             g.attr("transform", transform.toString());
-                            xAxisGroup.call(xAxis.scale(transform.rescaleX(xScale)));
+                            const rescaledX = transform.rescaleX(xScale);
+                            xAxisGroup.call(xAxis.scale(rescaledX));
+                            updateGridlines(rescaledX);
+                            yearGuide.attr('hidden', true);
                         });
 
                     svg.call(zoomBehavior)
                         .on("dblclick.zoom", null);
                 };
 
-                const seqgen = function (data) {
+                const seqgen = function (data, keys, valueAccessor) {
                     // re-arrange the data sequentially
                     let prestack = [];
                     dates.forEach(datum => {
-                        prestack.push({'date': datum});
+                        const row = {'date': datum};
+                        keys.forEach(key => {
+                            row[key] = 0;
+                        });
+                        prestack.push(row);
                     });
                     data.forEach(datum => {
-                        prestack[dates.indexOf(datum['date'])][datum['topic']] = yValue(datum);
+                        prestack[dates.indexOf(datum['date'])][datum['topic']] = valueAccessor(datum);
                     });
                     return prestack
                 }
 
-                currentColor = 0;
+                showVizLoading();
                 d3.csv(countsCsvFilename).then(function (dataset) {
                     dataset.forEach(datum => {
                         datum['count'] = +(datum['count']);
                     });
 
-                    let filtered_set = getFilteredSet(dataset);
-                    let odds = [],
-                        evens = []
-                    let sorting_set = [];
-                    for (const x of Array(filtered_set.length).keys()) {
-                        if (x === 0) {
-
-                        } else if (x % 2 === 1) {
-                            odds.push(x)
-                        } else {
-                            evens.push(x)
-                        }
-                    }
-
-                    evens.reverse().forEach((index) => {
-                        sorting_set.push(filtered_set[index]['key'])
-                    })
-                    sorting_set.push(filtered_set[0]['key'])
-                    odds.forEach((index) => {
-                        sorting_set.push(filtered_set[index]['key'])
-                    })
-
-                    limited_dataset = dataset.filter(d => filtered_set.map(d => d.key).includes(d.topic))
+                    full_dataset = dataset;
 
                     // remove duplicated items
-                    let alldates = Array.from(new Set(limited_dataset.map(datum => datum['date'])));
+                    let alldates = Array.from(new Set(full_dataset.map(datum => datum['date'])));
 
                     // make sure dates are listed according to real time order
-                    alldates = alldates.sort(function (a, b) {
-                        return new Date(b.date) - new Date(a.date);
-                    });
+                    alldates = alldates.sort((a, b) => new Date(a) - new Date(b));
                     dates = alldates;
+
+                    const topicLimit = getTopicLimit();
+                    let filtered_set = getFilteredSet(full_dataset, topicLimit);
+                    const topTopics = filtered_set.map(d => d.key);
+                    rendered_topics = new Set(topTopics);
+                    const hasOtherTopics = full_dataset.some(d => !topTopics.includes(d.topic));
+                    let sorting_set = buildSortingSet(filtered_set, hasOtherTopics);
+
+                    limited_dataset = buildChartDataset(full_dataset, topTopics, alldates)
 
                     // generate sequential data
                     let sequential = [];
@@ -604,10 +1112,24 @@ $(document).ready(async function () {
                     sequential = rebalanceSet(sequential, sorting_set, up_max);
 
                     // stack data
-                    let prestack = seqgen(limited_dataset);
+                    const stackValue = getChartLayout() === 'stacked' ? yRaw : yValue;
+                    let prestack = seqgen(limited_dataset, sorting_set, stackValue);
                     let keys = sorting_set;
+                    reset_bar_colors();
                     render(prestack, keys);
+                    updateChartAccessibleText(keys);
+                    buildChartDataTable(full_dataset);
+                    const selectedYear = populateYearSelect();
+                    selectedDateIndex = getDateIndexForYear(selectedYear);
+                    if (selectedTopic && papersShowing) {
+                        showPapers(selectedTopic, selectedDateIndex);
+                    } else {
+                        updateTermListForYear(selectedYear, selectedTopic);
+                        setPaperAndTop20Showing(false, true);
+                    }
+                    hideVizLoading();
                 }).catch(err => {
+                    hideVizLoading();
                     console.error('Failed to load visualization data:', err);
                     showVizError('Could not load data for this selection. The dataset files may be missing.');
                 });
@@ -644,20 +1166,25 @@ $(document).ready(async function () {
                     // disable any individual size the selected dataset lacks.
                     $("#ngram-line").toggleClass("is-disabled", !enable);
                     $(".control-group-ngram").toggleClass("is-disabled", !enable);
+                    $("#ngram-hint").prop("hidden", enable);
+                    $(".control-group-ngram").attr("aria-describedby", enable ? null : "ngram-hint");
                     $(".control-group-ngram input[type=radio]").each(function () {
                         const available = !selectedMeta || selectedMeta.ngrams.includes(parseInt(this.value, 10));
                         this.disabled = !enable || !available;
                     });
                 }
-                setPaperAndTop20Showing((!stateObj.initialDrawing && !stateObj.extractionMethodChanged && !stateObj.resizing) || (stateObj.resizing && papersShowing));
-
-                const tension = 0 //$("#myRange").val() / 100
+                const keepPapersVisible = papersShowing &&
+                    ((!stateObj.initialDrawing && !stateObj.extractionMethodChanged && !stateObj.resizing) ||
+                        (stateObj.resizing && papersShowing));
+                setPaperAndTop20Showing(keepPapersVisible, false);
+                const transitionDuration = prefersReducedMotion() ? '0s' : '2s';
 
                 updateNgramControl(supportsNgrams);
 
                 const baseFilename = getBaseFilename()
                 started = baseFilename != "not-ready"
                 if (started) {
+                    $("#topic-limit-in-title").text(getTopicLimit());
 
                     const countsCsvFilename = `${baseFilename}counts.csv`;
                     const papersJsonFilename = `${baseFilename}papers.json`;
@@ -669,13 +1196,13 @@ $(document).ready(async function () {
                     $("#please-header, #instruction-line").hide()
 
 
-                    $("#info-row").css({'position': 'unset', 'flex': '0 1 275px', 'transition': '2s'})
-                    $("#chart-row").css({'opacity': '1', 'align-items': 'center', 'transition': '2s'})
-                    $(".paper-instructions").css({'opacity': '1', 'transition': '2s'})
+                    $("#info-row").css({'position': 'unset', 'flex': '0 1 275px', 'transition': transitionDuration})
+                    $("#chart-row").css({'opacity': '1', 'align-items': 'center', 'transition': transitionDuration})
+                    $(".paper-instructions").css({'opacity': '1', 'transition': transitionDuration})
 
                     alreadyAnimatedResize = true;
 
-                    drawRiver("./data/" + countsCsvFilename, "./data/" + papersJsonFilename, tension);
+                    drawRiver("./data/" + countsCsvFilename, "./data/" + papersJsonFilename);
                 }
             }
 
@@ -684,21 +1211,36 @@ $(document).ready(async function () {
             stateObj.extractionMethodChanged = false
             stateObj.initialDrawing = !alreadyAnimatedResize
             $('.control-group-ngram input[type=radio], .control-group-pubmed-source input[type=radio]').change(() => {
+                resetPaperSelection();
                 stateObj.extractionMethodChanged = true;
                 stateObj.initialDrawing = false
-                      stateObj.resizing = false
+                stateObj.resizing = false
                 updateOptions(stateObj)
             })
 
-            // $("#myRange").on("input", function () {
-            //     updateOptions(false)
-            // })
+            $('.control-group-layout input[type=radio]').change(() => {
+                stateObj.extractionMethodChanged = false;
+                stateObj.initialDrawing = false
+                stateObj.resizing = false
+                updateOptions(stateObj)
+            })
+
+            $('.control-group-topic-limit input[type=radio]').change(() => {
+                resetPaperSelection();
+                stateObj.extractionMethodChanged = false;
+                stateObj.initialDrawing = false
+                stateObj.resizing = false
+                updateOptions(stateObj)
+            })
 
             $(window).on("resize", function () {
-                stateObj.resizing = true
-                      stateObj.extractionMethodChanged = false;
-
-                updateOptions(stateObj)
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function () {
+                    stateObj.resizing = true
+                    stateObj.extractionMethodChanged = false;
+                    stateObj.initialDrawing = false
+                    updateOptions(stateObj)
+                }, prefersReducedMotion() ? 0 : 120);
             })
 
             updateOptions(stateObj);

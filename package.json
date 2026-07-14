@@ -24,6 +24,8 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
+    "build": "npm run build:manifest && npm run build:index",
+    "build:index": "bash scripts/stamp-themeriver-year.sh",
     "build:manifest": "node scripts/build-manifest.js data"
   },
   "dependencies": {

@@ -7,14 +7,14 @@ setup, the most common contribution (adding a dataset), and conventions.
 
 ```bash
 npm install
-npm start        # http://localhost:8001, regenerates the manifest on boot
+npm start        # http://localhost:8001, regenerates manifest + index.html
 ```
 
 There is no build/bundling step. Edit `index.template.html`, `css/themeriver.css`,
 or `js/main.js` and refresh the browser.
 
 > Edit `index.template.html`, **not** `index.html` — the latter is generated.
-> Run `bash ../scripts/stamp-themeriver-year.sh` (from the repo root) or restart
+> Run `bash scripts/stamp-themeriver-year.sh` (from the repo root) or restart
 > `npm start` to regenerate it.
 
 ## Adding or updating a dataset
@@ -25,7 +25,7 @@ Datasets are discovered from files on disk; no code changes are required.
    `data/<source>-ngram_<n>-papers.json`. The formats are documented in
    [docs/DATA.md](docs/DATA.md).
 2. Optionally add a label / order / default in `datasets.config.json`.
-3. Regenerate the manifest: `node scripts/build-manifest.js data`.
+3. Regenerate the static artifacts: `npm run build`.
 4. Reload and confirm the new control appears and renders.
 
 Please keep the two files consistent: every `(year, topic)` with a non-zero
