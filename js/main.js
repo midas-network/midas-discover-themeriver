@@ -409,14 +409,14 @@ function buildSortingSet(filtered_set, includeOther) {
     return sorting_set;
 }
 
-function buildChartDataset(dataset, topTopics, allDates) {
+function buildChartDataset(dataset, topTopics, allDates, includeOther) {
     const topTopicSet = new Set(topTopics);
     const chartDataset = dataset
         .filter(d => topTopicSet.has(d.topic))
         .map(d => Object.assign({}, d));
     const hasOtherTopics = dataset.some(d => !topTopicSet.has(d.topic));
 
-    if (!hasOtherTopics) return chartDataset;
+    if (!includeOther || !hasOtherTopics) return chartDataset;
 
     allDates.forEach(date => {
         const otherCount = dataset.reduce((sum, datum) => {
@@ -447,6 +447,11 @@ function getTopicLimit() {
     return Number.isFinite(selectedLimit) && selectedLimit > 0 ? selectedLimit : TOP_TOPIC_COUNT;
 }
 
+function shouldShowOtherBand() {
+    const toggle = document.getElementById('show-other-toggle');
+    return toggle ? toggle.checked : true;
+}
+
 function getChartLayoutLabel() {
     return getChartLayout() === 'stacked' ? 'zero-baseline stacked area chart' : 'streamgraph';
 }
@@ -463,7 +468,7 @@ function ensureSvgTitle() {
     }
 }
 
-function updateChartAccessibleText(keys) {
+function updateChartAccessibleText(keys, hasHiddenOther) {
     ensureSvgTitle();
 
     const viewLabel = getChartViewLabel();
@@ -471,9 +476,10 @@ function updateChartAccessibleText(keys) {
     const yearRange = getYearRangeText();
     const renderedCount = keys.filter(key => !isOtherTopic(key)).length;
     const hasOther = keys.some(isOtherTopic);
-    const otherText = hasOther ? " plus an Other band for remaining topics" : "";
-    const title = `ThemeRiver ${layoutLabel} of the top ${renderedCount} ${viewLabel} themes${otherText}, ${yearRange}`;
-    const summary = `ThemeRiver ${layoutLabel} of the top ${renderedCount} ${viewLabel} themes per year, ${yearRange}${otherText}. Full yearly counts for all themes are available in the data table.`;
+    const otherTitleText = hasOther ? " plus an Other band for remaining topics" : hasHiddenOther ? " with the Other band hidden" : "";
+    const otherSummaryText = hasOther ? ", plus an Other band for remaining topics" : hasHiddenOther ? ", with the Other band hidden" : "";
+    const title = `ThemeRiver ${layoutLabel} of the top ${renderedCount} ${viewLabel} themes${otherTitleText}, ${yearRange}`;
+    const summary = `ThemeRiver ${layoutLabel} of the top ${renderedCount} ${viewLabel} themes per year, ${yearRange}${otherSummaryText}. Full yearly counts for all themes are available in the data table.`;
 
     $('#main-svg-title').text(title);
     $('#chart-summary').text(summary);
@@ -1077,9 +1083,10 @@ $(document).ready(async function () {
                     const topTopics = filtered_set.map(d => d.key);
                     rendered_topics = new Set(topTopics);
                     const hasOtherTopics = full_dataset.some(d => !topTopics.includes(d.topic));
-                    let sorting_set = buildSortingSet(filtered_set, hasOtherTopics);
+                    const includeOther = hasOtherTopics && shouldShowOtherBand();
+                    let sorting_set = buildSortingSet(filtered_set, includeOther);
 
-                    limited_dataset = buildChartDataset(full_dataset, topTopics, alldates)
+                    limited_dataset = buildChartDataset(full_dataset, topTopics, alldates, includeOther)
 
                     // generate sequential data
                     let sequential = [];
@@ -1117,7 +1124,7 @@ $(document).ready(async function () {
                     let keys = sorting_set;
                     reset_bar_colors();
                     render(prestack, keys);
-                    updateChartAccessibleText(keys);
+                    updateChartAccessibleText(keys, hasOtherTopics && !includeOther);
                     buildChartDataTable(full_dataset);
                     const selectedYear = populateYearSelect();
                     selectedDateIndex = getDateIndexForYear(selectedYear);
@@ -1219,6 +1226,13 @@ $(document).ready(async function () {
             })
 
             $('.control-group-layout input[type=radio]').change(() => {
+                stateObj.extractionMethodChanged = false;
+                stateObj.initialDrawing = false
+                stateObj.resizing = false
+                updateOptions(stateObj)
+            })
+
+            $('#show-other-toggle').change(() => {
                 stateObj.extractionMethodChanged = false;
                 stateObj.initialDrawing = false
                 stateObj.resizing = false

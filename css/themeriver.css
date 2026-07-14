@@ -1027,8 +1027,8 @@ body {
     background: transparent !important;
     color: var(--navy);
     font-weight: 800;
-    font-size: 16px;
-    letter-spacing: .2px;
+    font-size: 17px;
+    letter-spacing: 0;
     display: flex;
     align-items: center;
     gap: 9px;
@@ -1054,7 +1054,7 @@ body {
 #title,
 .title {
     text-align: center;
-    font-size: clamp(15px, 2vw, 21px);
+    font-size: 23px;
     font-weight: 700;
     color: var(--ink);
     line-height: 1.35;
@@ -1063,7 +1063,7 @@ body {
 
 .subtitle {
     text-align: center;
-    font-size: 13px;
+    font-size: 15px;
     color: var(--muted);
     margin: 4px 0 0;
 }
@@ -1076,7 +1076,7 @@ body {
 
 #please-header {
     color: var(--muted);
-    font-size: 18px;
+    font-size: 19px;
 }
 
 /* ---- Options toolbar ------------------------------------------------------- */
@@ -1114,9 +1114,9 @@ body {
 #ngram-line {
     margin: 0;
     color: var(--muted) !important;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
-    letter-spacing: .6px;
+    letter-spacing: 0;
     text-transform: uppercase;
     text-align: center;
 }
@@ -1127,10 +1127,10 @@ body {
 
 .control-hint {
     color: var(--muted-2);
-    font-size: 11px;
+    font-size: 12px;
     line-height: 1.25;
     margin: 0;
-    max-width: 150px;
+    max-width: 170px;
     text-align: center;
 }
 
@@ -1172,9 +1172,9 @@ body {
 
 .seg__label {
     display: block;
-    padding: 7px 15px;
+    padding: 8px 16px;
     border-radius: 7px;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
     color: var(--muted);
     white-space: nowrap;
@@ -1209,9 +1209,9 @@ body {
     border: 1px solid var(--border);
     border-radius: 8px;
     color: var(--ink);
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
-    min-height: 34px;
+    min-height: 36px;
     min-width: 96px;
     padding: 6px 10px;
 }
@@ -1221,6 +1221,68 @@ body {
     outline-offset: 2px;
 }
 
+.toggle-control {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 36px;
+    margin: 0;
+    cursor: pointer;
+    color: var(--ink);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.toggle-control input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+}
+
+.toggle-control__track {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    width: 38px;
+    height: 22px;
+    border-radius: 999px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    transition: background .15s ease, border-color .15s ease;
+}
+
+.toggle-control__thumb {
+    position: absolute;
+    left: 3px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--muted);
+    box-shadow: var(--shadow-sm);
+    transition: transform .15s ease, background .15s ease;
+}
+
+.toggle-control input:checked + .toggle-control__track {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+.toggle-control input:checked + .toggle-control__track .toggle-control__thumb {
+    background: #ffffff;
+    transform: translateX(16px);
+}
+
+.toggle-control input:focus-visible + .toggle-control__track {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+.toggle-control:hover .toggle-control__label {
+    color: var(--accent);
+}
+
 /* ---- Chart area ------------------------------------------------------------ */
 #chart-row {
     align-items: center;
@@ -1228,6 +1290,7 @@ body {
 
 .tick text {
     fill: var(--muted) !important;
+    font-size: 1.7em;
 }
 
 .tick line {
@@ -1236,7 +1299,7 @@ body {
 
 .axis-title {
     fill: var(--muted);
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 700;
     letter-spacing: 0;
     text-anchor: middle;
@@ -1272,7 +1335,7 @@ body {
 .paper-instructions {
     color: var(--muted) !important;
     flex: 1 1 66%;
-    font-size: 15px !important;
+    font-size: 16px !important;
     margin: 0 !important;
     min-width: 320px;
     padding: 34px 20px !important;
@@ -1304,7 +1367,7 @@ body {
 #topic-line,
 #topic-line2 {
     color: var(--ink);
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 600;
     margin-bottom: 8px;
 }
@@ -1332,7 +1395,7 @@ body {
 #term-list {
     height: 190px;
     background: var(--surface-2);
-    font-size: 13px;
+    font-size: 14px;
     margin-bottom: 0;
     overflow: auto;
     scrollbar-width: thin;
@@ -1369,8 +1432,8 @@ body {
     display: grid;
     gap: 8px;
     grid-template-columns: max-content minmax(0, 1fr) 14px;
-    min-height: 30px;
-    padding: 5px 6px;
+    min-height: 32px;
+    padding: 6px 7px;
     text-align: left;
     width: 100%;
 }
@@ -1398,7 +1461,7 @@ body {
 
 .term-rank {
     color: var(--muted);
-    font-size: 12px;
+    font-size: 13px;
     font-variant-numeric: tabular-nums;
 }
 
@@ -1489,7 +1552,7 @@ body {
     justify-content: space-between;
     gap: 8px 18px;
     padding: 10px 24px 0;
-    font-size: 12px;
+    font-size: 13px;
     color: var(--muted);
 }
 
@@ -1526,7 +1589,7 @@ body {
     border-radius: 999px;
     color: var(--ink);
     display: inline-flex;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 700;
     gap: 8px;
     margin: 0 24px 8px;
@@ -1552,12 +1615,12 @@ body {
     color: var(--accent);
     cursor: pointer;
     display: inline-flex;
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 800;
-    height: 24px;
+    height: 26px;
     justify-content: center;
     line-height: 1;
-    min-width: 24px;
+    min-width: 26px;
     padding: 0;
 }
 
@@ -1618,6 +1681,15 @@ body {
 
     #header-row {
         padding: 14px 14px 6px;
+    }
+
+    #title,
+    .title {
+        font-size: 19px;
+    }
+
+    .subtitle {
+        font-size: 13px;
     }
 
     #options-bar {
