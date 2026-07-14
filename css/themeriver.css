@@ -913,23 +913,23 @@ ul.list-style-none li a {
    ========================================================================== */
 
 :root {
-    --bg: #eef1f5;
-    --surface: #ffffff;
-    --surface-2: #f6f8fa;
-    --border: #e4e7ec;
-    --border-strong: #d0d5dd;
-    --ink: #1a1d26;
-    --muted: #5b6472;
-    --muted-2: #5b6472;
-    --navy: #0d1b2a;
-    --accent: #a11b2e;          /* MIDAS crimson */
-    --accent-strong: #7d1424;
-    --accent-weak: #fbe9ec;
-    --radius: 12px;
-    --radius-sm: 8px;
-    --shadow-sm: 0 1px 2px rgba(16, 24, 40, .06), 0 1px 3px rgba(16, 24, 40, .08);
-    --shadow-md: 0 6px 18px rgba(16, 24, 40, .10);
-    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --bg: var(--midas-bg);
+    --surface: var(--midas-surface);
+    --surface-2: var(--midas-surface-muted);
+    --border: var(--midas-border);
+    --border-strong: var(--midas-border-strong);
+    --ink: var(--midas-ink);
+    --muted: var(--midas-muted);
+    --muted-2: var(--midas-muted);
+    --navy: var(--midas-navy);
+    --accent: var(--midas-accent);
+    --accent-strong: var(--midas-accent-strong);
+    --accent-weak: var(--midas-accent-soft);
+    --radius: var(--midas-radius);
+    --radius-sm: var(--midas-radius-sm);
+    --shadow-sm: var(--midas-shadow-sm);
+    --shadow-md: var(--midas-shadow-md);
+    --font: var(--midas-font-sans);
 }
 
 body {

@@ -1,0 +1,59 @@
+/*
+ * Shared MIDAS Discover theme tokens.
+ * Keep this file in sync across midas-discover-themeriver and
+ * midas-discover-network-viz; app-specific CSS should map local variables to
+ * these tokens instead of hard-coding brand colors.
+ */
+:root {
+    --midas-font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --midas-bg: #eef1f5;
+    --midas-surface: #ffffff;
+    --midas-surface-muted: #f6f8fa;
+    --midas-border: #e4e7ec;
+    --midas-border-strong: #d0d5dd;
+    --midas-ink: #1a1d26;
+    --midas-muted: #5b6472;
+    --midas-navy: #0d1b2a;
+    --midas-accent: #a11b2e;
+    --midas-accent-strong: #7d1424;
+    --midas-accent-soft: #fbe9ec;
+    --midas-focus-ring: 0 0 0 4px rgba(161, 27, 46, .18);
+    --midas-radius: 12px;
+    --midas-radius-sm: 8px;
+    --midas-radius-xs: 6px;
+    --midas-shadow-sm: 0 1px 2px rgba(16, 24, 40, .06), 0 1px 3px rgba(16, 24, 40, .08);
+    --midas-shadow-md: 0 6px 18px rgba(16, 24, 40, .10);
+
+    --bs-body-font-family: var(--midas-font-sans);
+    --bs-body-color: var(--midas-ink);
+    --bs-body-bg: var(--midas-bg);
+    --bs-link-color: var(--midas-accent);
+    --bs-link-hover-color: var(--midas-accent-strong);
+    --bs-primary: var(--midas-accent);
+}
+
+html {
+    color-scheme: light;
+}
+
+body {
+    background: var(--midas-bg);
+    color: var(--midas-ink);
+    font-family: var(--midas-font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+:where(a:not(.btn):not(.nav-link)) {
+    color: var(--midas-accent);
+}
+
+:where(a:not(.btn):not(.nav-link)):hover {
+    color: var(--midas-accent-strong);
+}
+
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+    outline: 2px solid var(--midas-accent);
+    outline-offset: 2px;
+    box-shadow: var(--midas-focus-ring);
+}
