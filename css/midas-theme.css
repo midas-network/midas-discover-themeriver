@@ -1,59 +1,214 @@
-/*
- * Shared MIDAS Discover theme tokens.
- * Keep this file in sync across midas-discover-themeriver and
- * midas-discover-network-viz; app-specific CSS should map local variables to
- * these tokens instead of hard-coding brand colors.
- */
+/* GENERATED — do not edit. Edit tokens/ and run npm run build. */
+
 :root {
-    --midas-font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    --midas-bg: #eef1f5;
-    --midas-surface: #ffffff;
-    --midas-surface-muted: #f6f8fa;
-    --midas-border: #e4e7ec;
-    --midas-border-strong: #d0d5dd;
-    --midas-ink: #1a1d26;
-    --midas-muted: #5b6472;
-    --midas-navy: #0d1b2a;
-    --midas-accent: #a11b2e;
-    --midas-accent-strong: #7d1424;
-    --midas-accent-soft: #fbe9ec;
-    --midas-focus-ring: 0 0 0 4px rgba(161, 27, 46, .18);
-    --midas-radius: 12px;
-    --midas-radius-sm: 8px;
-    --midas-radius-xs: 6px;
-    --midas-shadow-sm: 0 1px 2px rgba(16, 24, 40, .06), 0 1px 3px rgba(16, 24, 40, .08);
-    --midas-shadow-md: 0 6px 18px rgba(16, 24, 40, .10);
-
-    --bs-body-font-family: var(--midas-font-sans);
-    --bs-body-color: var(--midas-ink);
-    --bs-body-bg: var(--midas-bg);
-    --bs-link-color: var(--midas-accent);
-    --bs-link-hover-color: var(--midas-accent-strong);
-    --bs-primary: var(--midas-accent);
+  --midas-blue-50: #f0f5fa;
+  --midas-blue-100: #dbe8f4;
+  --midas-blue-200: #b4cde6;
+  --midas-blue-300: #83aad3;
+  --midas-blue-400: #5187be;
+  --midas-blue-500: #2f6ba6;
+  --midas-blue-600: #205487;
+  --midas-blue-700: #17406a;
+  --midas-blue-800: #102e4d;
+  --midas-blue-900: #0b1f35;
+  --midas-teal-100: #d6f0ea;
+  --midas-teal-400: #2bb6a3;
+  --midas-teal-500: #14958a;
+  --midas-teal-600: #0c7570;
+  --midas-grey-0: #ffffff;
+  --midas-grey-50: #f6f8fa;
+  --midas-grey-100: #eef1f5;
+  --midas-grey-200: #dde3ea;
+  --midas-grey-300: #c3ccd6;
+  --midas-grey-400: #9aa6b2;
+  --midas-grey-450: #616d79;
+  --midas-grey-500: #6b7885;
+  --midas-grey-600: #4a5560;
+  --midas-grey-700: #333c45;
+  --midas-grey-800: #20262d;
+  --midas-grey-900: #12161b;
+  --midas-danger: #c1352c;
+  --midas-danger-bg: #fdecea;
+  --midas-danger-text: #7a1f19;
+  --midas-warning: #b26a00;
+  --midas-warning-bg: #fdf3e2;
+  --midas-warning-text: #7a4900;
+  --midas-success: #1f7a4d;
+  --midas-success-bg: #e8f5ee;
+  --midas-success-text: #14543a;
+  --midas-info: #205487;
+  --midas-info-bg: #e9f1f8;
+  --midas-info-text: #17406a;
+  --midas-cat-1: #205487;
+  --midas-cat-2: #e69f00;
+  --midas-cat-3: #1f9d8b;
+  --midas-cat-4: #cc6677;
+  --midas-cat-5: #56b4e9;
+  --midas-cat-6: #9467bd;
+  --midas-cat-7: #5b9e3f;
+  --midas-cat-8: #d55e00;
+  --midas-cat-9: #cc79a7;
+  --midas-cat-10: #b08c3e;
+  --midas-cat-other: #6b7885;
+  --midas-seq-1: #eaf2fb;
+  --midas-seq-2: #c6ddf1;
+  --midas-seq-3: #93bfe0;
+  --midas-seq-4: #5b9bcd;
+  --midas-seq-5: #3178b4;
+  --midas-seq-6: #1d5893;
+  --midas-seq-7: #0f3a63;
+  --midas-div-1: #a3510a;
+  --midas-div-2: #dd8b3a;
+  --midas-div-3: #f3c58f;
+  --midas-div-4: #eef0f2;
+  --midas-div-5: #a6c6e2;
+  --midas-div-6: #4d89bf;
+  --midas-div-7: #164a80;
+  --color-bg: #f6f8fa;
+  --color-surface: #ffffff;
+  --color-surface-alt: #eef1f5;
+  --color-border: #dde3ea;
+  --color-border-strong: #7c8996;
+  --color-text: #12161b;
+  --color-text-muted: #616d79;
+  --color-text-inverse: #ffffff;
+  --color-primary: #205487;
+  --color-primary-hover: #17406a;
+  --color-primary-active: #102e4d;
+  --color-primary-contrast: #ffffff;
+  --color-secondary: #14958a;
+  --color-secondary-hover: #0c7570;
+  --color-link: #205487;
+  --color-link-hover: #17406a;
+  --color-focus-ring: #5187be;
+  --color-selection: #dbe8f4;
+  --color-danger: #c1352c;
+  --color-danger-bg: #fdecea;
+  --color-danger-text: #7a1f19;
+  --color-warning: #b26a00;
+  --color-warning-bg: #fdf3e2;
+  --color-warning-text: #7a4900;
+  --color-success: #1f7a4d;
+  --color-success-bg: #e8f5ee;
+  --color-success-text: #14543a;
+  --color-info: #205487;
+  --color-info-bg: #e9f1f8;
+  --color-info-text: #17406a;
+  --color-header-bg: #ffffff;
+  --color-header-accent: #205487;
+  --chart-surface: #ffffff;
+  --chart-gridline: #dde3ea;
+  --chart-axis: #c3ccd6;
+  --chart-ink: #12161b;
+  --chart-ink-muted: #6b7885;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", ui-monospace, "Cascadia Code", Consolas, monospace;
+  --num-tabular: "tnum" 1, "lnum" 1;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 999px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --shadow-sm: 0 1px 2px rgba(11,31,53,0.06), 0 1px 3px rgba(11,31,53,0.08);
+  --shadow-md: 0 2px 6px rgba(11,31,53,0.08), 0 6px 16px rgba(11,31,53,0.10);
+  --border-hairline: 0.5px solid #dde3ea;
 }
 
-html {
-    color-scheme: light;
+[data-theme="dark"] {
+  --color-bg: #0c1a2b;
+  --color-surface: #12263c;
+  --color-surface-alt: #17304a;
+  --color-border: #274462;
+  --color-border-strong: #547a9e;
+  --color-text: #e7edf3;
+  --color-text-muted: #9fb2c4;
+  --color-text-inverse: #08131f;
+  --color-primary: #4e8bc0;
+  --color-primary-hover: #6ba0cf;
+  --color-primary-active: #83aad3;
+  --color-primary-contrast: #08131f;
+  --color-secondary: #2bb6a3;
+  --color-secondary-hover: #4fc9b8;
+  --color-link: #7fb0dd;
+  --color-link-hover: #a3c6e6;
+  --color-focus-ring: #6ba0cf;
+  --color-selection: #1c3a5a;
+  --color-danger: #e06a60;
+  --color-danger-bg: #3a1a17;
+  --color-danger-text: #f2b8b2;
+  --color-warning: #e0a34a;
+  --color-warning-bg: #3a2a10;
+  --color-warning-text: #f2d3a0;
+  --color-success: #4fb07d;
+  --color-success-bg: #123a29;
+  --color-success-text: #a8dcc0;
+  --color-info: #4e8bc0;
+  --color-info-bg: #14324f;
+  --color-info-text: #a6c6e2;
+  --color-header-bg: #12263c;
+  --color-header-accent: #4e8bc0;
+  --chart-surface: #12263c;
+  --chart-gridline: #24405f;
+  --chart-axis: #375b7e;
+  --chart-ink: #e7edf3;
+  --chart-ink-muted: #9fb2c4;
+  --midas-cat-1: #5187be;
+  --midas-cat-other: #8a97a5;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.35), 0 1px 3px rgba(0,0,0,0.35);
+  --shadow-md: 0 2px 6px rgba(0,0,0,0.45), 0 6px 16px rgba(0,0,0,0.45);
 }
 
-body {
-    background: var(--midas-bg);
-    color: var(--midas-ink);
-    font-family: var(--midas-font-sans);
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
-}
+@media (prefers-color-scheme: dark) {
 
-:where(a:not(.btn):not(.nav-link)) {
-    color: var(--midas-accent);
-}
+  :root:not([data-theme="light"]) {
 
-:where(a:not(.btn):not(.nav-link)):hover {
-    color: var(--midas-accent-strong);
-}
+    --color-bg: #0c1a2b;
+    --color-surface: #12263c;
+    --color-surface-alt: #17304a;
+    --color-border: #274462;
+    --color-border-strong: #547a9e;
+    --color-text: #e7edf3;
+    --color-text-muted: #9fb2c4;
+    --color-text-inverse: #08131f;
+    --color-primary: #4e8bc0;
+    --color-primary-hover: #6ba0cf;
+    --color-primary-active: #83aad3;
+    --color-primary-contrast: #08131f;
+    --color-secondary: #2bb6a3;
+    --color-secondary-hover: #4fc9b8;
+    --color-link: #7fb0dd;
+    --color-link-hover: #a3c6e6;
+    --color-focus-ring: #6ba0cf;
+    --color-selection: #1c3a5a;
+    --color-danger: #e06a60;
+    --color-danger-bg: #3a1a17;
+    --color-danger-text: #f2b8b2;
+    --color-warning: #e0a34a;
+    --color-warning-bg: #3a2a10;
+    --color-warning-text: #f2d3a0;
+    --color-success: #4fb07d;
+    --color-success-bg: #123a29;
+    --color-success-text: #a8dcc0;
+    --color-info: #4e8bc0;
+    --color-info-bg: #14324f;
+    --color-info-text: #a6c6e2;
+    --color-header-bg: #12263c;
+    --color-header-accent: #4e8bc0;
+    --chart-surface: #12263c;
+    --chart-gridline: #24405f;
+    --chart-axis: #375b7e;
+    --chart-ink: #e7edf3;
+    --chart-ink-muted: #9fb2c4;
+    --midas-cat-1: #5187be;
+    --midas-cat-other: #8a97a5;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.35), 0 1px 3px rgba(0,0,0,0.35);
+    --shadow-md: 0 2px 6px rgba(0,0,0,0.45), 0 6px 16px rgba(0,0,0,0.45);
 
-:where(a, button, input, select, textarea, [tabindex]):focus-visible {
-    outline: 2px solid var(--midas-accent);
-    outline-offset: 2px;
-    box-shadow: var(--midas-focus-ring);
+  }
+
 }

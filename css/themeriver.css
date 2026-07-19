@@ -908,28 +908,34 @@ ul.list-style-none li a {
 }
 
 /* ==========================================================================
-   Modern redesign — light theme + MIDAS crimson accent
+   Modern redesign — shared MIDAS token theme
    Appended so these rules override the legacy styles above.
    ========================================================================== */
 
 :root {
-    --bg: var(--midas-bg);
-    --surface: var(--midas-surface);
-    --surface-2: var(--midas-surface-muted);
-    --border: var(--midas-border);
-    --border-strong: var(--midas-border-strong);
-    --ink: var(--midas-ink);
-    --muted: var(--midas-muted);
-    --muted-2: var(--midas-muted);
-    --navy: var(--midas-navy);
-    --accent: var(--midas-accent);
-    --accent-strong: var(--midas-accent-strong);
-    --accent-weak: var(--midas-accent-soft);
-    --radius: var(--midas-radius);
-    --radius-sm: var(--midas-radius-sm);
-    --shadow-sm: var(--midas-shadow-sm);
-    --shadow-md: var(--midas-shadow-md);
-    --font: var(--midas-font-sans);
+    --focus-ring-shadow: 0 0 0 4px color-mix(in srgb, var(--color-focus-ring) 24%, transparent);
+
+    --bs-body-font-family: var(--font-sans);
+    --bs-body-color: var(--color-text);
+    --bs-body-bg: var(--color-bg);
+    --bs-link-color: var(--color-link);
+    --bs-link-hover-color: var(--color-link-hover);
+    --bs-primary: var(--color-primary);
+
+    --bg: var(--color-bg);
+    --surface: var(--color-surface);
+    --surface-2: var(--color-surface-alt);
+    --border: var(--color-border);
+    --border-strong: var(--color-border-strong);
+    --ink: var(--color-text);
+    --muted: var(--color-text-muted);
+    --muted-2: var(--color-text-muted);
+    --navy: var(--color-primary-active);
+    --accent: var(--color-primary);
+    --accent-strong: var(--color-primary-hover);
+    --accent-weak: var(--color-selection);
+    --radius: var(--radius-lg);
+    --font: var(--font-sans);
 }
 
 body {
@@ -937,6 +943,21 @@ body {
     color: var(--ink);
     font-family: var(--font);
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+:where(a:not(.btn):not(.nav-link)) {
+    color: var(--color-link);
+}
+
+:where(a:not(.btn):not(.nav-link)):hover {
+    color: var(--color-link-hover);
+}
+
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 2px;
+    box-shadow: var(--focus-ring-shadow);
 }
 
 .sr-only {
@@ -1184,12 +1205,12 @@ body {
 
 .seg:hover .seg__label {
     color: var(--ink);
-    background: rgba(16, 24, 40, .04);
+    background: color-mix(in srgb, var(--color-text) 4%, transparent);
 }
 
 .seg input:checked + .seg__label {
     background: var(--accent);
-    color: #fff;
+    color: var(--color-primary-contrast);
     box-shadow: var(--shadow-sm);
 }
 
@@ -1386,7 +1407,7 @@ body {
 
 .side-panel {
     border: 1px solid var(--border) !important;
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-md);
     padding: 8px 10px;
     background: var(--surface-2);
 }
@@ -1541,7 +1562,7 @@ body {
 
 .caption-div {
     border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-md);
 }
 
 /* ---- Data access + provenance bar ----------------------------------------- */
@@ -1585,7 +1606,7 @@ body {
 #selection-chip {
     align-items: center;
     background: var(--accent-weak);
-    border: 1px solid rgba(163, 31, 52, .32);
+    border: 1px solid color-mix(in srgb, var(--color-primary) 32%, transparent);
     border-radius: 999px;
     color: var(--ink);
     display: inline-flex;
@@ -1639,7 +1660,7 @@ body {
     padding: 10px 14px;
     background: var(--surface-2);
     border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-md);
     color: var(--muted);
     font-size: 13px;
     font-weight: 700;
@@ -1652,10 +1673,10 @@ body {
 #viz-error {
     margin: 4px 24px 10px;
     padding: 10px 14px;
-    background: var(--accent-weak);
-    border: 1px solid #f0c4ca;
-    border-radius: var(--radius-sm);
-    color: var(--accent-strong);
+    background: var(--color-danger-bg);
+    border: 1px solid var(--color-danger);
+    border-radius: var(--radius-md);
+    color: var(--color-danger-text);
     font-size: 13px;
     font-weight: 600;
 }
