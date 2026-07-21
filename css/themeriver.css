@@ -266,14 +266,10 @@ text {
 
 }
 
-#term-list ul {
-    list-style-type: auto;
-}
-
-#term-list li::marker {
-    font-size: 11px;
-
-}
+/* Term list styling lives in .term-list-ul below; it renders its own rank
+   numbers via .term-rank spans, so the browser's <li> list markers must stay
+   off. (A stale `#term-list ul { list-style-type: auto }` rule used to win on
+   specificity here and produced a second, clipped column of numbers.) */
 
 .term-display label {
     color: white;
@@ -555,6 +551,7 @@ font-size: 24px;
 }
 
 #main-svg {
+    background: var(--chart-surface);
     cursor: grab;
 }
 
@@ -1067,6 +1064,34 @@ body {
     box-shadow: 0 0 0 3px var(--accent-weak);
 }
 
+.theme-picker {
+    align-items: center;
+    color: var(--muted);
+    display: flex;
+    flex: 0 0 auto;
+    font-size: 12px;
+    font-weight: 600;
+    gap: 7px;
+    padding: 8px 6px;
+}
+
+.theme-picker select {
+    background-color: var(--surface-2);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    color: var(--ink);
+    font: inherit;
+    height: 32px;
+    min-width: 84px;
+    padding: 0 8px;
+}
+
+.theme-picker select:focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 2px;
+    box-shadow: var(--focus-ring-shadow);
+}
+
 /* ---- Header / titles ------------------------------------------------------- */
 #header-row {
     padding: 20px 24px 8px;
@@ -1310,16 +1335,16 @@ body {
 }
 
 .tick text {
-    fill: var(--muted) !important;
+    fill: var(--chart-ink-muted) !important;
     font-size: 1.7em;
 }
 
 .tick line {
-    stroke: var(--border);
+    stroke: var(--chart-gridline);
 }
 
 .axis-title {
-    fill: var(--muted);
+    fill: var(--chart-ink-muted);
     font-size: 13px;
     font-weight: 700;
     letter-spacing: 0;
@@ -1327,7 +1352,7 @@ body {
 }
 
 .year-gridline {
-    stroke: var(--border);
+    stroke: var(--chart-gridline);
     stroke-width: 1;
     stroke-dasharray: 2 5;
     opacity: .72;
@@ -1335,7 +1360,7 @@ body {
 }
 
 #hover-year-guide {
-    stroke: var(--ink);
+    stroke: var(--chart-ink);
     stroke-width: 1.5;
     stroke-dasharray: 4 4;
     opacity: .58;
@@ -1687,6 +1712,27 @@ body {
 
 /* ---- Responsive / small screens ------------------------------------------- */
 @media (max-width: 760px) {
+    .theme-picker label {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+
+    .theme-picker {
+        padding-left: 4px;
+        padding-right: 4px;
+    }
+
+    .theme-picker select {
+        min-width: 76px;
+    }
+
     .app-title {
         font-size: 12px;
         letter-spacing: 0;

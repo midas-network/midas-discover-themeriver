@@ -11,6 +11,7 @@
     <meta property="og:description" content="How research themes in MIDAS infectious-disease modeling papers shift over time.">
     <meta property="og:type" content="website">
     <link rel="icon" href="data:,">
+    <script src="./js/theme-controller.js?v=BUILD_VERSION"></script>
     <link href="./css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="./css/midas-theme.css?v=BUILD_VERSION" rel="stylesheet">
     <link href="./css/themeriver.css?v=BUILD_VERSION" rel="stylesheet">
@@ -32,6 +33,14 @@
                                                             data-bs-toggle="tab" href="#viz" role="tab"
                                                             aria-controls="viz" aria-selected="false">Visualization</a></li>
             </ul>
+            <div class="theme-picker">
+                <label for="theme-select">Theme</label>
+                <select id="theme-select" data-theme-selector aria-label="Theme">
+                    <option value="system">System</option>
+                    <option value="light">Light</option>
+                    <option value="dark">Dark</option>
+                </select>
+            </div>
             <div class="app-title">MIDAS ThemeRiver Visualization</div>
         </div>
 
@@ -272,7 +281,7 @@
                     <div class="row" id="chart-row">
                         <div class="col-md-12" id="wrapper">
                             <svg class="svgs" height="100%" id="main-svg" preserveAspectRatio="xMidYMid meet"
-                                 style="background-color: #ffffff;" width="100%"
+                                 width="100%"
                                  role="img" aria-labelledby="main-svg-title" aria-describedby="chart-summary">
                                 <title id="main-svg-title">ThemeRiver of the top themes over time for the selected dataset</title>
                             </svg>
