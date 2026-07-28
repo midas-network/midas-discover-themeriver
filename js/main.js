@@ -4,7 +4,9 @@ let up_max = 5000;
 let yScale;
 let maxX, maxY;
 let dates;
+let allDates = [];
 let xScale, full_dataset, limited_dataset;
+let redrawThemeRiver = null;
 let currentZoomTransform = d3.zoomIdentity;
 
 const chartMargins = {
@@ -310,9 +312,37 @@ function getYearFromDate(dateString) {
     return String(dateString || '').substr(0, 4);
 }
 
+function getDatasetForYear(dataset, year) {
+    const selectedYear = String(year || '');
+    if (!selectedYear) return dataset || [];
+    return (dataset || []).filter(d => getYearFromDate(d.date) === selectedYear);
+}
+
+function getDatasetThroughYear(dataset, year) {
+    const endYear = Number(year);
+    if (!Number.isFinite(endYear)) return dataset || [];
+    return (dataset || []).filter(d => Number(getYearFromDate(d.date)) <= endYear);
+}
+
+function getTopicRankingDataset(dataset, year) {
+    const yearlyDataset = getDatasetForYear(dataset, year).filter(d => d.count > 0);
+    return yearlyDataset.length ? yearlyDataset : (dataset || []);
+}
+
+function getYearsFromDates(dateList) {
+    if (!dateList || !dateList.length) return [];
+    return dateList.map(getYearFromDate);
+}
+
 function getAvailableYears() {
-    if (!dates || !dates.length) return [];
-    return dates.map(getYearFromDate);
+    return getYearsFromDates(allDates.length ? allDates : dates);
+}
+
+function getDatesThroughYear(dateList, year) {
+    const endYear = Number(year);
+    if (!dateList || !dateList.length || !Number.isFinite(endYear)) return dateList || [];
+    const filteredDates = dateList.filter(date => Number(getYearFromDate(date)) <= endYear);
+    return filteredDates.length ? filteredDates : dateList;
 }
 
 function getLatestYear() {
@@ -449,7 +479,7 @@ function getTopicLimit() {
 
 function shouldShowOtherBand() {
     const toggle = document.getElementById('show-other-toggle');
-    return toggle ? toggle.checked : true;
+    return toggle ? toggle.checked : false;
 }
 
 function getChartLayoutLabel() {
@@ -458,7 +488,7 @@ function getChartLayoutLabel() {
 
 function getYearRangeText() {
     if (!dates || !dates.length) return '';
-    const years = getAvailableYears();
+    const years = getYearsFromDates(dates);
     return `${years[0]} to ${years[years.length - 1]}`;
 }
 
@@ -468,7 +498,7 @@ function ensureSvgTitle() {
     }
 }
 
-function updateChartAccessibleText(keys, hasHiddenOther) {
+function updateChartAccessibleText(keys, hasHiddenOther, selectedYear) {
     ensureSvgTitle();
 
     const viewLabel = getChartViewLabel();
@@ -476,20 +506,25 @@ function updateChartAccessibleText(keys, hasHiddenOther) {
     const yearRange = getYearRangeText();
     const renderedCount = keys.filter(key => !isOtherTopic(key)).length;
     const hasOther = keys.some(isOtherTopic);
+    const rankedYearText = selectedYear ? ` ranked in ${selectedYear}` : "";
     const otherTitleText = hasOther ? " plus an Other band for remaining topics" : hasHiddenOther ? " with the Other band hidden" : "";
     const otherSummaryText = hasOther ? ", plus an Other band for remaining topics" : hasHiddenOther ? ", with the Other band hidden" : "";
-    const title = `ThemeRiver ${layoutLabel} of the top ${renderedCount} ${viewLabel} themes${otherTitleText}, ${yearRange}`;
-    const summary = `ThemeRiver ${layoutLabel} of the top ${renderedCount} ${viewLabel} themes per year, ${yearRange}${otherSummaryText}. Full yearly counts for all themes are available in the data table.`;
+    const title = `ThemeRiver ${layoutLabel} of the top ${renderedCount} ${viewLabel} themes${rankedYearText}${otherTitleText}, ${yearRange}`;
+    const summary = `ThemeRiver ${layoutLabel} showing the top ${renderedCount} ${viewLabel} themes${rankedYearText} across ${yearRange}${otherSummaryText}. Full yearly counts for charted themes are available in the data table.`;
 
     $('#main-svg-title').text(title);
     $('#chart-summary').text(summary);
 }
 
-function buildChartDataTable(dataset) {
+function buildChartDataTable(dataset, keys, selectedYear) {
     const container = document.getElementById('chart-data-table');
-    if (!container || !dataset || !dataset.length || !dates || !dates.length) return;
+    if (!container) return;
+    if (!dataset || !dataset.length || !dates || !dates.length) {
+        container.innerHTML = '';
+        return;
+    }
 
-    const sortedTopics = getFilteredSet(dataset).map(d => d.key);
+    const sortedTopics = Array.isArray(keys) && keys.length ? keys : getFilteredSet(dataset).map(d => d.key);
     const countsByTopic = new Map();
     dataset.forEach(datum => {
         if (!countsByTopic.has(datum.topic)) {
@@ -500,7 +535,8 @@ function buildChartDataTable(dataset) {
 
     const viewLabel = getChartViewLabel();
     const yearRange = getYearRangeText();
-    let table = `<table><caption>Yearly paper counts for all ${escapeHtml(viewLabel)} themes, ${escapeHtml(yearRange)}.</caption>`;
+    const rankedYearText = selectedYear ? ` ranked in ${escapeHtml(selectedYear)}` : '';
+    let table = `<table><caption>Yearly paper counts for charted ${escapeHtml(viewLabel)} themes${rankedYearText}, ${escapeHtml(yearRange)}.</caption>`;
     table += '<thead><tr><th scope="col">Theme</th>';
     dates.forEach(date => {
         table += `<th scope="col">${escapeHtml(getYearFromDate(date))}</th>`;
@@ -800,6 +836,10 @@ $(document).ready(async function () {
     });
 
     $('#year-select').off('change').on('change', function () {
+        if (redrawThemeRiver) {
+            redrawThemeRiver();
+            return;
+        }
         const dateIndex = getDateIndexForYear(this.value);
         if (dateIndex < 0) return;
 
@@ -1072,30 +1112,35 @@ $(document).ready(async function () {
                     full_dataset = dataset;
 
                     // remove duplicated items
-                    let alldates = Array.from(new Set(full_dataset.map(datum => datum['date'])));
+                    let datasetDates = Array.from(new Set(full_dataset.map(datum => datum['date'])));
 
                     // make sure dates are listed according to real time order
-                    alldates = alldates.sort((a, b) => new Date(a) - new Date(b));
-                    dates = alldates;
+                    datasetDates = datasetDates.sort((a, b) => new Date(a) - new Date(b));
+                    allDates = datasetDates;
 
+                    const selectedYear = populateYearSelect();
+                    dates = getDatesThroughYear(allDates, selectedYear);
+                    selectedDateIndex = getDateIndexForYear(selectedYear);
                     const topicLimit = getTopicLimit();
-                    let filtered_set = getFilteredSet(full_dataset, topicLimit);
+                    let filtered_set = getFilteredSet(getTopicRankingDataset(full_dataset, selectedYear), topicLimit);
                     const topTopics = filtered_set.map(d => d.key);
                     rendered_topics = new Set(topTopics);
-                    const hasOtherTopics = full_dataset.some(d => !topTopics.includes(d.topic));
+                    const visibleDataset = getDatasetThroughYear(full_dataset, selectedYear);
+                    const hasOtherTopics = visibleDataset.some(d => !topTopics.includes(d.topic));
                     const includeOther = hasOtherTopics && shouldShowOtherBand();
                     let sorting_set = buildSortingSet(filtered_set, includeOther);
 
-                    limited_dataset = buildChartDataset(full_dataset, topTopics, alldates, includeOther)
+                    limited_dataset = buildChartDataset(visibleDataset, topTopics, dates, includeOther)
 
                     // generate sequential data
                     let sequential = [];
-                    alldates.forEach(() => {
+                    dates.forEach(() => {
                         sequential.push([])
                     });
                     // place each datum into year-specific array
                     limited_dataset.forEach(datum => {
-                        sequential[alldates.indexOf(datum['date'])].push(datum);
+                        const dateIndex = dates.indexOf(datum['date']);
+                        if (dateIndex >= 0) sequential[dateIndex].push(datum);
                     });
 
                     // generate max for Y-scale
@@ -1124,10 +1169,8 @@ $(document).ready(async function () {
                     let keys = sorting_set;
                     reset_bar_colors();
                     render(prestack, keys);
-                    updateChartAccessibleText(keys, hasOtherTopics && !includeOther);
-                    buildChartDataTable(full_dataset);
-                    const selectedYear = populateYearSelect();
-                    selectedDateIndex = getDateIndexForYear(selectedYear);
+                    updateChartAccessibleText(keys, hasOtherTopics && !includeOther, selectedYear);
+                    buildChartDataTable(limited_dataset, keys, selectedYear);
                     if (selectedTopic && papersShowing) {
                         showPapers(selectedTopic, selectedDateIndex);
                     } else {
@@ -1217,6 +1260,12 @@ $(document).ready(async function () {
             stateObj.resizing = false
             stateObj.extractionMethodChanged = false
             stateObj.initialDrawing = !alreadyAnimatedResize
+            redrawThemeRiver = () => {
+                stateObj.extractionMethodChanged = false;
+                stateObj.initialDrawing = false
+                stateObj.resizing = false
+                updateOptions(stateObj)
+            }
             $('.control-group-ngram input[type=radio], .control-group-pubmed-source input[type=radio]').change(() => {
                 resetPaperSelection();
                 stateObj.extractionMethodChanged = true;
