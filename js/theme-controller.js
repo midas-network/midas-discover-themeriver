@@ -80,6 +80,13 @@
         if (event.key === STORAGE_KEY) applyTheme(readPreference(), false);
     });
 
+    global.addEventListener("message", (event) => {
+        const data = event.data || {};
+        if (data.type === "midas-theme" && PREFERENCES.has(data.theme)) {
+            applyTheme(data.theme, true);
+        }
+    });
+
     global.MidasTheme = {
         apply: (preference) => applyTheme(preference, true),
         getPreference: readPreference,

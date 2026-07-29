@@ -37,6 +37,10 @@ function prefersReducedMotion() {
     return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
+function isEmbeddedMode() {
+    return new URLSearchParams(window.location.search).get("embed") === "1";
+}
+
 function getSvgBounds() {
     const rect = $("#main-svg")[0].getBoundingClientRect();
     return {
@@ -1310,5 +1314,9 @@ $(document).ready(async function () {
 
         }
     });
+
+    if (isEmbeddedMode()) {
+        showBootstrapTab(document.getElementById('main-tab-viz'));
+    }
 
 });

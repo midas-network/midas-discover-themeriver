@@ -1092,6 +1092,35 @@ body {
     box-shadow: var(--focus-ring-shadow);
 }
 
+html.is-embedded,
+html.is-embedded body,
+html.is-embedded #main-container,
+html.is-embedded .tab-content[role="main"] {
+    height: 100%;
+}
+
+html.is-embedded body {
+    overflow: hidden;
+}
+
+html.is-embedded #top-nav,
+html.is-embedded #home {
+    display: none !important;
+}
+
+html.is-embedded #viz {
+    height: 100%;
+}
+
+html.is-embedded #viz > .container {
+    max-width: none;
+    width: 100%;
+}
+
+html.is-embedded #chart-row {
+    min-height: 54vh;
+}
+
 /* ---- Header / titles ------------------------------------------------------- */
 #header-row {
     padding: 20px 24px 8px;
