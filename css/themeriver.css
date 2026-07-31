@@ -1771,12 +1771,10 @@ html.is-embedded #chart-row {
         min-width: 76px;
     }
 
+    /* The app title spills past a narrow header (WCAG 1.4.10 reflow); the tabs
+       and theme picker remain, and the Discover shell supplies branding. */
     .app-title {
-        font-size: 12px;
-        letter-spacing: 0;
-        padding-left: 12px;
-        padding-right: 12px;
-        text-align: right;
+        display: none;
     }
 
     #mainTab .nav-link,
