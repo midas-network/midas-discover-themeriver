@@ -29,7 +29,7 @@
 </head>
 <body>
     <div id="main-container">
-        <div id="top-nav">
+        <header id="top-nav">
             <ul class="nav nav-tabs" id="mainTab" role="tablist" aria-label="Main sections">
                 <li class="nav-item" role="presentation"><a class="nav-link active" id="main-tab-intro"
                                                             data-bs-toggle="tab" href="#home" role="tab"
@@ -47,7 +47,7 @@
                 </select>
             </div>
             <div class="app-title">MIDAS ThemeRiver Visualization</div>
-        </div>
+        </header>
 
         <div class="tab-content" role="main">
             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="main-tab-intro"
@@ -172,7 +172,7 @@
                                     following steps:</p>
                                 <ul>
                                     <li>Stemming - the pipeline reduces words to their root form (e.g. "infectious"
-                                        becomes infecti")
+                                        becomes "infecti")
                                     </li>
                                     <li>Lowercasing - the pipeline converts all words to lowercase</li>
                                     <li>Tokenization - the pipeline splits the text into n-grams (word phrases, where n
@@ -242,7 +242,8 @@
                                 <select id="year-select" class="year-select"></select>
                             </div>
                             <div class="option-block" id="topic-limit-block">
-                                <div class="options-header" id="topic-limit-line">Bands</div>
+                                <div class="options-header" id="topic-limit-line"
+                                     title="How many of the top themes to draw as separate ribbons.">Bands</div>
                                 <div class="seg-group control-group-topic-limit" role="radiogroup"
                                      aria-labelledby="topic-limit-line">
                                     <label class="seg"><input type="radio" name="topic-limit-radio" value="10">
@@ -254,7 +255,8 @@
                                 </div>
                             </div>
                             <div class="option-block" id="other-block">
-                                <div class="options-header" id="other-line">Aggregate</div>
+                                <div class="options-header" id="other-line"
+                                     title="Roll every theme outside the top Bands into a single grey &quot;Other&quot; ribbon.">Aggregate</div>
                                 <label class="toggle-control" for="show-other-toggle">
                                     <input type="checkbox" id="show-other-toggle">
                                     <span class="toggle-control__track" aria-hidden="true">
@@ -264,7 +266,8 @@
                                 </label>
                             </div>
                             <div class="option-block" id="layout-block">
-                                <div class="options-header" id="layout-line">Layout</div>
+                                <div class="options-header" id="layout-line"
+                                     title="Stream centres the ribbons to compare shapes; Stacked reads absolute paper counts off the y-axis.">Layout</div>
                                 <div class="seg-group control-group-layout" role="radiogroup"
                                      aria-labelledby="layout-line">
                                     <label class="seg"><input type="radio" name="layout-radio" value="stream" checked>

@@ -1037,6 +1037,15 @@ body {
     border-bottom-color: var(--accent) !important;
 }
 
+/* WCAG 1.4.3: the dark-theme --accent (#4e8bc0) on the surface bar is only
+   4.22:1 — under the 4.5:1 minimum for this 14px label. Use a lighter blue for
+   the active tab in dark mode so it clears the threshold. */
+[data-bs-theme="dark"] #mainTab .nav-link.active,
+[data-bs-theme="dark"] #docTab .nav-link.active {
+    color: #7fb2e6;
+    border-bottom-color: #7fb2e6 !important;
+}
+
 .nav-item:nth-child(1) {
     margin-left: 8px;
 }
