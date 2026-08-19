@@ -81,6 +81,7 @@
     });
 
     global.addEventListener("message", (event) => {
+        if (event.origin !== global.location.origin || event.source !== global.parent) return;
         const data = event.data || {};
         if (data.type === "midas-theme" && PREFERENCES.has(data.theme)) {
             applyTheme(data.theme, true);

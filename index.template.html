@@ -4,8 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script>
-        if (new URLSearchParams(window.location.search).get("embed") === "1") {
+        const embedParams = new URLSearchParams(window.location.search);
+        if (embedParams.get("embed") === "1") {
+            const embeddedSection = embedParams.get("section") === "introduction"
+                ? "introduction"
+                : "visualization";
             document.documentElement.classList.add("is-embedded");
+            document.documentElement.classList.add(`is-embedded-${embeddedSection}`);
         }
     </script>
     <title>MIDAS ThemeRiver — Research themes in infectious-disease modeling over time</title>
@@ -60,9 +65,9 @@
                                     rel="noopener noreferrer">ThemeRiver<span class="sr-only"> (opens in a new tab)</span></a> is a visualization of thematic variations over time in a set of documents.
                                 Documents are grouped into <i>themes</i> based on the terms they contain.</p>
                             <p>In a ThemeRiver visualization, themes are represented as colored ribbons that flow from
-                                left to right. The x-axis represents time, and the y-axis represents the proportion of
-                                documents that contain a given theme at a given time. When individual themes are stacked
-                                on top of each other, the visualization resembles a river, hence the name.</p></div>
+                                left to right. The x-axis represents time, and a ribbon's thickness reflects the number
+                                of papers containing that theme in a given year. When individual themes are stacked on
+                                top of each other, the visualization resembles a river, hence the name.</p></div>
 
                     </div>
                     <div id="viz-explain">
@@ -91,7 +96,7 @@
                                     of MIDAS papers over time. Specifically, the display shows the 20 most frequently
                                     occurring themes in infectious disease papers authored by MIDAS members from 2013 to
                                     END_YEAR.</p>
-                                <div class="caption-div" id="main-middle-div" width="75%"><h4 class="h6">The display is
+                                <div class="caption-div" id="main-middle-div"><h4 class="h6">The display is
                                     composed of four parts:</h4>
                                 <h5 class="caption">1. The ThemeRiver</h5>
                                 <img alt="Screenshot of the ThemeRiver showing stacked theme ribbons flowing across years"
@@ -100,7 +105,7 @@
                                     <ul>
                                         <li><b>Hovering over a theme</b> shows a tooltip with the theme name and the
                                             number of papers containing the theme in that year. The year is determined
-                                            by the mouses position over the x-axis.
+                                            by the pointer's position over the x-axis.
                                         </li>
                                         <li><b>Clicking on a theme</b> displays a list of papers that contain the theme
                                             in the year.
@@ -111,7 +116,7 @@
                                     <div class="caption-div" id="fulloptiondiv">
                                         <h5 class="caption">2. Options</h5>
                                         <img alt="The Options panel with PubMed field and n-gram size controls"
-                                             class="figure img-fluid" src="./img/options.png" width="200px">
+                                             class="figure img-fluid" src="./img/options.png" width="200">
                                         <ul>
                                             <li><b>Field</b> - The PubMed metadata field to use for theme extraction.
                                             </li>
@@ -124,7 +129,7 @@
                                     <div class="caption-div" id="fullpaperdiv">
                                         <h5 class="caption">3. Paper Listing</h5>
                                         <img alt="The paper listing panel showing titles for a selected theme and year"
-                                             class="figure img-fluid" src="./img/papers.png" width="500px">
+                                             class="figure img-fluid" src="./img/papers.png" width="500">
                                         <ul>
                                             <li><b>Hovering over a paper</b> displays the paper title and abstract.</li>
                                             <li><b>Clicking a paper</b> takes you to the paper on midasnetwork.us.</li>
@@ -133,7 +138,7 @@
                                     <div class="caption-div" id="fulltermdiv">
                                         <h5 class="caption">4. Theme Listing</h5>
                                         <img alt="The theme listing panel ranking the top themes for a year"
-                                             class="figure img-fluid" src="img/terms.png" width="200px">
+                                             class="figure img-fluid" src="img/terms.png" width="200">
                                         <ul>
                                             <li>Clicking on a theme name will highlight the theme in the visualization
                                                 and load the papers for that theme in the Papers section.
@@ -179,7 +184,7 @@
                                         is the size of the phrase specified by the user) and removes punctuation
                                     </li>
 
-                                    <li>Stop Word & Other Common Word Removal - the pipeline removes stop words (words
+                                    <li>Stop Word &amp; Other Common Word Removal - the pipeline removes stop words (words
                                         that are common in the English language, but don't add meaning to the text, such
                                         as "the" and "and"). Additionally, other commonly used words that occur in MIDAS
                                         papers are removed to ensure that the extracted themes are informative. That is,

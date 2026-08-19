@@ -1112,9 +1112,23 @@ html.is-embedded body {
     overflow: hidden;
 }
 
-html.is-embedded #top-nav,
-html.is-embedded #home {
+html.is-embedded.is-embedded-introduction body {
+    overflow: auto;
+}
+
+html.is-embedded #top-nav {
     display: none !important;
+}
+
+html.is-embedded.is-embedded-visualization #home,
+html.is-embedded.is-embedded-introduction #viz {
+    display: none !important;
+}
+
+html.is-embedded.is-embedded-introduction #main-container,
+html.is-embedded.is-embedded-introduction .tab-content[role="main"] {
+    height: auto;
+    min-height: 100%;
 }
 
 html.is-embedded #viz {

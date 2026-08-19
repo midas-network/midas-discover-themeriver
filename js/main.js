@@ -41,6 +41,12 @@ function isEmbeddedMode() {
     return new URLSearchParams(window.location.search).get("embed") === "1";
 }
 
+function embeddedSectionFromUrl() {
+    return new URLSearchParams(window.location.search).get("section") === "introduction"
+        ? "introduction"
+        : "visualization";
+}
+
 function getSvgBounds() {
     const rect = $("#main-svg")[0].getBoundingClientRect();
     return {
@@ -568,6 +574,35 @@ function showBootstrapTab(tabElement) {
     tab.show();
 }
 
+function showEmbeddedSection(section) {
+    if (!isEmbeddedMode()) return;
+
+    const safeSection = section === 'introduction' ? 'introduction' : 'visualization';
+    const root = document.documentElement;
+    root.classList.toggle('is-embedded-introduction', safeSection === 'introduction');
+    root.classList.toggle('is-embedded-visualization', safeSection === 'visualization');
+    showBootstrapTab(document.getElementById(
+        safeSection === 'introduction' ? 'main-tab-intro' : 'main-tab-viz'
+    ));
+
+    if (safeSection === 'introduction') window.scrollTo(0, 0);
+}
+
+window.addEventListener('message', event => {
+    if (!isEmbeddedMode() || event.origin !== window.location.origin || event.source !== window.parent) return;
+    const data = event.data || {};
+    if (data.type === 'midas-section') showEmbeddedSection(data.section);
+});
+
+// Start-up has finished, so ask the shell which section it wants. Its reply
+// arrives after this app has initialized, which keeps a section the user picked
+// mid-load from being overwritten by the frame URL's stale value.
+function notifyShellSectionReady() {
+    if (!isEmbeddedMode() || window.parent === window) return;
+    window.parent.postMessage({type: 'midas-section-ready'}, window.location.origin);
+}
+
+
 function focusThemeExtractionHeading() {
     setTimeout(() => {
         const heading = document.getElementById('term-extraction-heading');
@@ -600,6 +635,15 @@ function showAboutData(event) {
 
     if (introPanel.classList.contains('active')) {
         showThemeExtractionDocs();
+        return;
+    }
+
+    if (isEmbeddedMode() && window.parent !== window) {
+        introTab.addEventListener('shown.bs.tab', showThemeExtractionDocs, {once: true});
+        window.parent.postMessage({
+            type: 'midas-section-request',
+            section: 'introduction'
+        }, window.location.origin);
         return;
     }
 
@@ -1316,7 +1360,8 @@ $(document).ready(async function () {
     });
 
     if (isEmbeddedMode()) {
-        showBootstrapTab(document.getElementById('main-tab-viz'));
+        showEmbeddedSection(embeddedSectionFromUrl());
+        notifyShellSectionReady();
     }
 
 });
